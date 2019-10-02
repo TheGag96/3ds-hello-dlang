@@ -20,7 +20,7 @@ enum DVLE_Type
 /// Constant type.
 enum DVLE_ConstantType
 {
-    bool    = 0x0, ///< Bool.
+    _bool   = 0x0, ///< Bool.
     u8      = 0x1, ///< Unsigned 8-bit integer.
     float24 = 0x2  ///< 24-bit float.
 }

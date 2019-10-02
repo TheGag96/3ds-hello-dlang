@@ -3,7 +3,7 @@
  * @brief Functions for working with shaders.
  */
 
-module ctru.gpu.shaderProgram;
+module ctru.gpu.shaderprogram;
 
 import ctru.types;
 

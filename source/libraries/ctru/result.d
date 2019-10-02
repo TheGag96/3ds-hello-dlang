@@ -46,9 +46,9 @@ extern (D) auto R_DESCRIPTION(T)(auto ref T res)
 }
 
 /// Builds a result code from its constituent components.
-extern (D) auto MAKERESULT(T0, T1, T2, T3)(auto ref T0 level, auto ref T1 summary, auto ref T2 module, auto ref T3 description)
+extern (D) auto MAKERESULT(T0, T1, T2, T3)(auto ref T0 level, auto ref T1 summary, auto ref T2 _module, auto ref T3 description)
 {
-    return ((level & 0x1F) << 27) | ((summary & 0x3F) << 21) | ((module & 0xFF) << 10) | (description & 0x3FF);
+    return ((level & 0x1F) << 27) | ((summary & 0x3F) << 21) | ((_module & 0xFF) << 10) | (description & 0x3FF);
 }
 
 /// Result code level values.

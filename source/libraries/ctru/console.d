@@ -113,10 +113,10 @@ enum CONSOLE_CROSSED_OUT   = BIT(8); ///< Crossed out text
 /// Console debug devices supported by libnds.
 enum debugDevice
 {
-    null = 0, ///< Swallows prints to stderr
-    svc = 1, ///< Outputs stderr debug statements using svcOutputDebugString, which can then be captured by interactive debuggers
-    console = 2, ///< Directs stderr debug statements to 3DS console window
-    _3dmoo = svc
+    _null   = 0,  ///< Swallows prints to stderr
+    svc     = 1,  ///< Outputs stderr debug statements using svcOutputDebugString, which can then be captured by interactive debuggers
+    console = 2,  ///< Directs stderr debug statements to 3DS console window
+    _3dmoo  = svc
 }
 
 /**

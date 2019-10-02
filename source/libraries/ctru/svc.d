@@ -188,7 +188,7 @@ struct ExitThreadEvent
 enum UserBreakType
 {
     panic     = 0, ///< Panic.
-    assert    = 1, ///< Assertion failed.
+    _assert   = 1, ///< Assertion failed.
     user      = 2, ///< User related.
     load_ro   = 3, ///< Load RO.
     unload_ro = 4  ///< Unload RO.

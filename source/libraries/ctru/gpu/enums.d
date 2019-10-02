@@ -86,7 +86,7 @@ enum GpuTexUnit
 {
     texunit0 = 0x1, ///< Texture unit 0.
     texunit1 = 0x2, ///< Texture unit 1.
-    texunit2 = 0x4 ///< Texture unit 2.
+    texunit2 = 0x4  ///< Texture unit 2.
 }
 
 /// Supported texture formats.
@@ -117,7 +117,7 @@ enum GpuTexFace
     positive_y = 2, // +Y face
     negative_y = 3, // -Y face
     positive_z = 4, // +Z face
-    negative_z = 5 // -Z face
+    negative_z = 5  // -Z face
 }
 
 /// Procedural texture clamp modes.
@@ -326,10 +326,10 @@ enum GpuFragOpMode
 /// Supported component formats.
 enum GpuFormats
 {
-    byte          = 0, ///< 8-bit byte.
+    _byte          = 0, ///< 8-bit byte.
     unsigned_byte = 1, ///< 8-bit unsigned byte.
-    short         = 2, ///< 16-bit short.
-    float         = 3  ///< 32-bit float.
+    _short         = 2, ///< 16-bit short.
+    _float         = 3  ///< 32-bit float.
 }
 
 /// Cull modes.
@@ -364,22 +364,22 @@ enum GpuTevSrc
 /// Texture RGB combiner operands.
 enum GpuTevOpRgb
 {
-    src_color           = 0x00, ///< Source color.
-    one_minus_src_color = 0x01, ///< Source color - 1.
-    src_alpha           = 0x02, ///< Source alpha.
-    one_minus_src_alpha = 0x03, ///< Source alpha - 1.
-    src_r               = 0x04, ///< Source red.
-    one_minus_src_r     = 0x05, ///< Source red - 1.
-    _0x06               = 0x06, ///< Unknown.
-    _0x07               = 0x07, ///< Unknown.
-    src_g               = 0x08, ///< Source green.
-    one_minus_src_g     = 0x09, ///< Source green - 1.
-    _0x0a               = 0x0A, ///< Unknown.
-    _0x0b               = 0x0B, ///< Unknown.
-    src_b               = 0x0C, ///< Source blue.
-    one_minus_src_b     = 0x0D, ///< Source blue - 1.
-    _0x0e               = 0x0E, ///< Unknown.
-    _0x0f               = 0x0F  ///< Unknown.
+    src_color           = 0x00, /// < Source color.
+    one_minus_src_color = 0x01, /// < Source color - 1.
+    src_alpha           = 0x02, /// < Source alpha.
+    one_minus_src_alpha = 0x03, /// < Source alpha - 1.
+    src_r               = 0x04, /// < Source red.
+    one_minus_src_r     = 0x05, /// < Source red - 1.
+    _0x06               = 0x06, /// < Unknown.
+    _0x07               = 0x07, /// < Unknown.
+    src_g               = 0x08, /// < Source green.
+    one_minus_src_g     = 0x09, /// < Source green - 1.
+    _0x0a               = 0x0A, /// < Unknown.
+    _0x0b               = 0x0B, /// < Unknown.
+    src_b               = 0x0C, /// < Source blue.
+    one_minus_src_b     = 0x0D, /// < Source blue - 1.
+    _0x0e               = 0x0E, /// < Unknown.
+    _0x0f               = 0x0F  /// < Unknown.
 }
 
 /// Texture Alpha combiner operands.
@@ -491,7 +491,7 @@ enum GpuFresnelSel
 /// Bump map modes.
 enum GpuBumpMode
 {
-    not_used      = 0, ///< Disabled.
+    bump_not_used = 0, ///< Disabled.
     bump_as_bump  = 1, ///< Bump as bump mapping.
     bump_as_tang  = 2  ///< Bump as tangent/normal mapping.
 }

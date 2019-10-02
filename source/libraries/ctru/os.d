@@ -3,6 +3,8 @@
  * @brief OS related stuff.
  */
 
+module ctru.os;
+
 extern (C):
 
 enum SYSCLOCK_SOC = 16756991;
@@ -20,21 +22,21 @@ extern (D) auto SYSTEM_VERSION(T0, T1, T2)(auto ref T0 major, auto ref T1 minor,
 }
 
 /// Retrieves the major version from a packed system version.
-extern (D) auto GET_VERSION_MAJOR(T)(auto ref T version)
+extern (D) auto GET_VERSION_MAJOR(T)(auto ref T _version)
 {
-    return version >> 24;
+    return _version >> 24;
 }
 
 /// Retrieves the minor version from a packed system version.
-extern (D) auto GET_VERSION_MINOR(T)(auto ref T version)
+extern (D) auto GET_VERSION_MINOR(T)(auto ref T _version)
 {
-    return (version >> 16) & 0xFF;
+    return (_version >> 16) & 0xFF;
 }
 
 /// Retrieves the revision version from a packed system version.
-extern (D) auto GET_VERSION_REVISION(T)(auto ref T version)
+extern (D) auto GET_VERSION_REVISION(T)(auto ref T _version)
 {
-    return (version >> 8) & 0xFF;
+    return (_version >> 8) & 0xFF;
 }
 
 /// Memory regions.
