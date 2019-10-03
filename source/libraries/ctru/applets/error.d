@@ -1,0 +1,96 @@
+/**
+ * @file error.h
+ * @brief Error applet.
+ */
+
+module ctru.applets.error;
+
+import ctru.types;
+import ctru.services.cfgu;
+
+extern (C):
+
+enum
+{
+    ERROR_LANGUAGE_FLAG = 0x100, ///<??-Unknown flag
+    ERROR_WORD_WRAP_FLAG = 0x200 ///<??-Unknown flag
+}
+
+///< Type of Error applet to be called
+
+enum ErrorType
+{
+    code                    = 0,                                                ///< Displays the infrastructure communications-related error message corresponding to the error code.
+    text                    = 1,                                                ///< Displays text passed to this applet.
+    eula                    = 2,                                                ///< Displays the EULA
+    type_eula_first_boot    = 3,                                                ///< Use prohibited.
+    type_eula_draw_only     = 4,                                                ///< Use prohibited.
+    type_agree              = 5,                                                ///< Use prohibited.
+    code_language           = CODE | ERROR_LANGUAGE_FLAG,                       ///< Displays a network error message in a specified language.
+    text_language           = TEXT | ERROR_LANGUAGE_FLAG,                       ///< Displays text passed to this applet in a specified language.
+    eula_language           = EULA | ERROR_LANGUAGE_FLAG,                       ///< Displays EULA in a specified language.
+    text_word_wrap          = TEXT | ERROR_WORD_WRAP_FLAG,                      ///< Displays the custom error message passed to this applet with automatic line wrapping
+    text_language_word_wrap = TEXT | ERROR_LANGUAGE_FLAG | ERROR_WORD_WRAP_FLAG ///< Displays the custom error message with automatic line wrapping and in the specified language.
+}
+
+///< Flags for the Upper Screen.Does nothing even if specified.
+
+enum ErrorScreenFlag
+{
+    normal = 0,
+    stereo = 1
+}
+
+///< Return code of the Error module.Use UNKNOWN for simple apps.
+
+enum ErrorReturnCode
+{
+    unknown        = -1,
+    none           = 0,
+    success        = 1,
+    not_supported  = 2,
+    home_button    = 10,
+    software_reset = 11,
+    power_button   = 12
+}
+
+///< Structure to be passed to the applet.Shouldn't be modified directly.
+
+struct errorConf
+{
+    errorType type;
+    int errorCode;
+    errorScreenFlag upperScreenFlag;
+    ushort useLanguage;
+    ushort[1900] Text;
+    bool homeButton;
+    bool softwareReset;
+    bool appJump;
+    errorReturnCode returnCode;
+    ushort eulaVersion;
+}
+
+/**
+* @brief Init the error applet.
+* @param err Pointer to errorConf.
+* @param type errorType Type of error.
+* @param lang CFG_Language Lang of error.
+*/
+void errorInit(errorConf* err, errorType type, CFG_Language lang);
+/**
+* @brief Sets error code to display.
+* @param err Pointer to errorConf.
+* @param error Error-code to display.
+*/
+void errorCode(errorConf* err, int error);
+/**
+* @brief Sets error text to display.
+* @param err Pointer to errorConf.
+* @param text Error-text to display.
+*/
+void errorText(errorConf* err, const(char)* text);
+/**
+* @brief Displays the error applet.
+* @param err Pointer to errorConf.
+*/
+void errorDisp(errorConf* err);

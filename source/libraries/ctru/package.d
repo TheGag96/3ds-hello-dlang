@@ -17,4 +17,9 @@ public import ctru.sdmc;
 public import ctru.srv;
 public import ctru.svc;
 
+public import ctru.allocator;
+public import ctru.applets;
 public import ctru.gpu;
+public import ctru.ndsp;
+//public import ctru.services;
+public import ctru.util;
