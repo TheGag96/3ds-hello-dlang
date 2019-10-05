@@ -21,5 +21,5 @@ public import ctru.allocator;
 public import ctru.applets;
 public import ctru.gpu;
 public import ctru.ndsp;
-//public import ctru.services;
+public import ctru.services;
 public import ctru.util;

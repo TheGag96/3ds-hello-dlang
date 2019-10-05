@@ -1,5 +1,5 @@
-module ctru.alloactor;
+module ctru.allocator;
 
-public import ctru.alloactor.linear;
-public import ctru.alloactor.mappable;
-public import ctru.alloactor.vram;
+public import ctru.allocator.linear;
+public import ctru.allocator.mappable;
+public import ctru.allocator.vram;

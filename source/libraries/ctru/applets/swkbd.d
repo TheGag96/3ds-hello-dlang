@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Keyboard types.
-enum SwkbdType
+enum SWKBDType
 {
     normal  = 0, ///< Normal keyboard with several pages (QWERTY/accents/symbol/mobile)
     qwerty  = 1, ///< QWERTY keyboard only.
@@ -19,7 +19,7 @@ enum SwkbdType
 }
 
 /// Accepted input types.
-enum SwkbdValidInput
+enum SWKBDValidInput
 {
     anything          = 0, ///< All inputs are accepted.
     notempty          = 1, ///< Empty inputs are not accepted.
@@ -30,7 +30,7 @@ enum SwkbdValidInput
 }
 
 /// Keyboard dialog buttons.
-enum SwkbdButton
+enum SWKBDButton
 {
     left    = 0, ///< Left button (usually Cancel)
     middle  = 1, ///< Middle button (usually I Forgot)
@@ -40,7 +40,7 @@ enum SwkbdButton
 }
 
 /// Keyboard password modes.
-enum SwkbdPasswordMode
+enum SWKBDPasswordMode
 {
     NONE       = 0, ///< Characters are not concealed.
     HIDE       = 1, ///< Characters are concealed immediately.
@@ -73,7 +73,7 @@ enum
 }
 
 /// Keyboard filter callback return values.
-enum SwkbdCallbackResult
+enum SWKBDCallbackResult
 {
     ok        = 0, ///< Specifies that the input is valid.
     close     = 1, ///< Displays an error message, then closes the keyboard.
@@ -81,7 +81,7 @@ enum SwkbdCallbackResult
 }
 
 /// Keyboard return values.
-enum SwkbdResult
+enum SWKBDResult
 {
     none          = -1, ///< Dummy/unused.
     invalid_input = -2, ///< Invalid parameters to swkbd.
@@ -114,7 +114,7 @@ enum SWKBD_MAX_HINT_TEXT_LEN = 64;
 enum SWKBD_MAX_CALLBACK_MSG_LEN = 256;
 
 /// Keyboard dictionary word for predictive input.
-struct SwkbdDictWord
+struct SWKBDDictWord
 {
     ushort[41] reading; ///< Reading of the word (that is, the string that needs to be typed).
     ushort[41] word; ///< Spelling of the word.
@@ -123,32 +123,32 @@ struct SwkbdDictWord
 }
 
 /// Keyboard filter callback function.
-alias SwkbdCallbackFn = SwkbdCallbackResult function (void* user, const(char*)* ppMessage, const(char)* text, size_t textlen);
+alias SWKBDCallbackFn = SWKBDCallbackResult function (void* user, const(char*)* ppMessage, const(char)* text, size_t textlen);
 /// Keyboard status data.
-struct SwkbdStatusData
+struct SWKBDStatusData
 {
     uint[0x11] data;
 }
 
 /// Keyboard predictive input learning data.
-struct SwkbdLearningData
+struct SWKBDLearningData
 {
     uint[0x291B] data;
 }
 
 /// Internal libctru book-keeping structure for software keyboards.
-struct SwkbdExtra
+struct SWKBDExtra
 {
     const(char)* initial_text;
-    const(SwkbdDictWord)* dict;
-    SwkbdStatusData* status_data;
-    SwkbdLearningData* learning_data;
-    SwkbdCallbackFn callback;
+    const(SWKBDDictWord)* dict;
+    SWKBDStatusData* status_data;
+    SWKBDLearningData* learning_data;
+    SWKBDCallbackFn callback;
     void* callback_user;
 }
 
 /// Software keyboard parameter structure, it shouldn't be modified directly.
-struct SwkbdState
+struct SWKBDState
 {
     int type;
     int num_buttons_m1;
@@ -180,7 +180,7 @@ struct SwkbdState
     int initial_learning_offset;
     size_t shared_memory_size;
     uint version_;
-    SwkbdResult result;
+    SWKBDResult result;
     int status_offset;
     int learning_offset;
     int text_offset;
@@ -192,7 +192,7 @@ struct SwkbdState
     union
     {
         ubyte[171] reserved;
-        SwkbdExtra extra;
+        SWKBDExtra extra;
     }
 }
 
@@ -203,14 +203,14 @@ struct SwkbdState
  * @param numButtons Number of dialog buttons to display (1, 2 or 3).
  * @param maxTextLength Maximum number of UTF-16 code units that input text can have (or -1 to let libctru use a big default).
  */
-void swkbdInit(SwkbdState* swkbd, SwkbdType type, int numButtons, int maxTextLength);
+void swkbdInit(SWKBDState* swkbd, SWKBDType type, int numButtons, int maxTextLength);
 
 /**
  * @brief Configures password mode in a software keyboard.
  * @param swkbd Pointer to swkbd state.
  * @param mode Password mode.
  */
-void swkbdSetPasswordMode(SwkbdState* swkbd, SwkbdPasswordMode mode);
+void swkbdSetPasswordMode(SWKBDState* swkbd, SWKBDPasswordMode mode);
 
 /**
  * @brief Configures input validation in a software keyboard.
@@ -220,8 +220,8 @@ void swkbdSetPasswordMode(SwkbdState* swkbd, SwkbdPasswordMode mode);
  * @param maxDigits In case digits are disallowed, specifies how many digits are allowed at maximum in input strings (0 completely restricts digit input).
  */
 void swkbdSetValidation(
-    SwkbdState* swkbd,
-    SwkbdValidInput validInput,
+    SWKBDState* swkbd,
+    SWKBDValidInput validInput,
     uint filterFlags,
     int maxDigits);
 
@@ -231,21 +231,21 @@ void swkbdSetValidation(
  * @param left Unicode codepoint produced by the leftmost key in the bottom row (0 hides the key).
  * @param left Unicode codepoint produced by the rightmost key in the bottom row (0 hides the key).
  */
-void swkbdSetNumpadKeys(SwkbdState* swkbd, int left, int right);
+void swkbdSetNumpadKeys(SWKBDState* swkbd, int left, int right);
 
 /**
  * @brief Specifies which special features are enabled in a software keyboard.
  * @param swkbd Pointer to swkbd state.
  * @param features Feature bitmask.
  */
-void swkbdSetFeatures(SwkbdState* swkbd, uint features);
+void swkbdSetFeatures(SWKBDState* swkbd, uint features);
 
 /**
  * @brief Sets the hint text of a software keyboard (that is, the help text that is displayed when the textbox is empty).
  * @param swkbd Pointer to swkbd state.
  * @param text Hint text.
  */
-void swkbdSetHintText(SwkbdState* swkbd, const(char)* text);
+void swkbdSetHintText(SWKBDState* swkbd, const(char)* text);
 
 /**
  * @brief Configures a dialog button in a software keyboard.
@@ -254,14 +254,14 @@ void swkbdSetHintText(SwkbdState* swkbd, const(char)* text);
  * @param text Button text.
  * @param submit Specifies whether pushing the button will submit the text or discard it.
  */
-void swkbdSetButton(SwkbdState* swkbd, SwkbdButton button, const(char)* text, bool submit);
+void swkbdSetButton(SWKBDState* swkbd, SWKBDButton button, const(char)* text, bool submit);
 
 /**
  * @brief Sets the initial text that a software keyboard will display on launch.
  * @param swkbd Pointer to swkbd state.
  * @param text Initial text.
  */
-void swkbdSetInitialText(SwkbdState* swkbd, const(char)* text);
+void swkbdSetInitialText(SWKBDState* swkbd, const(char)* text);
 
 /**
  * @brief Configures a word in a predictive dictionary for use with a software keyboard.
@@ -269,7 +269,7 @@ void swkbdSetInitialText(SwkbdState* swkbd, const(char)* text);
  * @param reading Reading of the word, that is, the sequence of characters that need to be typed to trigger the word in the predictive input system.
  * @param text Spelling of the word, that is, the actual characters that will be produced when the user decides to select the word.
  */
-void swkbdSetDictWord(SwkbdDictWord* word, const(char)* reading, const(char)* text);
+void swkbdSetDictWord(SWKBDDictWord* word, const(char)* reading, const(char)* text);
 
 /**
  * @brief Sets the custom word dictionary to be used with the predictive input system of a software keyboard.
@@ -277,7 +277,7 @@ void swkbdSetDictWord(SwkbdDictWord* word, const(char)* reading, const(char)* te
  * @param dict Pointer to dictionary words.
  * @param wordCount Number of words in the dictionary.
  */
-void swkbdSetDictionary(SwkbdState* swkbd, const(SwkbdDictWord)* dict, int wordCount);
+void swkbdSetDictionary(SWKBDState* swkbd, const(SWKBDDictWord)* dict, int wordCount);
 
 /**
  * @brief Configures software keyboard internal status management.
@@ -286,7 +286,7 @@ void swkbdSetDictionary(SwkbdState* swkbd, const(SwkbdDictWord)* dict, int wordC
  * @param in Specifies whether the data should be read from the structure when the keyboard is launched.
  * @param out Specifies whether the data should be written to the structure when the keyboard is closed.
  */
-void swkbdSetStatusData(SwkbdState* swkbd, SwkbdStatusData* data, bool in_, bool out_);
+void swkbdSetStatusData(SWKBDState* swkbd, SWKBDStatusData* data, bool in_, bool out_);
 
 /**
  * @brief Configures software keyboard predictive input learning data management.
@@ -295,7 +295,7 @@ void swkbdSetStatusData(SwkbdState* swkbd, SwkbdStatusData* data, bool in_, bool
  * @param in Specifies whether the data should be read from the structure when the keyboard is launched.
  * @param out Specifies whether the data should be written to the structure when the keyboard is closed.
  */
-void swkbdSetLearningData(SwkbdState* swkbd, SwkbdLearningData* data, bool in_, bool out_);
+void swkbdSetLearningData(SWKBDState* swkbd, SWKBDLearningData* data, bool in_, bool out_);
 
 /**
  * @brief Configures a custom function to be used to check the validity of input when it is submitted in a software keyboard.
@@ -303,7 +303,7 @@ void swkbdSetLearningData(SwkbdState* swkbd, SwkbdLearningData* data, bool in_, 
  * @param callback Filter callback function.
  * @param user Custom data to be passed to the callback function.
  */
-void swkbdSetFilterCallback(SwkbdState* swkbd, SwkbdCallbackFn callback, void* user);
+void swkbdSetFilterCallback(SWKBDState* swkbd, SWKBDCallbackFn callback, void* user);
 
 /**
  * @brief Launches a software keyboard in order to input text.
@@ -312,11 +312,11 @@ void swkbdSetFilterCallback(SwkbdState* swkbd, SwkbdCallbackFn callback, void* u
  * @param bufsize Maximum number of UTF-8 code units that the buffer can hold (including null terminator).
  * @return The identifier of the dialog button that was pressed, or SWKBD_BUTTON_NONE if a different condition was triggered - in that case use swkbdGetResult to check the condition.
  */
-SwkbdButton swkbdInputText(SwkbdState* swkbd, char* buf, size_t bufsize);
+SWKBDButton swkbdInputText(SWKBDState* swkbd, char* buf, size_t bufsize);
 
 /**
  * @brief Retrieves the result condition of a software keyboard after it has been used.
  * @param swkbd Pointer to swkbd state.
  * @return The result value.
  */
-SwkbdResult swkbdGetResult(SwkbdState* swkbd);
+SWKBDResult swkbdGetResult(SWKBDState* swkbd);
