@@ -55,14 +55,14 @@ extern (D) auto GPU_TEV_BUFFER_WRITE_CONFIG(T0, T1, T2, T3)(auto ref T0 stage0, 
 }
 
 /// Texture filters.
-enum GpuTextureFilterParam
+enum GPUTextureFilterParam
 {
     nearest = 0x0, ///< Nearest-neighbor interpolation.
     linear  = 0x1  ///< Linear interpolation.
 }
 
 /// Texture wrap modes.
-enum GpuTextureWrapParam
+enum GPUTextureWrapParam
 {
     clamp_to_edge   = 0x0, ///< Clamps to edge.
     clamp_to_border = 0x1, ///< Clamps to border.
@@ -71,7 +71,7 @@ enum GpuTextureWrapParam
 }
 
 /// Texture modes.
-enum GpuTextureModeParam
+enum GPUTextureModeParam
 {
     _2d         = 0x0, ///< 2D texture
     cube_map    = 0x1, ///< Cube map
@@ -82,7 +82,7 @@ enum GpuTextureModeParam
 }
 
 /// Supported texture units.
-enum GpuTexUnit
+enum GPUTexUnit
 {
     texunit0 = 0x1, ///< Texture unit 0.
     texunit1 = 0x2, ///< Texture unit 1.
@@ -90,7 +90,7 @@ enum GpuTexUnit
 }
 
 /// Supported texture formats.
-enum GpuTexColor
+enum GPUTexColor
 {
     rgba8    = 0x0, ///< 8-bit Red + 8-bit Green + 8-bit Blue + 8-bit Alpha
     rgb8     = 0x1, ///< 8-bit Red + 8-bit Green + 8-bit Blue
@@ -109,7 +109,7 @@ enum GpuTexColor
 }
 
 // Texture faces.
-enum GpuTexFace
+enum GPUTexFace
 {
     texface_2d = 0, // 2D face
     positive_x = 0, // +X face
@@ -121,7 +121,7 @@ enum GpuTexFace
 }
 
 /// Procedural texture clamp modes.
-enum GpuProcTexClamp
+enum GPUProcTexClamp
 {
     clamp_to_zero   = 0, ///< Clamp to zero.
     clamp_to_edge   = 1, ///< Clamp to edge.
@@ -131,7 +131,7 @@ enum GpuProcTexClamp
 }
 
 /// Procedural texture mapping functions.
-enum GpuProcTexMapFunc
+enum GPUProcTexMapFunc
 {
     u     = 0, ///< U
     u2    = 1, ///< U2
@@ -146,7 +146,7 @@ enum GpuProcTexMapFunc
 }
 
 /// Procedural texture shift values.
-enum GpuProcTexShift
+enum GPUProcTexShift
 {
     none = 0, ///< No shift.
     odd  = 1, ///< Odd shift.
@@ -154,7 +154,7 @@ enum GpuProcTexShift
 }
 
 /// Procedural texture filter values.
-enum GpuProcTexFilter
+enum GPUProcTexFilter
 {
     nearest             = 0, ///< Nearest-neighbor
     linear              = 1, ///< Linear interpolation
@@ -165,7 +165,7 @@ enum GpuProcTexFilter
 }
 
 /// Procedural texture LUT IDs.
-enum GpuProcTexLutId
+enum GPUProcTexLutId
 {
     noise    = 0, ///< Noise table
     rgbmap   = 2, ///< RGB mapping function table
@@ -175,7 +175,7 @@ enum GpuProcTexLutId
 }
 
 /// Supported color buffer formats.
-enum GpuColorBuf
+enum GPUColorBuf
 {
     rgba8    = 0, ///< 8-bit Red + 8-bit Green + 8-bit Blue + 8-bit Alpha
     rgb8     = 1, ///< 8-bit Red + 8-bit Green + 8-bit Blue
@@ -185,7 +185,7 @@ enum GpuColorBuf
 }
 
 /// Supported depth buffer formats.
-enum GpuDepthBuf
+enum GPUDepthBuf
 {
     depth16          = 0, ///< 16-bit Depth
     depth24          = 2, ///< 24-bit Depth
@@ -193,7 +193,7 @@ enum GpuDepthBuf
 }
 
 /// Test functions.
-enum GpuTestFunc
+enum GPUTestFunc
 {
     never    = 0, ///< Never pass.
     always   = 1, ///< Always pass.
@@ -206,7 +206,7 @@ enum GpuTestFunc
 }
 
 /// Early depth test functions.
-enum GpuEarlyDepthFunc
+enum GPUEarlyDepthFunc
 {
     gequal  = 0, ///< Pass if greater than or equal.
     greater = 1, ///< Pass if greater than.
@@ -215,7 +215,7 @@ enum GpuEarlyDepthFunc
 }
 
 /// Gas depth functions.
-enum GpuGasDepthFunc
+enum GPUGasDepthFunc
 {
     never   = 0, ///< Never pass (0).
     always  = 1, ///< Always pass (1).
@@ -230,7 +230,7 @@ extern (D) auto GPU_MAKEGASDEPTHFUNC(T)(auto ref T n)
 }
 
 /// Scissor test modes.
-enum GpuScissorMode
+enum GPUScissorMode
 {
     disable = 0, ///< Disable.
     invert  = 1, ///< Exclude pixels inside the scissor box.
@@ -239,7 +239,7 @@ enum GpuScissorMode
 }
 
 /// Stencil operations.
-enum GpuStencilOp
+enum GPUStencilOp
 {
     keep      = 0, ///< Keep old value. (old_stencil)
     zero      = 1, ///< Zero. (0)
@@ -252,7 +252,7 @@ enum GpuStencilOp
 }
 
 /// Pixel write mask.
-enum GpuWriteMask
+enum GPUWriteMask
 {
     red   = 0x01, ///< Write red.
     green = 0x02, ///< Write green.
@@ -265,7 +265,7 @@ enum GpuWriteMask
 }
 
 /// Blend modes.
-enum GpuBlendEquation
+enum GPUBlendEquation
 {
     add              = 0, ///< Add colors.
     subtract         = 1, ///< Subtract colors.
@@ -275,7 +275,7 @@ enum GpuBlendEquation
 }
 
 /// Blend factors.
-enum GpuBlendFactor
+enum GPUBlendFactor
 {
     zero                     = 0,  ///< Zero.
     one                      = 1,  ///< One.
@@ -295,7 +295,7 @@ enum GpuBlendFactor
 }
 
 /// Logical operations.
-enum GpuLogicOp
+enum GPULogicOp
 {
     clear         = 0,  ///< Clear.
     and           = 1,  ///< Bitwise AND.
@@ -316,7 +316,7 @@ enum GpuLogicOp
 }
 
 /// Fragment operation modes.
-enum GpuFragOpMode
+enum GPUFragOpMode
 {
     gl      = 0, ///< OpenGL mode.
     gas_acc = 1, ///< Gas mode (?).
@@ -324,7 +324,7 @@ enum GpuFragOpMode
 }
 
 /// Supported component formats.
-enum GpuFormats
+enum GPUFormats
 {
     _byte          = 0, ///< 8-bit byte.
     unsigned_byte = 1, ///< 8-bit unsigned byte.
@@ -333,7 +333,7 @@ enum GpuFormats
 }
 
 /// Cull modes.
-enum GpuCullMode
+enum GPUCullMode
 {
     none      = 0, ///< Disabled.
     front_ccw = 1, ///< Front, counter-clockwise.
@@ -347,7 +347,7 @@ extern (D) auto GPU_ATTRIBFMT(T0, T1, T2)(auto ref T0 i, auto ref T1 n, auto ref
 }
 
 /// Texture combiner sources.
-enum GpuTevSrc
+enum GPUTevSrc
 {
     primary_color            = 0x00, ///< Primary color.
     fragment_primary_color   = 0x01, ///< Primary fragment color.
@@ -362,7 +362,7 @@ enum GpuTevSrc
 }
 
 /// Texture RGB combiner operands.
-enum GpuTevOpRgb
+enum GPUTevOpRGB
 {
     src_color           = 0x00, /// < Source color.
     one_minus_src_color = 0x01, /// < Source color - 1.
@@ -383,7 +383,7 @@ enum GpuTevOpRgb
 }
 
 /// Texture Alpha combiner operands.
-enum GpuTevOpA
+enum GPUTevOpA
 {
     src_alpha           = 0x00, ///< Source alpha.
     one_minus_src_alpha = 0x01, ///< Source alpha - 1.
@@ -396,7 +396,7 @@ enum GpuTevOpA
 }
 
 /// Texture combiner functions.
-enum GpuCombineFunc
+enum GPUCombineFunc
 {
     replace      = 0x00, ///< Replace.
     modulate     = 0x01, ///< Modulate.
@@ -410,7 +410,7 @@ enum GpuCombineFunc
 }
 
 /// Texture scale factors.
-enum GpuTevScale
+enum GPUTevScale
 {
     x1 = 0x0, ///< 1x
     x2 = 0x1, ///< 2x
@@ -480,7 +480,7 @@ extern (D) auto GPU_LIGHTCOLOR(T0, T1, T2)(auto ref T0 r, auto ref T1 g, auto re
 }
 
 /// Fresnel options.
-enum GpuFresnelSel
+enum GPUFresnelSel
 {
     no_fresnel            = 0, ///< None.
     pri_alpha_fresnel     = 1, ///< Primary alpha.
@@ -489,7 +489,7 @@ enum GpuFresnelSel
 }
 
 /// Bump map modes.
-enum GpuBumpMode
+enum GPUBumpMode
 {
     bump_not_used = 0, ///< Disabled.
     bump_as_bump  = 1, ///< Bump as bump mapping.
@@ -497,7 +497,7 @@ enum GpuBumpMode
 }
 
 /// LUT IDs.
-enum GpuLightLutId
+enum GPULightLutId
 {
     d0 = 0, ///< D0 LUT.
     d1 = 1, ///< D1 LUT.
@@ -510,7 +510,7 @@ enum GpuLightLutId
 }
 
 /// LUT inputs.
-enum GpuLightLutInput
+enum GPULightLutInput
 {
     nh = 0, ///< Normal*HalfVector
     vh = 1, ///< View*HalfVector
@@ -521,7 +521,7 @@ enum GpuLightLutInput
 }
 
 /// LUT scalers.
-enum GpuLightLutScaler
+enum GPULightLutScaler
 {
     x1    = 0, ///< 1x scale.
     x2    = 1, ///< 2x scale.
@@ -532,7 +532,7 @@ enum GpuLightLutScaler
 }
 
 /// LUT selection.
-enum GpuLightLutSelect
+enum GPULightLutSelect
 {
     common = 0, ///< LUTs that are common to all lights.
     sp     = 1, ///< Spotlight LUT.
@@ -540,7 +540,7 @@ enum GpuLightLutSelect
 }
 
 /// Fog modes.
-enum GpuFogMode
+enum GPUFogMode
 {
     no_fog = 0, ///< Fog/Gas unit disabled.
     fog    = 5, ///< Fog/Gas unit configured in Fog mode.
@@ -548,21 +548,21 @@ enum GpuFogMode
 }
 
 /// Gas shading density source values.
-enum GpuGasMode
+enum GPUGasMode
 {
     plain_density = 0, ///< Plain density.
     depth_density = 1  ///< Depth density.
 }
 
 /// Gas color LUT inputs.
-enum GpuGasLutInput
+enum GPUGasLutInput
 {
     gas_density  = 0, ///< Gas density used as input.
     light_factor = 1  ///< Light factor used as input.
 }
 
 /// Supported primitives.
-enum GpuPrimitiveT
+enum GPUPrimitive
 {
     triangles      = 0x0000, ///< Triangles.
     triangle_strip = 0x0100, ///< Triangle strip.
@@ -571,7 +571,7 @@ enum GpuPrimitiveT
 }
 
 /// Shader types.
-enum GpuShaderType
+enum GPUShaderType
 {
     vertex_shader   = 0x0, ///< Vertex shader.
     geometry_shader = 0x1  ///< Geometry shader.

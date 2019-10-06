@@ -9,8 +9,8 @@ module ctru.services.soc;
 
 import core.stdc.config;
 import ctru.types;
-import ctru.netinet.in_;
-import ctru.sys.socket;
+//import ctru.netinet.in_;
+//import ctru.sys.socket;
 
 extern (C):
 
