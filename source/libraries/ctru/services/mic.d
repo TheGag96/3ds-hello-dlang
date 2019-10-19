@@ -67,13 +67,13 @@ Result MICU_UnmapSharedMem();
  * @param sharedMemAudioSize Size of audio data to write to the shared memory buffer. This should be at most "bufferSize - 4".
  * @param loop Whether to loop back to the beginning of the buffer when the end is reached.
  */
-Result MICU_StartSampling(MICU_Encoding encoding, MICU_SampleRate sampleRate, uint offset, uint size, bool loop);
+Result MICU_StartSampling(MICUEncoding encoding, MICUSampleRate sampleRate, uint offset, uint size, bool loop);
 
 /**
  * @brief Adjusts the configuration of the current sampling session.
  * @param sampleRate Sample rate of outputted audio.
  */
-Result MICU_AdjustSampling(MICU_SampleRate sampleRate);
+Result MICU_AdjustSampling(MICUSampleRate sampleRate);
 
 /// Stops sampling microphone input.
 Result MICU_StopSampling();

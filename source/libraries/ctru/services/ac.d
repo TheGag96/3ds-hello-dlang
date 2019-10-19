@@ -53,7 +53,7 @@ Result ACU_GetStatus(uint* out_);
  * @brief Gets the connected Wifi security mode.
  * @param mode Pointer to output the connected Wifi security mode to. (0 = Open Authentication, 1 = WEP 40-bit, 2 = WEP 104-bit, 3 = WEP 128-bit, 4 = WPA TKIP, 5 = WPA2 TKIP, 6 = WPA AES, 7 = WPA2 AES)
  */
-Result ACU_GetSecurityMode(acSecurityMode* mode);
+Result ACU_GetSecurityMode(ACSecurityMode* mode);
 
 /**
  * @brief Gets the connected Wifi SSID.

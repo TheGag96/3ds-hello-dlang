@@ -5,8 +5,9 @@
 
 module ctru.services.fsreg;
 
-import ctru.types;
 import ctru.exheader;
+import ctru.services.fs;
+import ctru.types;
 
 extern (C):
 

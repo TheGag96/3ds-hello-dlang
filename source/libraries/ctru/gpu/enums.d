@@ -5,39 +5,47 @@
 
 module ctru.gpu.enums;
 
+import ctru.types;
+
 extern (C):
 
 /// Creates a texture magnification filter parameter from a @ref GPU_TEXTURE_FILTER_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_MAG_FILTER(T)(auto ref T v)
 {
     return (v & 0x1) << 1;
 }
 
 /// Creates a texture minification filter parameter from a @ref GPU_TEXTURE_FILTER_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_MIN_FILTER(T)(auto ref T v)
 {
     return (v & 0x1) << 2;
 }
 
 /// Creates a texture mipmap filter parameter from a @ref GPU_TEXTURE_FILTER_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_MIP_FILTER(T)(auto ref T v)
 {
     return (v & 0x1) << 24;
 }
 
 /// Creates a texture wrap S parameter from a @ref GPU_TEXTURE_WRAP_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_WRAP_S(T)(auto ref T v)
 {
     return (v & 0x3) << 12;
 }
 
 /// Creates a texture wrap T parameter from a @ref GPU_TEXTURE_WRAP_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_WRAP_T(T)(auto ref T v)
 {
     return (v & 0x3) << 8;
 }
 
 /// Creates a texture mode parameter from a @ref GPU_TEXTURE_MODE_PARAM
+pragma(inline)
 extern (D) auto GPU_TEXTURE_MODE(T)(auto ref T v)
 {
     return (v & 0x7) << 28;
@@ -49,6 +57,7 @@ enum GPU_TEXTURE_ETC1_PARAM = BIT(5);
 enum GPU_TEXTURE_SHADOW_PARAM = BIT(20);
 
 /// Creates a combiner buffer write configuration.
+pragma(inline)
 extern (D) auto GPU_TEV_BUFFER_WRITE_CONFIG(T0, T1, T2, T3)(auto ref T0 stage0, auto ref T1 stage1, auto ref T2 stage2, auto ref T3 stage3)
 {
     return stage0 | (stage1 << 1) | (stage2 << 2) | (stage3 << 3);
@@ -224,6 +233,7 @@ enum GPUGasDepthFunc
 }
 
 /// Converts \ref GPU_TESTFUNC into \ref GPU_GASDEPTHFUNC.
+pragma(inline)
 extern (D) auto GPU_MAKEGASDEPTHFUNC(T)(auto ref T n)
 {
     return cast(GPU_GASDEPTHFUNC) (0xAF02 >> (cast(int) n << 1)) & 3;
@@ -341,6 +351,7 @@ enum GPUCullMode
 }
 
 /// Creates a VBO attribute parameter from its index, size, and format.
+pragma(inline)
 extern (D) auto GPU_ATTRIBFMT(T0, T1, T2)(auto ref T0 i, auto ref T1 n, auto ref T2 f)
 {
     return (((n - 1) << 2) | (f & 3)) << (i * 4);
@@ -418,18 +429,21 @@ enum GPUTevScale
 }
 
 /// Creates a texture combiner source parameter from three sources.
+pragma(inline)
 extern (D) auto GPU_TEVSOURCES(T0, T1, T2)(auto ref T0 a, auto ref T1 b, auto ref T2 c)
 {
     return (a) | (b << 4) | (c << 8);
 }
 
 /// Creates a texture combiner operand parameter from three operands.
+pragma(inline)
 extern (D) auto GPU_TEVOPERANDS(T0, T1, T2)(auto ref T0 a, auto ref T1 b, auto ref T2 c)
 {
     return (a) | (b << 4) | (c << 8);
 }
 
 /// Creates a light environment layer configuration parameter.
+pragma(inline)
 extern (D) auto GPU_LIGHT_ENV_LAYER_CONFIG(T)(auto ref T n)
 {
     return n + (n == 7);
@@ -438,42 +452,49 @@ extern (D) auto GPU_LIGHT_ENV_LAYER_CONFIG(T)(auto ref T n)
 /// Light shadow disable bits in GPUREG_LIGHT_CONFIG1.
 alias lc1_shadowbit = BIT;
 /// Light spot disable bits in GPUREG_LIGHT_CONFIG1.
+pragma(inline)
 extern (D) auto GPU_LC1_SPOTBIT(T)(auto ref T n)
 {
     return BIT(n + 8);
 }
 
 /// LUT disable bits in GPUREG_LIGHT_CONFIG1.
+pragma(inline)
 extern (D) auto GPU_LC1_LUTBIT(T)(auto ref T n)
 {
     return BIT(n + 16);
 }
 
 /// Light distance attenuation disable bits in GPUREG_LIGHT_CONFIG1.
+pragma(inline)
 extern (D) auto GPU_LC1_ATTNBIT(T)(auto ref T n)
 {
     return BIT(n + 24);
 }
 
 /// Creates a light permutation parameter.
+pragma(inline)
 extern (D) auto GPU_LIGHTPERM(T0, T1)(auto ref T0 i, auto ref T1 n)
 {
     return n << (i * 4);
 }
 
 /// Creates a light LUT input parameter.
+pragma(inline)
 extern (D) auto GPU_LIGHTLUTINPUT(T0, T1)(auto ref T0 i, auto ref T1 n)
 {
     return n << (i * 4);
 }
 
 /// Creates a light LUT index parameter.
+pragma(inline)
 extern (D) auto GPU_LIGHTLUTIDX(T0, T1, T2)(auto ref T0 c, auto ref T1 i, auto ref T2 o)
 {
     return o | (i << 8) | (c << 11);
 }
 
 /// Creates a light color parameter from red, green, and blue components.
+pragma(inline)
 extern (D) auto GPU_LIGHTCOLOR(T0, T1, T2)(auto ref T0 r, auto ref T1 g, auto ref T2 b)
 {
     return (b & 0xFF) | ((g << 10) & 0xFF) | ((r << 20) & 0xFF);

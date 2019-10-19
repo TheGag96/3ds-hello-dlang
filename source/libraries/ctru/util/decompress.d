@@ -5,6 +5,8 @@
 
 module ctru.util.decompress;
 
+import ctru.types;
+
 extern (C):
 
 /** @brief Compression types */
@@ -65,7 +67,7 @@ ssize_t decompressCallback_Stdio(void* userdata, void* buffer, size_t size);
  *  @retval -1 error
  */
 ssize_t decompressHeader(
-    decompressType* type,
+    DecompressType* type,
     size_t* size,
     decompressCallback callback,
     void* userdata,

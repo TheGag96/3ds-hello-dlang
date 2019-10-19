@@ -78,7 +78,7 @@ Handle* amGetSessionHandle();
  * @param mediatype Media type to get titles from.
  * @param[out] count Pointer to write the title count to.
  */
-Result AM_GetTitleCount(FS_MediaType mediatype, uint* count);
+Result AM_GetTitleCount(FSMediaType mediatype, uint* count);
 
 /**
  * @brief Gets a list of title IDs present in a mediatype.
@@ -87,7 +87,7 @@ Result AM_GetTitleCount(FS_MediaType mediatype, uint* count);
  * @param titleCount Number of title IDs to get.
  * @param titleIds Buffer to output the retrieved title IDs to.
  */
-Result AM_GetTitleList(uint* titlesRead, FS_MediaType mediatype, uint titleCount, ulong* titleIds);
+Result AM_GetTitleList(uint* titlesRead, FSMediaType mediatype, uint titleCount, ulong* titleIds);
 
 /**
  * @brief Gets a list of details about installed titles.
@@ -96,7 +96,7 @@ Result AM_GetTitleList(uint* titlesRead, FS_MediaType mediatype, uint titleCount
  * @param titleIds List of title IDs to retrieve details for.
  * @param titleInfo Buffer to write AM_TitleEntry's to.
  */
-Result AM_GetTitleInfo(FS_MediaType mediatype, uint titleCount, ulong* titleIds, AM_TitleEntry* titleInfo);
+Result AM_GetTitleInfo(FSMediaType mediatype, uint titleCount, ulong* titleIds, AM_TitleEntry* titleInfo);
 
 /**
  * @brief Gets the number of tickets installed on the system.
@@ -119,7 +119,7 @@ Result AM_GetTicketList(uint* ticketsRead, uint ticketCount, uint skip, ulong* t
  * @param mediatype Media type of pending titles to count.
  * @param statusMask Bit mask of status values to include.
  */
-Result AM_GetPendingTitleCount(uint* count, FS_MediaType mediatype, uint statusMask);
+Result AM_GetPendingTitleCount(uint* count, FSMediaType mediatype, uint statusMask);
 
 /**
  * @brief Gets a list of pending titles on this system.
@@ -129,7 +129,7 @@ Result AM_GetPendingTitleCount(uint* count, FS_MediaType mediatype, uint statusM
  * @param statusMask Bit mask of status values to include.
  * @param titleIds Buffer to output the retrieved pending title IDs to.
  */
-Result AM_GetPendingTitleList(uint* titlesRead, uint titleCount, FS_MediaType mediatype, uint statusMask, ulong* titleIds);
+Result AM_GetPendingTitleList(uint* titlesRead, uint titleCount, FSMediaType mediatype, uint statusMask, ulong* titleIds);
 
 /**
  * @brief Gets information about pending titles on this system.
@@ -138,7 +138,7 @@ Result AM_GetPendingTitleList(uint* titlesRead, uint titleCount, FS_MediaType me
  * @param titleIds IDs of the titles to get information about.
  * @param titleInfo Buffer to output the retrieved pending title info to.
  */
-Result AM_GetPendingTitleInfo(uint titleCount, FS_MediaType mediatype, ulong* titleIds, AM_PendingTitleEntry* titleInfo);
+Result AM_GetPendingTitleInfo(uint titleCount, FSMediaType mediatype, ulong* titleIds, AM_PendingTitleEntry* titleInfo);
 
 /**
  * @brief Gets a 32-bit device-specific ID.
@@ -188,7 +188,7 @@ Result AM_GetTWLPartitionInfo(AM_TWLPartitionInfo* info);
  * @param mediatype Media type to install the CIA to.
  * @param[out] ciaHandle Pointer to write the CIA handle to.
  */
-Result AM_StartCiaInstall(FS_MediaType mediatype, Handle* ciaHandle);
+Result AM_StartCiaInstall(FSMediaType mediatype, Handle* ciaHandle);
 
 /**
  * @brief Initializes the CIA install process for Download Play CIAs, returning a handle to write CIA data to.
@@ -221,21 +221,21 @@ Result AM_FinishCiaInstallWithoutCommit(Handle ciaHandle);
  * @param temp Whether the titles being finalized are in the temporary database.
  * @param titleIds Title IDs to finalize.
  */
-Result AM_CommitImportPrograms(FS_MediaType mediaType, uint titleCount, bool temp, const(ulong)* titleIds);
+Result AM_CommitImportPrograms(FSMediaType mediaType, uint titleCount, bool temp, const(ulong)* titleIds);
 
 /**
  * @brief Deletes a title.
  * @param mediatype Media type to delete from.
  * @param titleID ID of the title to delete.
  */
-Result AM_DeleteTitle(FS_MediaType mediatype, ulong titleID);
+Result AM_DeleteTitle(FSMediaType mediatype, ulong titleID);
 
 /**
  * @brief Deletes a title, provided that it is not a system title.
  * @param mediatype Media type to delete from.
  * @param titleID ID of the title to delete.
  */
-Result AM_DeleteAppTitle(FS_MediaType mediatype, ulong titleID);
+Result AM_DeleteAppTitle(FSMediaType mediatype, ulong titleID);
 
 /**
  * @brief Deletes a ticket.
@@ -248,20 +248,20 @@ Result AM_DeleteTicket(ulong ticketId);
  * @param mediatype Media type to delete from.
  * @param titleId ID of the pending title to delete.
  */
-Result AM_DeletePendingTitle(FS_MediaType mediatype, ulong titleId);
+Result AM_DeletePendingTitle(FSMediaType mediatype, ulong titleId);
 
 /**
  * @brief Deletes pending titles.
  * @param mediatype Media type to delete from.
  * @param flags Flags used to select pending titles.
  */
-Result AM_DeletePendingTitles(FS_MediaType mediatype, uint flags);
+Result AM_DeletePendingTitles(FSMediaType mediatype, uint flags);
 
 /**
  * @brief Deletes all pending titles.
  * @param mediatype Media type to delete from.
  */
-Result AM_DeleteAllPendingTitles(FS_MediaType mediatype);
+Result AM_DeleteAllPendingTitles(FSMediaType mediatype);
 
 /// Installs the current NATIVE_FIRM title to NAND (firm0:/ & firm1:/)
 Result AM_InstallNativeFirm();
@@ -278,7 +278,7 @@ Result AM_InstallFirm(ulong titleID);
  * @param titleID ID of the title.
  * @param[out] productCode Pointer to output the product code to. (length = 16)
  */
-Result AM_GetTitleProductCode(FS_MediaType mediatype, ulong titleId, char* productCode);
+Result AM_GetTitleProductCode(FSMediaType mediatype, ulong titleId, char* productCode);
 
 /**
  * @brief Gets the ext data ID of a title.
@@ -286,7 +286,7 @@ Result AM_GetTitleProductCode(FS_MediaType mediatype, ulong titleId, char* produ
  * @param mediatype Media type of the title.
  * @param titleID ID of the title.
  */
-Result AM_GetTitleExtDataId(ulong* extDataId, FS_MediaType mediatype, ulong titleId);
+Result AM_GetTitleExtDataId(ulong* extDataId, FSMediaType mediatype, ulong titleId);
 
 /**
  * @brief Gets an AM_TitleEntry instance for a CIA file.
@@ -294,7 +294,7 @@ Result AM_GetTitleExtDataId(ulong* extDataId, FS_MediaType mediatype, ulong titl
  * @param[out] titleEntry Pointer to write the AM_TitleEntry instance to.
  * @param fileHandle Handle of the CIA file.
  */
-Result AM_GetCiaFileInfo(FS_MediaType mediatype, AM_TitleEntry* titleEntry, Handle fileHandle);
+Result AM_GetCiaFileInfo(FSMediaType mediatype, AM_TitleEntry* titleEntry, Handle fileHandle);
 
 /**
  * @brief Gets the SMDH icon data of a CIA file.
@@ -330,7 +330,7 @@ Result AM_GetCiaCoreVersion(uint* coreVersion, Handle fileHandle);
  * @param mediaType Media type to check free space needed to install to.
  * @param fileHandle Handle of the CIA file.
  */
-Result AM_GetCiaRequiredSpace(ulong* requiredSpace, FS_MediaType mediaType, Handle fileHandle);
+Result AM_GetCiaRequiredSpace(ulong* requiredSpace, FSMediaType mediaType, Handle fileHandle);
 
 /**
  * @brief Gets the full meta section of a CIA file.
@@ -376,7 +376,7 @@ Result AM_InstallTicketFinish(Handle ticketHandle);
  * @param titleId ID of the title to install.
  * @param unk Unknown. (usually false)
  */
-Result AM_InstallTitleBegin(FS_MediaType mediaType, ulong titleId, bool unk);
+Result AM_InstallTitleBegin(FSMediaType mediaType, ulong titleId, bool unk);
 
 /// Stops installing a title, generally to be resumed later.
 Result AM_InstallTitleStop();
@@ -386,7 +386,7 @@ Result AM_InstallTitleStop();
  * @param mediaType Destination to install to.
  * @param titleId ID of the title to install.
  */
-Result AM_InstallTitleResume(FS_MediaType mediaType, ulong titleId);
+Result AM_InstallTitleResume(FSMediaType mediaType, ulong titleId);
 
 /// Aborts installing a title.
 Result AM_InstallTitleAbort();
@@ -401,7 +401,7 @@ Result AM_InstallTitleFinish();
  * @param temp Whether the titles being finalized are in the temporary database.
  * @param titleIds Title IDs to finalize.
  */
-Result AM_CommitImportTitles(FS_MediaType mediaType, uint titleCount, bool temp, const(ulong)* titleIds);
+Result AM_CommitImportTitles(FSMediaType mediaType, uint titleCount, bool temp, const(ulong)* titleIds);
 
 /**
  * @brief Begins installing a TMD.
@@ -489,7 +489,7 @@ Result AM_ImportCertificate(uint certSize, void* cert);
  * @param temp Whether the titles being finalized are in the temporary database.
  * @param titleIds Title IDs to finalize.
  */
-Result AM_CommitImportTitlesAndUpdateFirmwareAuto(FS_MediaType mediaType, uint titleCount, bool temp, ulong* titleIds);
+Result AM_CommitImportTitlesAndUpdateFirmwareAuto(FSMediaType mediaType, uint titleCount, bool temp, ulong* titleIds);
 
 /// Resets play count of all installed demos by deleting their launch info.
 Result AM_DeleteAllDemoLaunchInfos();
@@ -501,7 +501,7 @@ Result AM_DeleteAllTemporaryTitles();
  * @brief Deletes all expired titles.
  * @param mediatype Media type to delete from.
  */
-Result AM_DeleteAllExpiredTitles(FS_MediaType mediatype);
+Result AM_DeleteAllExpiredTitles(FSMediaType mediatype);
 
 /// Deletes all TWL titles.
 Result AM_DeleteAllTwlTitles();

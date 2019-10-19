@@ -84,7 +84,7 @@ Result PS_VerifyRsaSha256(ubyte* hash, psRSAContext* ctx, ubyte* signature);
  * @param key_type Key type to use.
  * @param iv Pointer to the CTR/IV. The output CTR/IV is also written here.
  */
-Result PS_EncryptDecryptAes(uint size, ubyte* in_, ubyte* out_, PS_AESAlgorithm aes_algo, PS_AESKeyType key_type, ubyte* iv);
+Result PS_EncryptDecryptAes(uint size, ubyte* in_, ubyte* out_, PSAESAlgorithm aes_algo, PSAESKeyType key_type, ubyte* iv);
 
 /**
  * @brief Encrypts/Decrypts signed AES CCM data.
@@ -100,7 +100,7 @@ Result PS_EncryptDecryptAes(uint size, ubyte* in_, ubyte* out_, PS_AESAlgorithm 
  * @param key_type Key type to use.
  * @param nonce Pointer to the nonce.
  */
-Result PS_EncryptSignDecryptVerifyAesCcm(ubyte* in_, uint in_size, ubyte* out_, uint out_size, uint data_len, uint mac_data_len, uint mac_len, PS_AESAlgorithm aes_algo, PS_AESKeyType key_type, ubyte* nonce);
+Result PS_EncryptSignDecryptVerifyAesCcm(ubyte* in_, uint in_size, ubyte* out_, uint out_size, uint data_len, uint mac_data_len, uint mac_len, PSAESAlgorithm aes_algo, PSAESKeyType key_type, ubyte* nonce);
 
 /**
  * @brief Gets the 64-bit console friend code seed.

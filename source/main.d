@@ -1,17 +1,20 @@
 /*
 	Hello World example made by Aurelio Mannara for ctrulib
-	This code was modified for the last time on: 12/12/2014 21:00 UTC+1
+	Ported to D by TheGag96
 */
 
-//#include <3ds.h>
-//module object;
 import ctru;
+import citro3d;
+
+extern(C) int printf(
+  scope const(char*) format, ...
+) nothrow @nogc; 
 
 extern(C) int main(int argc, char** argv) {
 	gfxInitDefault();
 
 	//Initialize console on top screen. Using null as the second argument tells the console library to use the internal console structure as current one
-	consoleInit(GFXScreen.TOP, null);
+	consoleInit(GFXScreen.top, null);
 
 	//Move the cursor to row 15 and column 19 and then prints "Hello World!"
 	//To move the cursor you have to print "\x1b[r;cH", where r and c are respectively
@@ -30,8 +33,7 @@ extern(C) int main(int argc, char** argv) {
 
 		//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
 		uint kDown = hidKeysDown();
-		int KEY_START = 1 << 3;
-		if (kDown & KEY_START) break; // break in order to return to hbmenu
+		if (kDown & Key.start) break; // break in order to return to hbmenu
 
 		// Flush and swap framebuffers
 		gfxFlushBuffers();

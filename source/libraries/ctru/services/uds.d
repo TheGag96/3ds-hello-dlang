@@ -319,11 +319,11 @@ Result udsCreateNetwork(const(udsNetworkStruct)* network, const(void)* passphras
  * @param passphrase_size Size of the passphrase buffer.
  * @param context Optional output bind context which will be created for this host.
  * @param recv_NetworkNodeID This is the NetworkNodeID passed to udsBind() internally.
- * @param connection_type Type of connection, see the udsConnectionType enum values.
+ * @param connection_type Type of connection, see the UDSConnectionType enum values.
  * @param data_channel This is the data_channel value which will be passed to udsBind() internally.
  * @param recv_buffer_size This is the recv_buffer_size value which will be passed to udsBind() internally.
  */
-Result udsConnectNetwork(const(udsNetworkStruct)* network, const(void)* passphrase, size_t passphrase_size, udsBindContext* context, ushort recv_NetworkNodeID, udsConnectionType connection_type, ubyte data_channel, uint recv_buffer_size);
+Result udsConnectNetwork(const(udsNetworkStruct)* network, const(void)* passphrase, size_t passphrase_size, udsBindContext* context, ushort recv_NetworkNodeID, UDSConnectionType connection_type, ubyte data_channel, uint recv_buffer_size);
 
 /**
  * @brief Stop hosting the network.

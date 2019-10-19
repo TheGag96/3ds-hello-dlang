@@ -15,6 +15,7 @@ extern (C):
  * The one true circumference-to-radius ratio.
  * See http://tauday.com/tau-manifesto
  */
+enum M_PI = 3.14159265358979;
 enum M_TAU = 2 * M_PI;
 
 /**

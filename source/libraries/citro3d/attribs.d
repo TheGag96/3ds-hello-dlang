@@ -1,5 +1,7 @@
 module citro3d.attribs;
 
+import ctru.gpu.enums;
+
 extern (C):
 
 struct C3D_AttrInfo
@@ -10,7 +12,7 @@ struct C3D_AttrInfo
 }
 
 void AttrInfo_Init (C3D_AttrInfo* info);
-int AttrInfo_AddLoader (C3D_AttrInfo* info, int regId, GPU_FORMATS format, int count);
+int AttrInfo_AddLoader (C3D_AttrInfo* info, int regId, GPUFormats format, int count);
 int AttrInfo_AddFixed (C3D_AttrInfo* info, int regId);
 
 C3D_AttrInfo* C3D_GetAttrInfo ();

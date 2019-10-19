@@ -5,6 +5,8 @@
 
 module ctru.os;
 
+import ctru.types;
+
 extern (C):
 
 enum SYSCLOCK_SOC = 16756991;

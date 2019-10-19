@@ -5,6 +5,9 @@
 
 module ctru.services.gsplcd;
 
+import ctru.types;
+import ctru.gfx;
+
 extern (C):
 
 // For gfxScreen_t
@@ -12,9 +15,9 @@ extern (C):
 /// LCD screens.
 enum
 {
-    GSPLCD_SCREEN_TOP = BIT(.GFX_TOP), ///< Top screen.
-    GSPLCD_SCREEN_BOTTOM = BIT(.GFX_BOTTOM), ///< Bottom screen.
-    GSPLCD_SCREEN_BOTH = GSPLCD_SCREEN_TOP | GSPLCD_SCREEN_BOTTOM ///< Both screens.
+    GSPLCD_SCREEN_TOP    = BIT(GFXScreen.top),                      ///< Top screen.
+    GSPLCD_SCREEN_BOTTOM = BIT(GFXScreen.bottom),                   ///< Bottom screen.
+    GSPLCD_SCREEN_BOTH   = GSPLCD_SCREEN_TOP | GSPLCD_SCREEN_BOTTOM ///< Both screens.
 }
 
 /// Initializes GSPLCD.

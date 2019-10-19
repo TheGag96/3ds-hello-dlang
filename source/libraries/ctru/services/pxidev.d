@@ -49,19 +49,19 @@ void pxiDevExit();
  * @return A packed card SPI transfer option value.
  */
 ubyte pxiDevMakeTransferOption(
-    FS_CardSpiBaudRate baudRate,
-    FS_CardSpiBusMode busMode);
+    FSCardSPIBaudRate baudRate,
+    FSCardSPIBusMode busMode);
 
 /**
  * @brief Creates a packed card SPI wait operation value.
- * @param waitType Type of wait to perform.
+ * @param waitTypnbe Type of wait to perform.
  * @param deassertType Type of register deassertion to perform.
  * @param timeout Timeout, in nanoseconds, to wait, if applicable.
  * @return A packed card SPI wait operation value.
  */
 ulong pxiDevMakeWaitOperation(
-    PXIDEV_WaitType waitType,
-    PXIDEV_DeassertType deassertType,
+    PXIDEVWaitType waitType,
+    PXIDEVDeassertType deassertType,
     ulong timeout);
 
 /**

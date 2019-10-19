@@ -35,11 +35,11 @@ extern (D) auto NDSP_ENCODING(T)(auto ref T n)
 /// Channel format flags for use with ndspChnSetFormat.
 enum
 {
-    NDSP_FORMAT_MONO_PCM8    = NDSP_CHANNELS(1) | NDSP_ENCODING(.NDSP_ENCODING_PCM8),  ///< Buffer contains Mono   PCM8.
-    NDSP_FORMAT_MONO_PCM16   = NDSP_CHANNELS(1) | NDSP_ENCODING(.NDSP_ENCODING_PCM16), ///< Buffer contains Mono   PCM16.
-    NDSP_FORMAT_MONO_ADPCM   = NDSP_CHANNELS(1) | NDSP_ENCODING(.NDSP_ENCODING_ADPCM), ///< Buffer contains Mono   ADPCM.
-    NDSP_FORMAT_STEREO_PCM8  = NDSP_CHANNELS(2) | NDSP_ENCODING(.NDSP_ENCODING_PCM8),  ///< Buffer contains Stereo PCM8.
-    NDSP_FORMAT_STEREO_PCM16 = NDSP_CHANNELS(2) | NDSP_ENCODING(.NDSP_ENCODING_PCM16), ///< Buffer contains Stereo PCM16.
+    NDSP_FORMAT_MONO_PCM8    = NDSP_CHANNELS(1) | NDSP_ENCODING(NDSP_ENCODING_PCM8),  ///< Buffer contains Mono   PCM8.
+    NDSP_FORMAT_MONO_PCM16   = NDSP_CHANNELS(1) | NDSP_ENCODING(NDSP_ENCODING_PCM16), ///< Buffer contains Mono   PCM16.
+    NDSP_FORMAT_MONO_ADPCM   = NDSP_CHANNELS(1) | NDSP_ENCODING(NDSP_ENCODING_ADPCM), ///< Buffer contains Mono   ADPCM.
+    NDSP_FORMAT_STEREO_PCM8  = NDSP_CHANNELS(2) | NDSP_ENCODING(NDSP_ENCODING_PCM8),  ///< Buffer contains Stereo PCM8.
+    NDSP_FORMAT_STEREO_PCM16 = NDSP_CHANNELS(2) | NDSP_ENCODING(NDSP_ENCODING_PCM16), ///< Buffer contains Stereo PCM16.
 
     NDSP_FORMAT_PCM8  = NDSP_FORMAT_MONO_PCM8,  ///< (Alias) Buffer contains Mono PCM8.
     NDSP_FORMAT_PCM16 = NDSP_FORMAT_MONO_PCM16, ///< (Alias) Buffer contains Mono PCM16.
@@ -51,7 +51,7 @@ enum
 }
 
 /// Interpolation types.
-enum NdspInterpType
+enum NDSPInterpType
 {
     polyphase = 0, ///< Polyphase interpolation
     linear    = 1, ///< Linear interpolation
@@ -125,7 +125,7 @@ void ndspChnSetFormat(int id, ushort format);
  * @param id ID of the channel (0..23).
  * @param type Interpolation type to use.
  */
-void ndspChnSetInterp(int id, ndspInterpType type);
+void ndspChnSetInterp(int id, NDSPInterpType type);
 
 /**
  * @brief Sets the sample rate of a channel.

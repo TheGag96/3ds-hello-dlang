@@ -48,7 +48,7 @@ void irrstCstickRead(circlePosition* pos);
 void irrstWaitForEvent(bool nextEvent);
 
 /// Macro for irrstCstickRead.
-enum hidCstickRead = irrstCstickRead;
+alias hidCstickRead = irrstCstickRead;
 
 /**
  * @brief Gets the shared memory and event handles for IRRST.

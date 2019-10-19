@@ -13,7 +13,7 @@ extern (C):
 /// Camera connection target ports.
 enum
 {
-    PORT_NONE = 0x0, ///< No port.
+    PORT_NONE = 0x0,    ///< No port.
     PORT_CAM1 = BIT(0), ///< CAM1 port.
     PORT_CAM2 = BIT(1), ///< CAM2 port.
 
@@ -24,16 +24,16 @@ enum
 /// Camera combinations.
 enum
 {
-    SELECT_NONE = 0x0, ///< No camera.
+    SELECT_NONE = 0x0,    ///< No camera.
     SELECT_OUT1 = BIT(0), ///< Outer camera 1.
-    SELECT_IN1 = BIT(1), ///< Inner camera 1.
+    SELECT_IN1  = BIT(1), ///< Inner camera 1.
     SELECT_OUT2 = BIT(2), ///< Outer camera 2.
 
     // Camera combinations.
-    SELECT_IN1_OUT1 = SELECT_OUT1 | SELECT_IN1, ///< Outer camera 1 and inner camera 1.
-    SELECT_OUT1_OUT2 = SELECT_OUT1 | SELECT_OUT2, ///< Both outer cameras.
-    SELECT_IN1_OUT2 = SELECT_IN1 | SELECT_OUT2, ///< Inner camera 1 and outer camera 2.
-    SELECT_ALL = SELECT_OUT1 | SELECT_IN1 | SELECT_OUT2 ///< All cameras.
+    SELECT_IN1_OUT1  = SELECT_OUT1 | SELECT_IN1,              ///< Outer camera 1 and inner camera 1.
+    SELECT_OUT1_OUT2 = SELECT_OUT1 | SELECT_OUT2,             ///< Both outer cameras.
+    SELECT_IN1_OUT2  = SELECT_IN1  | SELECT_OUT2,             ///< Inner camera 1 and outer camera 2.
+    SELECT_ALL       = SELECT_OUT1 | SELECT_IN1 | SELECT_OUT2 ///< All cameras.
 }
 
 /// Camera contexts.
@@ -44,7 +44,7 @@ enum CAMUContext
     b    = BIT(1),               ///< Context B.
 
     // Context combinations.
-    both = CONTEXT_A | CONTEXT_B ///< Both contexts.
+    both = a | b ///< Both contexts.
 }
 
 /// Ways to flip the camera image.
@@ -69,7 +69,7 @@ enum CAMUSize
     ctr_top_lcd    = 0x7,      ///< CTR Top LCD size. (400x240)
 
     // Alias for bottom screen to match top screen naming.
-    ctr_bottom_lcd = SIZE_QVGA ///< CTR Bottom LCD size. (320x240)
+    ctr_bottom_lcd = qvga ///< CTR Bottom LCD size. (320x240)
 }
 
 /// Camera capture frame rates.
@@ -221,14 +221,14 @@ struct CAMU_PackageParameterCameraSelect
 {
     ubyte camera; ///< Selected camera.
     byte exposure; ///< Camera exposure.
-    ubyte whiteBalance; ///< #CAMU_WhiteBalance Camera white balance.
+    ubyte whiteBalance; ///< #CAMUWhiteBalance Camera white balance.
     byte sharpness; ///< Camera sharpness.
     ubyte autoExposureOn; ///< #bool Whether to automatically determine the proper exposure.
     ubyte autoWhiteBalanceOn; ///< #bool Whether to automatically determine the white balance mode.
-    ubyte frameRate; ///< #CAMU_FrameRate Camera frame rate.
-    ubyte photoMode; ///< #CAMU_PhotoMode Camera photo mode.
-    ubyte contrast; ///< #CAMU_Contrast Camera contrast.
-    ubyte lensCorrection; ///< #CAMU_LensCorrection Camera lens correction.
+    ubyte frameRate; ///< #CAMUFrameRate Camera frame rate.
+    ubyte photoMode; ///< #CAMUPhotoMode Camera photo mode.
+    ubyte contrast; ///< #CAMUContrast Camera contrast.
+    ubyte lensCorrection; ///< #CAMULensCorrection Camera lens correction.
     ubyte noiseFilterOn; ///< #bool Whether to enable the camera's noise filter.
     ubyte padding; ///< Padding. (Aligns last 3 fields to 4 bytes)
     short autoExposureWindowX; ///< X of the region to use for auto exposure.
@@ -245,19 +245,19 @@ struct CAMU_PackageParameterCameraSelect
 struct CAMU_PackageParameterContext
 {
     ubyte camera; ///< Selected camera.
-    ubyte context; ///< #CAMU_Context Selected context.
-    ubyte flip; ///< #CAMU_Flip Camera image flip mode.
-    ubyte effect; ///< #CAMU_Effect Camera image special effects.
-    ubyte size; ///< #CAMU_Size Camera image resolution.
+    ubyte context; ///< #CAMUContext Selected context.
+    ubyte flip; ///< #CAMUFlip Camera image flip mode.
+    ubyte effect; ///< #CAMUEffect Camera image special effects.
+    ubyte size; ///< #CAMUSize Camera image resolution.
 }
 
 /// Batch camera configuration for use with a context and with detailed size information.
 struct CAMU_PackageParameterContextDetail
 {
     ubyte camera; ///< Selected camera.
-    ubyte context; ///< #CAMU_Context Selected context.
-    ubyte flip; ///< #CAMU_Flip Camera image flip mode.
-    ubyte effect; ///< #CAMU_Effect Camera image special effects.
+    ubyte context; ///< #CAMUContext Selected context.
+    ubyte flip; ///< #CAMUFlip Camera image flip mode.
+    ubyte effect; ///< #CAMUEffect Camera image special effects.
     short width; ///< Image width.
     short height; ///< Image height.
     short cropX0; ///< First crop point X.
@@ -432,7 +432,7 @@ Result CAMU_Activate (uint select);
  * @param select Camera to use.
  * @param context Context to use.
  */
-Result CAMU_SwitchContext (uint select, CAMU_Context context);
+Result CAMU_SwitchContext (uint select, CAMUContext context);
 
 /**
  * @brief Sets the exposure value of the specified camera.
@@ -446,7 +446,7 @@ Result CAMU_SetExposure (uint select, byte exposure);
  * @param select Camera to use.
  * @param whiteBalance White balance mode to use.
  */
-Result CAMU_SetWhiteBalance (uint select, CAMU_WhiteBalance whiteBalance);
+Result CAMU_SetWhiteBalance (uint select, CAMUWhiteBalance whiteBalance);
 
 /**
  * @brief Sets the white balance mode of the specified camera.
@@ -454,7 +454,7 @@ Result CAMU_SetWhiteBalance (uint select, CAMU_WhiteBalance whiteBalance);
  * @param select Camera to use.
  * @param whiteBalance White balance mode to use.
  */
-Result CAMU_SetWhiteBalanceWithoutBaseUp (uint select, CAMU_WhiteBalance whiteBalance);
+Result CAMU_SetWhiteBalanceWithoutBaseUp (uint select, CAMUWhiteBalance whiteBalance);
 
 /**
  * @brief Sets the sharpness of the specified camera.
@@ -497,7 +497,7 @@ Result CAMU_IsAutoWhiteBalance (bool* autoWhiteBalance, uint select);
  * @param flip Flip mode to use.
  * @param context Context to use.
  */
-Result CAMU_FlipImage (uint select, CAMU_Flip flip, CAMU_Context context);
+Result CAMU_FlipImage (uint select, CAMUFlip flip, CAMUContext context);
 
 /**
  * @brief Sets the image resolution of the given camera in the given context, in detail.
@@ -510,7 +510,7 @@ Result CAMU_FlipImage (uint select, CAMU_Flip flip, CAMU_Context context);
  * @param cropY1 Second crop point Y.
  * @param context Context to use.
  */
-Result CAMU_SetDetailSize (uint select, short width, short height, short cropX0, short cropY0, short cropX1, short cropY1, CAMU_Context context);
+Result CAMU_SetDetailSize (uint select, short width, short height, short cropX0, short cropY0, short cropX1, short cropY1, CAMUContext context);
 
 /**
  * @brief Sets the image resolution of the given camera in the given context.
@@ -518,21 +518,21 @@ Result CAMU_SetDetailSize (uint select, short width, short height, short cropX0,
  * @param size Size to use.
  * @param context Context to use.
  */
-Result CAMU_SetSize (uint select, CAMU_Size size, CAMU_Context context);
+Result CAMU_SetSize (uint select, CAMUSize size, CAMUContext context);
 
 /**
  * @brief Sets the frame rate of the given camera.
  * @param select Camera to use.
  * @param frameRate Frame rate to use.
  */
-Result CAMU_SetFrameRate (uint select, CAMU_FrameRate frameRate);
+Result CAMU_SetFrameRate (uint select, CAMUFrameRate frameRate);
 
 /**
  * @brief Sets the photo mode of the given camera.
  * @param select Camera to use.
  * @param photoMode Photo mode to use.
  */
-Result CAMU_SetPhotoMode (uint select, CAMU_PhotoMode photoMode);
+Result CAMU_SetPhotoMode (uint select, CAMUPhotoMode photoMode);
 
 /**
  * @brief Sets the special effects of the given camera in the given context.
@@ -540,21 +540,21 @@ Result CAMU_SetPhotoMode (uint select, CAMU_PhotoMode photoMode);
  * @param effect Effect to use.
  * @param context Context to use.
  */
-Result CAMU_SetEffect (uint select, CAMU_Effect effect, CAMU_Context context);
+Result CAMU_SetEffect (uint select, CAMUEffect effect, CAMUContext context);
 
 /**
  * @brief Sets the contrast mode of the given camera.
  * @param select Camera to use.
  * @param contrast Contrast mode to use.
  */
-Result CAMU_SetContrast (uint select, CAMU_Contrast contrast);
+Result CAMU_SetContrast (uint select, CAMUContrast contrast);
 
 /**
  * @brief Sets the lens correction mode of the given camera.
  * @param select Camera to use.
  * @param lensCorrection Lens correction mode to use.
  */
-Result CAMU_SetLensCorrection (uint select, CAMU_LensCorrection lensCorrection);
+Result CAMU_SetLensCorrection (uint select, CAMULensCorrection lensCorrection);
 
 /**
  * @brief Sets the output format of the given camera in the given context.
@@ -562,7 +562,7 @@ Result CAMU_SetLensCorrection (uint select, CAMU_LensCorrection lensCorrection);
  * @param format Format to output.
  * @param context Context to use.
  */
-Result CAMU_SetOutputFormat (uint select, CAMU_OutputFormat format, CAMU_Context context);
+Result CAMU_SetOutputFormat (uint select, CAMUOutputFormat format, CAMUContext context);
 
 /**
  * @brief Sets the region to base auto exposure off of for the specified camera.
@@ -684,13 +684,13 @@ Result CAMU_SetPackageParameterWithContextDetail (CAMU_PackageParameterContextDe
  * @brief Gets the Y2R coefficient applied to image data by the camera.
  * @param coefficient Pointer to output the Y2R coefficient to.
  */
-Result CAMU_GetSuitableY2rStandardCoefficient (Y2RU_StandardCoefficient* coefficient);
+Result CAMU_GetSuitableY2rStandardCoefficient (Y2RUStandardCoefficient* coefficient);
 
 /**
  * @brief Plays the specified shutter sound.
  * @param sound Shutter sound to play.
  */
-Result CAMU_PlayShutterSound (CAMU_ShutterSoundType sound);
+Result CAMU_PlayShutterSound (CAMUShutterSoundType sound);
 
 /// Initializes the camera driver.
 Result CAMU_DriverInitialize ();

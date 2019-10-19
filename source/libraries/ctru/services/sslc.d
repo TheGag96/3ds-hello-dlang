@@ -77,7 +77,7 @@ Result sslcAddTrustedRootCA(uint RootCertChain_contexthandle, const(ubyte)* cert
  * @param certID ID of the cert to add.
  * @param cert_contexthandle Optional, the cert contexthandle can be written here.
  */
-Result sslcRootCertChainAddDefaultCert(uint RootCertChain_contexthandle, SSLC_DefaultRootCert certID, uint* cert_contexthandle);
+Result sslcRootCertChainAddDefaultCert(uint RootCertChain_contexthandle, SSLCDefaultRootCert certID, uint* cert_contexthandle);
 
 /**
  * @brief Removes the specified cert from the RootCertChain.
@@ -136,7 +136,7 @@ Result sslcOpenClientCertContext(const(ubyte)* cert, uint certsize, const(ubyte)
  * @param certID ID of the ClientCert to use.
  * @param ClientCert_contexthandle Output contexthandle.
  */
-Result sslcOpenDefaultClientCertContext(SSLC_DefaultClientCert certID, uint* ClientCert_contexthandle);
+Result sslcOpenDefaultClientCertContext(SSLCDefaultClientCert certID, uint* ClientCert_contexthandle);
 
 /**
  * @brief Closes the specified ClientCert-context.

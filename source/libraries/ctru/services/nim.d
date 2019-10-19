@@ -17,7 +17,7 @@ import ctru.services.fs;
 
 extern (C):
 
-// FS_MediaType
+// FSMediaType
 
 /// Mode that NIM downloads/installs a title with.
 enum NIMInstallationMode
@@ -52,7 +52,7 @@ struct NIM_TitleConfig
     uint version_; ///< Title version
     uint unknown_0; ///< Always 0
     ubyte ratingAge; ///< Age for the HOME Menu parental controls
-    ubyte mediaType; ///< Media type, see @ref FS_MediaType enum
+    ubyte mediaType; ///< Media type, see @ref FSMediaType enum
     ubyte[2] padding; ///< Padding
     uint unknown_1; ///< Unknown input, seems to be always 0
 }
@@ -108,7 +108,7 @@ Result NIMS_WantUpdate(bool* want_update);
  * @param ratingAge Age for which the title is aged; used by parental controls in HOME Menu.
  * @param mediaType Media type of the title to download and install.
  */
-void NIMS_MakeTitleConfig(NIM_TitleConfig* cfg, ulong titleId, uint version_, ubyte ratingAge, FS_MediaType mediaType);
+void NIMS_MakeTitleConfig(NIM_TitleConfig* cfg, ulong titleId, uint version_, ubyte ratingAge, FSMediaType mediaType);
 
 /**
  * @brief Registers a background download task with NIM. These are processed in sleep mode only.
@@ -134,9 +134,9 @@ Result NIMS_UnregisterTask(ulong titleId);
 /**
  * @brief Starts an active download with NIM. Progress can be checked with @ref NIMS_GetProcess. Do not exit the process while a download is in progress without calling @ref NIMS_CancelDownload.
  * @param cfg Title config to use. See @ref NIMS_MakeTitleConfig.
- * @param mode The installation mode to use. See @ref NIM_InstallationMode.
+ * @param mode The installation mode to use. See @ref NIMInstallationMode.
  */
-Result NIMS_StartDownload(const(NIM_TitleConfig)* cfg, NIM_InstallationMode mode);
+Result NIMS_StartDownload(const(NIM_TitleConfig)* cfg, NIMInstallationMode mode);
 
 /**
  * @brief Starts an active download with NIM with default installation mode; cannot reinstall titles. Progress can be checked with @ref NIMS_GetProcess. Do not exit the process while a download is in progress without calling @ref NIMS_CancelDownload.

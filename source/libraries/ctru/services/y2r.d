@@ -105,10 +105,10 @@ struct Y2RU_ConversionParams
     import std.bitmanip : bitfields;
 
     mixin(bitfields!(
-        Y2RU_InputFormat, "input_format", 8,
-        Y2RU_OutputFormat, "output_format", 8,
-        Y2RU_Rotation, "rotation", 8,
-        Y2RU_BlockAlignment, "block_alignment", 8));
+        Y2RUInputFormat, "input_format", 8,
+        Y2RUOutputFormat, "output_format", 8,
+        Y2RURotation, "rotation", 8,
+        Y2RUBlockAlignment, "block_alignment", 8));
 
     ///< Value passed to @ref Y2RU_SetInputFormat
     ///< Value passed to @ref Y2RU_SetOutputFormat
@@ -116,7 +116,7 @@ struct Y2RU_ConversionParams
     ///< Value passed to @ref Y2RU_SetBlockAlignment
     short input_line_width; ///< Value passed to @ref Y2RU_SetInputLineWidth
     short input_lines;
-    mixin(bitfields!(Y2RU_StandardCoefficient, "standard_coefficient", 8)); ///< Value passed to @ref Y2RU_SetInputLines
+    mixin(bitfields!(Y2RUStandardCoefficient, "standard_coefficient", 8)); ///< Value passed to @ref Y2RU_SetInputLines
     ///< Value passed to @ref Y2RU_SetStandardCoefficient
     ubyte unused; ///< Unused.
     ushort alpha; ///< Value passed to @ref Y2RU_SetAlpha
@@ -163,13 +163,13 @@ void y2rExit();
  *
  * @note Prefer using @ref Y2RU_SetConversionParams if you have to set multiple parameters.
  */
-Result Y2RU_SetInputFormat(Y2RU_InputFormat format);
+Result Y2RU_SetInputFormat(Y2RUInputFormat format);
 
 /**
  * @brief Gets the configured input format.
  * @param format Pointer to output the input format to.
  */
-Result Y2RU_GetInputFormat(Y2RU_InputFormat* format);
+Result Y2RU_GetInputFormat(Y2RUInputFormat* format);
 
 /**
  * @brief Used to configure the output format.
@@ -177,13 +177,13 @@ Result Y2RU_GetInputFormat(Y2RU_InputFormat* format);
  *
  * @note Prefer using @ref Y2RU_SetConversionParams if you have to set multiple parameters.
  */
-Result Y2RU_SetOutputFormat(Y2RU_OutputFormat format);
+Result Y2RU_SetOutputFormat(Y2RUOutputFormat format);
 
 /**
  * @brief Gets the configured output format.
  * @param format Pointer to output the output format to.
  */
-Result Y2RU_GetOutputFormat(Y2RU_OutputFormat* format);
+Result Y2RU_GetOutputFormat(Y2RUOutputFormat* format);
 
 /**
  * @brief Used to configure the rotation of the output.
@@ -193,13 +193,13 @@ Result Y2RU_GetOutputFormat(Y2RU_OutputFormat* format);
  *
  * @note Prefer using @ref Y2RU_SetConversionParams if you have to set multiple parameters.
  */
-Result Y2RU_SetRotation(Y2RU_Rotation rotation);
+Result Y2RU_SetRotation(Y2RURotation rotation);
 
 /**
  * @brief Gets the configured rotation.
  * @param rotation Pointer to output the rotation to.
  */
-Result Y2RU_GetRotation(Y2RU_Rotation* rotation);
+Result Y2RU_GetRotation(Y2RURotation* rotation);
 
 /**
  * @brief Used to configure the alignment of the output buffer.
@@ -207,13 +207,13 @@ Result Y2RU_GetRotation(Y2RU_Rotation* rotation);
  *
  * @note Prefer using @ref Y2RU_SetConversionParams if you have to set multiple parameters.
  */
-Result Y2RU_SetBlockAlignment(Y2RU_BlockAlignment alignment);
+Result Y2RU_SetBlockAlignment(Y2RUBlockAlignment alignment);
 
 /**
  * @brief Gets the configured alignment.
  * @param alignment Pointer to output the alignment to.
  */
-Result Y2RU_GetBlockAlignment(Y2RU_BlockAlignment* alignment);
+Result Y2RU_GetBlockAlignment(Y2RUBlockAlignment* alignment);
 
 /**
  * @brief Sets whether to use spacial dithering.
@@ -294,14 +294,14 @@ Result Y2RU_GetCoefficients(Y2RU_ColorCoefficients* coefficients);
  *
  * @note Prefer using @ref Y2RU_SetConversionParams if you have to set multiple parameters.
  */
-Result Y2RU_SetStandardCoefficient(Y2RU_StandardCoefficient coefficient);
+Result Y2RU_SetStandardCoefficient(Y2RUStandardCoefficient coefficient);
 
 /**
  * @brief Gets the color coefficient parameters of a standard coefficient.
  * @param coefficients Pointer to output the coefficients to.
  * @param standardCoeff Standard coefficient to check.
  */
-Result Y2RU_GetStandardCoefficient(Y2RU_ColorCoefficients* coefficients, Y2RU_StandardCoefficient standardCoeff);
+Result Y2RU_GetStandardCoefficient(Y2RU_ColorCoefficients* coefficients, Y2RUStandardCoefficient standardCoeff);
 
 /**
  * @brief Used to configure the alpha value of the output.

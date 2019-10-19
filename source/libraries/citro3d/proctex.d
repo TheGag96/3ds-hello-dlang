@@ -1,5 +1,9 @@
 module citro3d.proctex;
 
+import ctru.types;
+import ctru.gpu.enums;
+import ctru.services.fs;
+
 extern (C):
 
 struct C3D_ProcTexColorLut
@@ -111,7 +115,7 @@ void C3D_ProcTexBind(int texCoordId, C3D_ProcTex* pt);
 
 // GPU_LUT_NOISE, GPU_LUT_RGBMAP, GPU_LUT_ALPHAMAP
 alias C3D_ProcTexLut = uint[128];
-void C3D_ProcTexLutBind(GPU_PROCTEX_LUTID id, C3D_ProcTexLut* lut);
+void C3D_ProcTexLutBind(GPUProcTexLutId id, C3D_ProcTexLut* lut);
 void ProcTexLut_FromArray(C3D_ProcTexLut* lut, ref const(float)[129] in_);
 
 void C3D_ProcTexColorLutBind(C3D_ProcTexColorLut* lut);
@@ -119,20 +123,20 @@ void ProcTexColorLut_Write(C3D_ProcTexColorLut* out_, const(uint)* in_, int offs
 
 void C3D_ProcTexClamp(
     C3D_ProcTex* pt,
-    GPU_PROCTEX_CLAMP u,
-    GPU_PROCTEX_CLAMP v);
+    GPUProcTexClamp u,
+    GPUProcTexClamp v);
 
 void C3D_ProcTexCombiner(
     C3D_ProcTex* pt,
     bool separate,
-    GPU_PROCTEX_MAPFUNC rgb,
-    GPU_PROCTEX_MAPFUNC alpha);
+    GPUProcTexMapFunc rgb,
+    GPUProcTexMapFunc alpha);
 
 void C3D_ProcTexNoiseEnable(C3D_ProcTex* pt, bool enable);
 
 void C3D_ProcTexShift(
     C3D_ProcTex* pt,
-    GPU_PROCTEX_SHIFT u,
-    GPU_PROCTEX_SHIFT v);
+    GPUProcTexShift u,
+    GPUProcTexShift v);
 
-void C3D_ProcTexFilter(C3D_ProcTex* pt, GPU_PROCTEX_FILTER min);
+void C3D_ProcTexFilter(C3D_ProcTex* pt, GPUProcTexFilter min);

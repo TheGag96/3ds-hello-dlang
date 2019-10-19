@@ -74,9 +74,9 @@ void ndmuExit();
 
 /**
  * @brief Sets the network daemon to an exclusive state.
- * @param state State specified in the ndmExclusiveState enumerator.
+ * @param state State specified in the NDMExclusiveState enumerator.
  */
-Result NDMU_EnterExclusiveState(ndmExclusiveState state);
+Result NDMU_EnterExclusiveState(NDMExclusiveState state);
 
 ///  Cancels an exclusive state for the network daemon.
 Result NDMU_LeaveExclusiveState();
@@ -85,7 +85,7 @@ Result NDMU_LeaveExclusiveState();
  * @brief Returns the exclusive state for the network daemon.
  * @param state Pointer to write the exclsuive state to.
  */
-Result NDMU_GetExclusiveState(ndmExclusiveState* state);
+Result NDMU_GetExclusiveState(NDMExclusiveState* state);
 
 ///  Locks the exclusive state.
 Result NDMU_LockState();
@@ -97,13 +97,13 @@ Result NDMU_UnlockState();
  * @brief Suspends network daemon.
  * @param mask The specified daemon.
  */
-Result NDMU_SuspendDaemons(ndmDaemonMask mask);
+Result NDMU_SuspendDaemons(NDMDaemonMask mask);
 
 /**
  * @brief Resumes network daemon.
  * @param mask The specified daemon.
  */
-Result NDMU_ResumeDaemons(ndmDaemonMask mask);
+Result NDMU_ResumeDaemons(NDMDaemonMask mask);
 
 /**
  * @brief Suspends scheduling for all network daemons.
@@ -118,13 +118,13 @@ Result NDMU_ResumeScheduler();
  * @brief Returns the current state for the network daemon.
  * @param state Pointer to write the current state to.
  */
-Result NDMU_GetCurrentState(ndmState* state);
+Result NDMU_GetCurrentState(NDMState* state);
 
 /**
  * @brief Returns the daemon state.
  * @param state Pointer to write the daemons state to.
  */
-Result NDMU_QueryStatus(ndmDaemonStatus* status);
+Result NDMU_QueryStatus(NDMDaemonStatus* status);
 
 /**
  * @brief Sets the scan interval.
@@ -151,7 +151,7 @@ Result NDMU_ResetDaemons();
  * @brief Gets the current default daemon bit mask.
  * @param interval Pointer to write the default daemon mask value to. The default value is (DAEMONMASK_CEC | DAEMONMASK_FRIENDS)
  */
-Result NDMU_GetDefaultDaemons(ndmDaemonMask* mask);
+Result NDMU_GetDefaultDaemons(NDMDaemonMask* mask);
 
 ///  Clears half awake mac filter.
 Result NDMU_ClearMacFilter();

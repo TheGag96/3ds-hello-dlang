@@ -5,6 +5,7 @@
 
 module ctru.ndsp.ndsp;
 
+import ctru.types;
 import ctru.os;
 
 extern (C):
@@ -14,26 +15,26 @@ enum NDSP_SAMPLE_RATE = SYSCLOCK_SOC / 512.0;
 ///@name Data types
 ///@{
 /// Sound output modes.
-enum ndspOutputMode
+enum NDSPOutputMode
 {
-    NDSP_OUTPUT_MONO = 0, ///< Mono sound
-    NDSP_OUTPUT_STEREO = 1, ///< Stereo sound
-    NDSP_OUTPUT_SURROUND = 2 ///< 3D Surround sound
+    mono     = 0, ///< Mono sound
+    stereo   = 1, ///< Stereo sound
+    surround = 2  ///< 3D Surround sound
 }
 
 // Clipping modes.
-enum ndspClippingMode
+enum NDSPClippingMode
 {
-    NDSP_CLIP_NORMAL = 0, ///< "Normal" clipping mode (?)
-    NDSP_CLIP_SOFT = 1 ///< "Soft" clipping mode (?)
+    normal = 0, ///< "Normal" clipping mode (?)
+    soft   = 1  ///< "Soft" clipping mode (?)
 }
 
 // Surround speaker positions.
-enum ndspSpeakerPos
+enum NDSPSpeakerPos
 {
-    NDSP_SPKPOS_SQUARE = 0, ///<?
-    NDSP_SPKPOS_WIDE = 1, ///<?
-    NDSP_SPKPOS_NUM = 2 ///<?
+    square = 0, ///< ?
+    wide   = 1, ///< ?
+    num    = 2  ///< ?
 }
 
 /// ADPCM data.
@@ -126,13 +127,13 @@ void ndspSetMasterVol (float volume);
  * @brief Sets the output mode.
  * @param mode Output mode to set. Defaults to NDSP_OUTPUT_STEREO.
  */
-void ndspSetOutputMode (ndspOutputMode mode);
+void ndspSetOutputMode (NDSPOutputMode mode);
 
 /**
  * @brief Sets the clipping mode.
  * @param mode Clipping mode to set. Defaults to NDSP_CLIP_SOFT.
  */
-void ndspSetClippingMode (ndspClippingMode mode);
+void ndspSetClippingMode (NDSPClippingMode mode);
 
 /**
  * @brief Sets the output count.
@@ -166,7 +167,7 @@ void ndspSurroundSetDepth (ushort depth);
  * @brief Sets the surround sound position.
  * @param pos Position to set. Defaults to NDSP_SPKPOS_SQUARE.
  */
-void ndspSurroundSetPos (ndspSpeakerPos pos);
+void ndspSurroundSetPos (NDSPSpeakerPos pos);
 
 /**
  * @brief Sets the surround sound rear ratio.

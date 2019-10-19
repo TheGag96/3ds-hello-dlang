@@ -12,37 +12,37 @@ extern (C):
 //See also: http://3dbrew.org/wiki/HID_Services http://3dbrew.org/wiki/HID_Shared_Memory
 
 /// Key values.
-enum
+enum Key
 {
-    KEY_A            = BIT(0),  ///< A
-    KEY_B            = BIT(1),  ///< B
-    KEY_SELECT       = BIT(2),  ///< Select
-    KEY_START        = BIT(3),  ///< Start
-    KEY_DRIGHT       = BIT(4),  ///< D-Pad Right
-    KEY_DLEFT        = BIT(5),  ///< D-Pad Left
-    KEY_DUP          = BIT(6),  ///< D-Pad Up
-    KEY_DDOWN        = BIT(7),  ///< D-Pad Down
-    KEY_R            = BIT(8),  ///< R
-    KEY_L            = BIT(9),  ///< L
-    KEY_X            = BIT(10), ///< X
-    KEY_Y            = BIT(11), ///< Y
-    KEY_ZL           = BIT(14), ///< ZL (New 3DS only)
-    KEY_ZR           = BIT(15), ///< ZR (New 3DS only)
-    KEY_TOUCH        = BIT(20), ///< Touch (Not actually provided by HID)
-    KEY_CSTICK_RIGHT = BIT(24), ///< C-Stick Right (New 3DS only)
-    KEY_CSTICK_LEFT  = BIT(25), ///< C-Stick Left (New 3DS only)
-    KEY_CSTICK_UP    = BIT(26), ///< C-Stick Up (New 3DS only)
-    KEY_CSTICK_DOWN  = BIT(27), ///< C-Stick Down (New 3DS only)
-    KEY_CPAD_RIGHT   = BIT(28), ///< Circle Pad Right
-    KEY_CPAD_LEFT    = BIT(29), ///< Circle Pad Left
-    KEY_CPAD_UP      = BIT(30), ///< Circle Pad Up
-    KEY_CPAD_DOWN    = BIT(31), ///< Circle Pad Down
+    a            = BIT(0),  ///< A
+    b            = BIT(1),  ///< B
+    select       = BIT(2),  ///< Select
+    start        = BIT(3),  ///< Start
+    dright       = BIT(4),  ///< D-Pad Right
+    dleft        = BIT(5),  ///< D-Pad Left
+    dup          = BIT(6),  ///< D-Pad Up
+    ddown        = BIT(7),  ///< D-Pad Down
+    r            = BIT(8),  ///< R
+    l            = BIT(9),  ///< L
+    x            = BIT(10), ///< X
+    y            = BIT(11), ///< Y
+    zl           = BIT(14), ///< ZL (New 3DS only)
+    zr           = BIT(15), ///< ZR (New 3DS only)
+    touch        = BIT(20), ///< Touch (Not actually provided by HID)
+    cstick_right = BIT(24), ///< C-Stick Right (New 3DS only)
+    cstick_left  = BIT(25), ///< C-Stick Left (New 3DS only)
+    cstick_up    = BIT(26), ///< C-Stick Up (New 3DS only)
+    cstick_down  = BIT(27), ///< C-Stick Down (New 3DS only)
+    cpad_right   = BIT(28), ///< Circle Pad Right
+    cpad_left    = BIT(29), ///< Circle Pad Left
+    cpad_up      = BIT(30), ///< Circle Pad Up
+    cpad_down    = BIT(31), ///< Circle Pad Down
 
     // Generic catch-all directions
-    KEY_UP    = KEY_DUP | KEY_CPAD_UP,      ///< D-Pad Up or Circle Pad Up
-    KEY_DOWN  = KEY_DDOWN | KEY_CPAD_DOWN,  ///< D-Pad Down or Circle Pad Down
-    KEY_LEFT  = KEY_DLEFT | KEY_CPAD_LEFT,  ///< D-Pad Left or Circle Pad Left
-    KEY_RIGHT = KEY_DRIGHT | KEY_CPAD_RIGHT ///< D-Pad Right or Circle Pad Right
+    up    = dup    | cpad_up,   ///< D-Pad Up or Circle Pad Up
+    down  = ddown  | cpad_down, ///< D-Pad Down or Circle Pad Down
+    left  = dleft  | cpad_left, ///< D-Pad Left or Circle Pad Left
+    right = dright | cpad_right ///< D-Pad Right or Circle Pad Right
 }
 
 /// Touch position.
@@ -149,7 +149,7 @@ void hidGyroRead(angularRate* rate);
  * @param id ID of the event.
  * @param nextEvent Whether to discard the current event and wait for the next event.
  */
-void hidWaitForEvent(HID_Event id, bool nextEvent);
+void hidWaitForEvent(HIDEvent id, bool nextEvent);
 
 /// Compatibility macro for hidScanInput.
 alias scanKeys = hidScanInput;

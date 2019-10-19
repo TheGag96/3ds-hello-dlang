@@ -109,9 +109,9 @@ struct NFC_AppDataWriteStruct
 
 /**
  * @brief Initializes NFC.
- * @param type See the NFC_OpType enum.
+ * @param type See the NFCOpType enum.
  */
-Result nfcInit(NFC_OpType type);
+Result nfcInit(NFCOpType type);
 
 /**
  * @brief Shuts down NFC.
@@ -154,7 +154,7 @@ Result nfcUpdateStoredAmiiboData();
  * @brief Returns the current NFC tag state.
  * @param state Pointer to write NFC tag state.
  */
-Result nfcGetTagState(NFC_TagState* state);
+Result nfcGetTagState(NFCTagState* state);
 
 /**
  * @brief Returns the current TagInfo.

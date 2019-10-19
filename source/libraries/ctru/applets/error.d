@@ -26,11 +26,11 @@ enum ErrorType
     type_eula_first_boot    = 3,                                                ///< Use prohibited.
     type_eula_draw_only     = 4,                                                ///< Use prohibited.
     type_agree              = 5,                                                ///< Use prohibited.
-    code_language           = CODE | ERROR_LANGUAGE_FLAG,                       ///< Displays a network error message in a specified language.
-    text_language           = TEXT | ERROR_LANGUAGE_FLAG,                       ///< Displays text passed to this applet in a specified language.
-    eula_language           = EULA | ERROR_LANGUAGE_FLAG,                       ///< Displays EULA in a specified language.
-    text_word_wrap          = TEXT | ERROR_WORD_WRAP_FLAG,                      ///< Displays the custom error message passed to this applet with automatic line wrapping
-    text_language_word_wrap = TEXT | ERROR_LANGUAGE_FLAG | ERROR_WORD_WRAP_FLAG ///< Displays the custom error message with automatic line wrapping and in the specified language.
+    code_language           = code | ERROR_LANGUAGE_FLAG,                       ///< Displays a network error message in a specified language.
+    text_language           = text | ERROR_LANGUAGE_FLAG,                       ///< Displays text passed to this applet in a specified language.
+    eula_language           = eula | ERROR_LANGUAGE_FLAG,                       ///< Displays EULA in a specified language.
+    text_word_wrap          = text | ERROR_WORD_WRAP_FLAG,                      ///< Displays the custom error message passed to this applet with automatic line wrapping
+    text_language_word_wrap = text | ERROR_LANGUAGE_FLAG | ERROR_WORD_WRAP_FLAG ///< Displays the custom error message with automatic line wrapping and in the specified language.
 }
 
 ///< Flags for the Upper Screen.Does nothing even if specified.
@@ -58,25 +58,25 @@ enum ErrorReturnCode
 
 struct errorConf
 {
-    errorType type;
+    ErrorType type;
     int errorCode;
-    errorScreenFlag upperScreenFlag;
+    ErrorScreenFlag upperScreenFlag;
     ushort useLanguage;
     ushort[1900] Text;
     bool homeButton;
     bool softwareReset;
     bool appJump;
-    errorReturnCode returnCode;
+    ErrorReturnCode returnCode;
     ushort eulaVersion;
 }
 
 /**
 * @brief Init the error applet.
 * @param err Pointer to errorConf.
-* @param type errorType Type of error.
-* @param lang CFG_Language Lang of error.
+* @param type ErrorType Type of error.
+* @param lang CFGLanguage Lang of error.
 */
-void errorInit(errorConf* err, errorType type, CFG_Language lang);
+void errorInit(errorConf* err, ErrorType type, CFGLanguage lang);
 /**
 * @brief Sets error code to display.
 * @param err Pointer to errorConf.

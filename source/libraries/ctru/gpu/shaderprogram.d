@@ -6,6 +6,7 @@
 module ctru.gpu.shaderprogram;
 
 import ctru.types;
+import ctru.gpu.shbin;
 
 extern (C):
 

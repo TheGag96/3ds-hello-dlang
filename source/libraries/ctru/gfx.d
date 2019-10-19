@@ -9,6 +9,7 @@
 module ctru.gfx;
 
 import ctru.types;
+import ctru.services.gspgpu;
 
 extern (C):
 
@@ -70,7 +71,7 @@ void gfxInitDefault();
  * @note Even if the double buffering is disabled, it will allocate two buffer per screen.
  * @note You should always call @ref gfxExit once done to free the memory and services
  */
-void gfxInit(GSPGPU_FramebufferFormats topFormat, GSPGPU_FramebufferFormats bottomFormat, bool vrambuffers);
+void gfxInit(GSPGPUFramebufferFormats topFormat, GSPGPUFramebufferFormats bottomFormat, bool vrambuffers);
 
 /**
  * @brief Closes the gsp service and frees the framebuffers.
@@ -99,14 +100,14 @@ bool gfxIs3D();
  * @param screen The screen of which format should be changed
  * @param format One of the gsp pixel formats.
  */
-void gfxSetScreenFormat(GFXScreen screen, GSPGPU_FramebufferFormats format);
+void gfxSetScreenFormat(GFXScreen screen, GSPGPUFramebufferFormats format);
 
 /**
  * @brief Gets a screen pixel format.
  * @param screen Screen to get the pixel format of.
  * @return the pixel format of the chosen screen set by ctrulib.
  */
-GSPGPU_FramebufferFormats gfxGetScreenFormat(GFXScreen screen);
+GSPGPUFramebufferFormats gfxGetScreenFormat(GFXScreen screen);
 
 /**
  * @brief Sets whether to use ctrulib's double buffering

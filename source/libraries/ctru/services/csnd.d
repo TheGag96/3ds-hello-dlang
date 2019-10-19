@@ -65,24 +65,24 @@ extern (D) auto SOUND_LOOPMODE(T)(auto ref T n)
 /// Sound flags.
 enum
 {
-    SOUND_LINEAR_INTERP = BIT(6), ///< Linear interpolation.
-    SOUND_REPEAT = SOUND_LOOPMODE(.CSND_LOOPMODE_NORMAL), ///< Repeat the sound.
-    SOUND_ONE_SHOT = SOUND_LOOPMODE(.CSND_LOOPMODE_ONESHOT), ///< Play the sound once.
-    SOUND_FORMAT_8BIT = SOUND_FORMAT(.CSND_ENCODING_PCM8), ///< PCM8
-    SOUND_FORMAT_16BIT = SOUND_FORMAT(.CSND_ENCODING_PCM16), ///< PCM16
-    SOUND_FORMAT_ADPCM = SOUND_FORMAT(.CSND_ENCODING_ADPCM), ///< ADPCM
-    SOUND_FORMAT_PSG = SOUND_FORMAT(.CSND_ENCODING_PSG), ///< PSG
-    SOUND_ENABLE = BIT(14) ///< Enable sound.
+    SOUND_LINEAR_INTERP = BIT(6),                                ///< Linear interpolation.
+    SOUND_REPEAT        = SOUND_LOOPMODE(CSND_LOOPMODE_NORMAL),  ///< Repeat the sound.
+    SOUND_ONE_SHOT      = SOUND_LOOPMODE(CSND_LOOPMODE_ONESHOT), ///< Play the sound once.
+    SOUND_FORMAT_8BIT   = SOUND_FORMAT(CSND_ENCODING_PCM8),      ///< PCM8
+    SOUND_FORMAT_16BIT  = SOUND_FORMAT(CSND_ENCODING_PCM16),     ///< PCM16
+    SOUND_FORMAT_ADPCM  = SOUND_FORMAT(CSND_ENCODING_ADPCM),     ///< ADPCM
+    SOUND_FORMAT_PSG    = SOUND_FORMAT(CSND_ENCODING_PSG),       ///< PSG
+    SOUND_ENABLE        = BIT(14)                                ///< Enable sound.
 }
 
 /// Capture modes.
 enum
 {
-    CAPTURE_REPEAT = 0, ///< Repeat capture.
-    CAPTURE_ONE_SHOT = BIT(0), ///< Capture once.
-    CAPTURE_FORMAT_16BIT = 0, ///< PCM16
-    CAPTURE_FORMAT_8BIT = BIT(1), ///< PCM8
-    CAPTURE_ENABLE = BIT(15) ///< Enable capture.
+    CAPTURE_REPEAT       = 0,      ///< Repeat capture.
+    CAPTURE_ONE_SHOT     = BIT(0), ///< Capture once.
+    CAPTURE_FORMAT_16BIT = 0,      ///< PCM16
+    CAPTURE_FORMAT_8BIT  = BIT(1), ///< PCM8
+    CAPTURE_ENABLE       = BIT(15) ///< Enable capture.
 }
 
 /// Duty cycles for a PSG channel.
@@ -254,7 +254,7 @@ void CSND_SetInterp(uint channel, bool interp);
  * @param channel Channel to use.
  * @param duty Duty to set.
  */
-void CSND_SetDuty(uint channel, CSND_DutyCycle duty);
+void CSND_SetDuty(uint channel, CSNDDutyCycle duty);
 
 /**
  * @brief Sets a channel's timer.
@@ -305,7 +305,7 @@ void CSND_SetChnRegs(uint flags, uint physaddr0, uint physaddr1, uint totalbytes
  * @param capVolumes Capture volume data.
  * @param duty Duty value to set.
  */
-void CSND_SetChnRegsPSG(uint flags, uint chnVolumes, uint capVolumes, CSND_DutyCycle duty);
+void CSND_SetChnRegsPSG(uint flags, uint chnVolumes, uint capVolumes, CSNDDutyCycle duty);
 
 /**
  * @brief Sets CSND's noise channel registers.

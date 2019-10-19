@@ -59,6 +59,8 @@ DFLAGS  := -g -Wall -O2 -mword-relocations \
 			-nophoboslib \
 			-fno-druntime \
 			-fversion=DevkitARM \
+			-fversion=CRuntime_Newlib \
+			-fversion=_3DS \
 			$(ARCH)
 
 ASFLAGS	:=	-g $(ARCH)

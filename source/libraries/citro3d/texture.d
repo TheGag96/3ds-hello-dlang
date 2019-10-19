@@ -1,5 +1,8 @@
 module citro3d.texture;
 
+import ctru.types;
+import ctru.gpu.enums;
+
 extern (C):
 
 struct C3D_TexCube

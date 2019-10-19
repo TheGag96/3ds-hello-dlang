@@ -37,7 +37,7 @@ enum MemOp
     region_mask   = 0xF00,   ///< Region bitmask.
     linear_flag   = 0x10000, ///< Flag for linear memory operations
 
-    alloc_linear  = MEMOP_LINEAR_FLAG | MEMOP_ALLOC ///< Allocates linear memory.
+    alloc_linear  = linear_flag | alloc ///< Allocates linear memory.
 }
 
 /// The state of a memory block.

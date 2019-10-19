@@ -6,6 +6,7 @@
 module ctru.sdmc;
 
 import ctru.types;
+import ctru.services.fs;
 
 extern (C):
 

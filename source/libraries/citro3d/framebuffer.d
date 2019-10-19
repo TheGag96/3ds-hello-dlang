@@ -1,5 +1,6 @@
 module citro3d.framebuffer;
 
+import citro3d.texture;
 import ctru.gfx;
 import ctru.gpu.enums;
 import ctru.types;
@@ -37,8 +38,8 @@ uint C3D_CalcDepthBufSize(uint width, uint height, GPUDepthBuf fmt);
 C3D_FrameBuf* C3D_GetFrameBuf();
 void C3D_SetFrameBuf(C3D_FrameBuf* fb);
 void C3D_FrameBufTex(C3D_FrameBuf* fb, C3D_Tex* tex, GPUTexFace face, int level);
-void C3D_FrameBufClear(C3D_FrameBuf* fb, C3D_ClearBits clearBits, uint clearColor, uint clearDepth);
-void C3D_FrameBufTransfer(C3D_FrameBuf* fb, gfxScreen_t screen, gfx3dSide_t side, uint transferFlags);
+void C3D_FrameBufClear(C3D_FrameBuf* fb, C3DClearBits clearBits, uint clearColor, uint clearDepth);
+void C3D_FrameBufTransfer(C3D_FrameBuf* fb, GFXScreen screen, GFX3DSide side, uint transferFlags);
 
 void C3D_FrameBufAttrib(
     C3D_FrameBuf* fb,

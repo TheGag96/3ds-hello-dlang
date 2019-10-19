@@ -28,13 +28,13 @@ struct GSPGPU_FramebufferInfo
 }
 
 /// Framebuffer format.
-enum GSPGPU_FramebufferFormats
+enum GSPGPUFramebufferFormats
 {
-    GSP_RGBA8_OES = 0, ///< RGBA8. (4 bytes)
-    GSP_BGR8_OES = 1, ///< BGR8. (3 bytes)
-    GSP_RGB565_OES = 2, ///< RGB565. (2 bytes)
-    GSP_RGB5_A1_OES = 3, ///< RGB5A1. (2 bytes)
-    GSP_RGBA4_OES = 4 ///< RGBA4. (2 bytes)
+    rgba8_oes   = 0, ///< RGBA8.  (4 bytes)
+    bgr8_oes    = 1, ///< BGR8.   (3 bytes)
+    rgb565_oes  = 2, ///< RGB565. (2 bytes)
+    rgb5_a1_oes = 3, ///< RGB5A1. (2 bytes)
+    rgba4_oes   = 4  ///< RGBA4.  (2 bytes)
 }
 
 /// Capture info entry.
@@ -79,7 +79,7 @@ void gspExit();
  * @param data Data to be passed to the callback.
  * @param oneShot When true, the callback is only executed once. When false, the callback is executed every time the event occurs.
  */
-void gspSetEventCallback(GSPGPU_Event id, ThreadFunc cb, void* data, bool oneShot);
+void gspSetEventCallback(GSPGPUEvent id, ThreadFunc cb, void* data, bool oneShot);
 
 /**
  * @brief Initializes the GSPGPU event handler.
@@ -97,7 +97,7 @@ void gspExitEventHandler();
  * @param id ID of the event.
  * @param nextEvent Whether to discard the current event and wait for the next event.
  */
-void gspWaitForEvent(GSPGPU_Event id, bool nextEvent);
+void gspWaitForEvent(GSPGPUEvent id, bool nextEvent);
 
 /**
  * @brief Waits for any GSPGPU event to occur.
@@ -105,18 +105,18 @@ void gspWaitForEvent(GSPGPU_Event id, bool nextEvent);
  *
  * The function returns immediately if there are unprocessed events at the time of call.
  */
-GSPGPU_Event gspWaitForAnyEvent();
+GSPGPUEvent gspWaitForAnyEvent();
 
 /// Waits for PSC0
 extern (D) auto gspWaitForPSC0()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_PSC0, false);
+    return gspWaitForEvent(GSPGPUEvent.psc0, false);
 }
 
 /// Waits for PSC1
 extern (D) auto gspWaitForPSC1()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_PSC1, false);
+    return gspWaitForEvent(GSPGPUEvent.psc1, false);
 }
 
 /// Waits for VBlank.
@@ -125,31 +125,31 @@ alias gspWaitForVBlank = gspWaitForVBlank0;
 /// Waits for VBlank0.
 extern (D) auto gspWaitForVBlank0()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_VBlank0, true);
+    return gspWaitForEvent(GSPGPUEvent.vblank0, true);
 }
 
 /// Waits for VBlank1.
 extern (D) auto gspWaitForVBlank1()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_VBlank1, true);
+    return gspWaitForEvent(GSPGPUEvent.vblank1, true);
 }
 
 /// Waits for PPF.
 extern (D) auto gspWaitForPPF()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_PPF, false);
+    return gspWaitForEvent(GSPGPUEvent.ppf, false);
 }
 
 /// Waits for P3D.
 extern (D) auto gspWaitForP3D()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_P3D, false);
+    return gspWaitForEvent(GSPGPUEvent.p3d, false);
 }
 
 /// Waits for DMA.
 extern (D) auto gspWaitForDMA()
 {
-    return gspWaitForEvent(GSPGPU_Event.GSPGPU_EVENT_DMA, false);
+    return gspWaitForEvent(GSPGPUEvent.dma, false);
 }
 
 /**

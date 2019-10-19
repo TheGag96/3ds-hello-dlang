@@ -53,7 +53,7 @@ enum MVDSTDOutputFormat
 /// Processing configuration.
 struct MVDSTD_Config
 {
-    MVDSTD_InputFormat input_type; ///< Input type.
+    MVDSTDInputFormat input_type; ///< Input type.
     uint unk_x04; ///< Unknown.
     uint unk_x08; ///< Unknown. Referred to as "H264 range" in SKATER.
     uint inwidth; ///< Input width.
@@ -70,7 +70,7 @@ struct MVDSTD_Config
     uint input_crop_height;
     uint input_crop_width;
     uint unk_x54; ///< Unknown.
-    MVDSTD_OutputFormat output_type; ///< Output type.
+    MVDSTDOutputFormat output_type; ///< Output type.
     uint outwidth; ///< Output width.
     uint outheight; ///< Output height.
     uint physaddr_outdata0; ///< Physical address of output data.
@@ -122,7 +122,7 @@ struct MVDSTD_InitStruct
  * @param size Size of the work buffer, MVD_DEFAULT_WORKBUF_SIZE can be used for this. Only used when type == MVDMODE_VIDEOPROCESSING.
  * @param initstruct Optional MVDSTD_InitStruct, this should be NULL normally.
  */
-Result mvdstdInit(MVDSTD_Mode mode, MVDSTD_InputFormat input_type, MVDSTD_OutputFormat output_type, uint size, MVDSTD_InitStruct* initstruct);
+Result mvdstdInit(MVDSTDMode mode, MVDSTDInputFormat input_type, MVDSTDOutputFormat output_type, uint size, MVDSTD_InitStruct* initstruct);
 
 /// Shuts down MVDSTD.
 void mvdstdExit();

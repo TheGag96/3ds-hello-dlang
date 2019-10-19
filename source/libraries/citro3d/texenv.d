@@ -1,5 +1,6 @@
 module citro3d.texenv;
 
+import ctru.types;
 import ctru.gpu.enums;
 
 extern (C):
@@ -49,7 +50,7 @@ void C3D_TexEnvInit(C3D_TexEnv* env);
 
 void C3D_TexEnvSrc(
     C3D_TexEnv* env,
-    C3D_TexEnvMode mode,
+    C3DTexEnvMode mode,
     GPUTevSrc s1,
     GPUTevSrc s2,
     GPUTevSrc s3);
@@ -68,7 +69,7 @@ void C3D_TexEnvOpAlpha(
 
 void C3D_TexEnvFunc(
     C3D_TexEnv* env,
-    C3D_TexEnvMode mode,
+    C3DTexEnvMode mode,
     GPUCombineFunc param);
 
 void C3D_TexEnvColor(C3D_TexEnv* env, uint color);

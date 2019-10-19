@@ -5,6 +5,8 @@
 
 module ctru.util.utf;
 
+import ctru.types;
+
 extern (C):
 
 /** Convert a UTF-8 sequence into a UTF-32 codepoint

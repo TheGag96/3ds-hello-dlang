@@ -13,25 +13,25 @@ extern (C):
 /// Open flags.
 enum
 {
-    FS_OPEN_READ = BIT(0), ///< Open for reading.
-    FS_OPEN_WRITE = BIT(1), ///< Open for writing.
-    FS_OPEN_CREATE = BIT(2) ///< Create file.
+    FS_OPEN_READ   = BIT(0), ///< Open for reading.
+    FS_OPEN_WRITE  = BIT(1), ///< Open for writing.
+    FS_OPEN_CREATE = BIT(2)  ///< Create file.
 }
 
 /// Write flags.
 enum
 {
-    FS_WRITE_FLUSH = BIT(0), ///< Flush.
-    FS_WRITE_UPDATE_TIME = BIT(8) ///< Update file timestamp.
+    FS_WRITE_FLUSH       = BIT(0), ///< Flush.
+    FS_WRITE_UPDATE_TIME = BIT(8)  ///< Update file timestamp.
 }
 
 /// Attribute flags.
 enum
 {
-    FS_ATTRIBUTE_DIRECTORY = BIT(0), ///< Directory.
-    FS_ATTRIBUTE_HIDDEN = BIT(8), ///< Hidden.
-    FS_ATTRIBUTE_ARCHIVE = BIT(16), ///< Archive.
-    FS_ATTRIBUTE_READ_ONLY = BIT(24) ///< Read-only.
+    FS_ATTRIBUTE_DIRECTORY = BIT(0),  ///< Directory.
+    FS_ATTRIBUTE_HIDDEN    = BIT(8),  ///< Hidden.
+    FS_ATTRIBUTE_ARCHIVE   = BIT(16), ///< Archive.
+    FS_ATTRIBUTE_READ_ONLY = BIT(24)  ///< Read-only.
 }
 
 /// Media types.
@@ -108,7 +108,7 @@ enum FSCardSPIBaudRate
 }
 
 /// Card SPI bus mode.
-enum FSCardSpiBusMode
+enum FSCardSPIBusMode
 {
     _1bit = 0, ///< 1-bit.
     _4bit = 1  ///< 4-bit.
@@ -187,7 +187,7 @@ struct FS_ProgramInfo
     import std.bitmanip : bitfields;
 
     ulong programId;
-    mixin(bitfields!(FS_MediaType, "mediaType", 8)); ///< Program ID.
+    mixin(bitfields!(FSMediaType, "mediaType", 8)); ///< Program ID.
     ///< Media type.
     ubyte[7] padding; ///< Padding.
 }
@@ -212,7 +212,7 @@ struct FS_ExtSaveDataInfo
 {
     import std.bitmanip : bitfields;
     align (1):
-    mixin(bitfields!(FS_MediaType, "mediaType", 8));
+    mixin(bitfields!(FSMediaType, "mediaType", 8));
 
     ///< Media type.
     ubyte unknown; ///< Unknown.
@@ -225,7 +225,7 @@ struct FS_ExtSaveDataInfo
 struct FS_SystemSaveDataInfo
 {
     import std.bitmanip : bitfields;
-    mixin(bitfields!(FS_MediaType, "mediaType", 8));
+    mixin(bitfields!(FSMediaType, "mediaType", 8));
 
     ///< Media type.
     ubyte unknown; ///< Unknown.
@@ -243,7 +243,7 @@ struct FS_DeviceMoveContext
 /// Filesystem path data, detailing the specific target of an operation.
 struct FS_Path
 {
-    FS_PathType type; ///< FS path type.
+    FSPathType type; ///< FS path type.
     uint size; ///< FS path size.
     const(void)* data; ///< Pointer to FS path data.
 }
@@ -285,7 +285,7 @@ void fsUnexemptFromSession (FS_Archive archive);
  * @param path Path to use.
  * @return The created FS_Path instance.
  */
-FS_Path fsMakePath (FS_PathType type, const(void)* path);
+FS_Path fsMakePath (FSPathType type, const(void)* path);
 
 /**
  * @brief Gets the current FS session handle.
@@ -301,7 +301,7 @@ Handle* fsGetSessionHandle ();
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_Control (FS_Action action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_Control (FSAction action, void* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Initializes a FSUSER session.
@@ -328,7 +328,7 @@ Result FSUSER_OpenFile (Handle* out_, FS_Archive archive, FS_Path path, uint ope
  * @param openFlags Flags to open the file with.
  * @param attributes Attributes of the file.
  */
-Result FSUSER_OpenFileDirectly (Handle* out_, FS_ArchiveID archiveId, FS_Path archivePath, FS_Path filePath, uint openFlags, uint attributes);
+Result FSUSER_OpenFileDirectly (Handle* out_, FSArchiveID archiveId, FS_Path archivePath, FS_Path filePath, uint openFlags, uint attributes);
 
 /**
  * @brief Deletes a file.
@@ -400,7 +400,7 @@ Result FSUSER_OpenDirectory (Handle* out_, FS_Archive archive, FS_Path path);
  * @param id ID of the archive.
  * @param path Path of the archive.
  */
-Result FSUSER_OpenArchive (FS_Archive* archive, FS_ArchiveID id, FS_Path path);
+Result FSUSER_OpenArchive (FS_Archive* archive, FSArchiveID id, FS_Path path);
 
 /**
  * @brief Performs a control operation on an archive.
@@ -411,7 +411,7 @@ Result FSUSER_OpenArchive (FS_Archive* archive, FS_ArchiveID id, FS_Path path);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_ControlArchive (FS_Archive archive, FS_ArchiveAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_ControlArchive (FS_Archive archive, FSArchiveAction action, void* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Closes an archive.
@@ -430,7 +430,7 @@ Result FSUSER_GetFreeBytes (ulong* freeBytes, FS_Archive archive);
  * @brief Gets the inserted card type.
  * @param type Pointer to output the card type to.
  */
-Result FSUSER_GetCardType (FS_CardType* type);
+Result FSUSER_GetCardType (FSCardType* type);
 
 /**
  * @brief Gets the SDMC archive resource information.
@@ -620,13 +620,13 @@ Result FSUSER_GetProgramLaunchInfo (FS_ProgramInfo* info, uint processId);
  * @brief Sets the CARDSPI baud rate.
  * @param baudRate Baud rate to set.
  */
-Result FSUSER_SetCardSpiBaudRate (FS_CardSpiBaudRate baudRate);
+Result FSUSER_SetCardSpiBaudRate (FSCardSPIBaudRate baudRate);
 
 /**
  * @brief Sets the CARDSPI bus mode.
  * @param baudRate Bus mode to set.
  */
-Result FSUSER_SetCardSpiBusMode (FS_CardSpiBusMode busMode);
+Result FSUSER_SetCardSpiBusMode (FSCardSPIBusMode busMode);
 
 /// Sends initialization info to ARM9.
 Result FSUSER_SendInitializeInfoTo9 ();
@@ -638,7 +638,7 @@ Result FSUSER_SendInitializeInfoTo9 ();
  * @param programId Program ID owning the special content.
  * @param type Type of special content.
  */
-Result FSUSER_GetSpecialContentIndex (ushort* index, FS_MediaType mediaType, ulong programId, FS_SpecialContentType type);
+Result FSUSER_GetSpecialContentIndex (ushort* index, FSMediaType mediaType, ulong programId, FSSpecialContentType type);
 
 /**
  * @brief Gets the legacy ROM header of a program.
@@ -646,7 +646,7 @@ Result FSUSER_GetSpecialContentIndex (ushort* index, FS_MediaType mediaType, ulo
  * @param programId ID of the program.
  * @param header Pointer to output the legacy ROM header to. (size = 0x3B4)
  */
-Result FSUSER_GetLegacyRomHeader (FS_MediaType mediaType, ulong programId, ubyte* header);
+Result FSUSER_GetLegacyRomHeader (FSMediaType mediaType, ulong programId, ubyte* header);
 
 /**
  * @brief Gets the legacy banner data of a program.
@@ -654,7 +654,7 @@ Result FSUSER_GetLegacyRomHeader (FS_MediaType mediaType, ulong programId, ubyte
  * @param programId ID of the program.
  * @param header Pointer to output the legacy banner data to. (size = 0x23C0)
  */
-Result FSUSER_GetLegacyBannerData (FS_MediaType mediaType, ulong programId, ubyte* banner);
+Result FSUSER_GetLegacyBannerData (FSMediaType mediaType, ulong programId, ubyte* banner);
 
 /**
  * @brief Checks a process's authority to access a save data archive.
@@ -663,7 +663,7 @@ Result FSUSER_GetLegacyBannerData (FS_MediaType mediaType, ulong programId, ubyt
  * @param saveId ID of the save data.
  * @param processId ID of the process to check.
  */
-Result FSUSER_CheckAuthorityToAccessExtSaveData (bool* access, FS_MediaType mediaType, ulong saveId, uint processId);
+Result FSUSER_CheckAuthorityToAccessExtSaveData (bool* access, FSMediaType mediaType, ulong saveId, uint processId);
 
 /**
  * @brief Queries the total quota size of a save data archive.
@@ -702,7 +702,7 @@ Result FSUSER_CreateSeed ();
  * @param archiveId ID of the archive.
  * @param path Path of the archive.
  */
-Result FSUSER_GetFormatInfo (uint* totalSize, uint* directories, uint* files, bool* duplicateData, FS_ArchiveID archiveId, FS_Path path);
+Result FSUSER_GetFormatInfo (uint* totalSize, uint* directories, uint* files, bool* duplicateData, FSArchiveID archiveId, FS_Path path);
 
 /**
  * @brief Gets the legacy ROM header of a program.
@@ -711,7 +711,7 @@ Result FSUSER_GetFormatInfo (uint* totalSize, uint* directories, uint* files, bo
  * @param programId ID of the program.
  * @param header Pointer to output the legacy ROM header to.
  */
-Result FSUSER_GetLegacyRomHeader2 (uint headerSize, FS_MediaType mediaType, ulong programId, ubyte* header);
+Result FSUSER_GetLegacyRomHeader2 (uint headerSize, FSMediaType mediaType, ulong programId, ubyte* header);
 
 /**
  * @brief Gets the CTR SDMC root path.
@@ -725,7 +725,7 @@ Result FSUSER_GetSdmcCtrRootPath (ubyte* out_, uint length);
  * @param archiveResource Pointer to output the archive resource information to.
  * @param mediaType System media type to check.
  */
-Result FSUSER_GetArchiveResource (FS_ArchiveResource* archiveResource, FS_SystemMediaType mediaType);
+Result FSUSER_GetArchiveResource (FS_ArchiveResource* archiveResource, FSSystemMediaType mediaType);
 
 /**
  * @brief Exports the integrity verification seed.
@@ -750,7 +750,7 @@ Result FSUSER_ImportIntegrityVerificationSeed (FS_IntegrityVerificationSeed* see
  * @param fileBuckets File hash tree bucket count.
  * @param duplicateData Whether to store an internal duplicate of the data.
  */
-Result FSUSER_FormatSaveData (FS_ArchiveID archiveId, FS_Path path, uint blocks, uint directories, uint files, uint directoryBuckets, uint fileBuckets, bool duplicateData);
+Result FSUSER_FormatSaveData (FSArchiveID archiveId, FS_Path path, uint blocks, uint directories, uint files, uint directoryBuckets, uint fileBuckets, bool duplicateData);
 
 /**
  * @brief Gets the legacy sub banner data of a program.
@@ -759,7 +759,7 @@ Result FSUSER_FormatSaveData (FS_ArchiveID archiveId, FS_Path path, uint blocks,
  * @param programId ID of the program.
  * @param header Pointer to output the legacy sub banner data to.
  */
-Result FSUSER_GetLegacySubBannerData (uint bannerSize, FS_MediaType mediaType, ulong programId, ubyte* banner);
+Result FSUSER_GetLegacySubBannerData (uint bannerSize, FSMediaType mediaType, ulong programId, ubyte* banner);
 
 /**
  * @brief Hashes the given data and outputs a SHA256 hash.
@@ -828,7 +828,7 @@ Result FSUSER_GetExtDataBlockSize (ulong* totalBlocks, ulong* freeBlocks, uint* 
  * @param shared Whether to enumerate shared ext save data.
  * @param ids Pointer to output IDs to.
  */
-Result FSUSER_EnumerateExtSaveData (uint* idsWritten, uint idsSize, FS_MediaType mediaType, uint idSize, bool shared_, ubyte* ids);
+Result FSUSER_EnumerateExtSaveData (uint* idsWritten, uint idsSize, FSMediaType mediaType, uint idSize, bool shared_, ubyte* ids);
 
 /**
  * @brief Creates system save data.
@@ -923,7 +923,7 @@ Result FSUSER_GetPriority (uint* priority);
  * @param titleUniqueId Unique ID of the title. (default = 0)
  * @param titleVariation Variation of the title. (default = 0)
  */
-Result FSUSER_SetSaveDataSecureValue (ulong value, FS_SecureValueSlot slot, uint titleUniqueId, ubyte titleVariation);
+Result FSUSER_SetSaveDataSecureValue (ulong value, FSSecureValueSlot slot, uint titleUniqueId, ubyte titleVariation);
 
 /**
  * @brief Gets the save data secure value.
@@ -933,7 +933,7 @@ Result FSUSER_SetSaveDataSecureValue (ulong value, FS_SecureValueSlot slot, uint
  * @param titleUniqueId Unique ID of the title. (default = 0)
  * @param titleVariation Variation of the title. (default = 0)
  */
-Result FSUSER_GetSaveDataSecureValue (bool* exists, ulong* value, FS_SecureValueSlot slot, uint titleUniqueId, ubyte titleVariation);
+Result FSUSER_GetSaveDataSecureValue (bool* exists, ulong* value, FSSecureValueSlot slot, uint titleUniqueId, ubyte titleVariation);
 
 /**
  * @brief Performs a control operation on a secure save.
@@ -943,13 +943,13 @@ Result FSUSER_GetSaveDataSecureValue (bool* exists, ulong* value, FS_SecureValue
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_ControlSecureSave (FS_SecureSaveAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_ControlSecureSave (FSSecureSaveAction action, void* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Gets the media type of the current application.
  * @param mediaType Pointer to output the media type to.
  */
-Result FSUSER_GetMediaType (FS_MediaType* mediaType);
+Result FSUSER_GetMediaType (FSMediaType* mediaType);
 
 /**
  * @brief Performs a control operation on a file.
@@ -960,7 +960,7 @@ Result FSUSER_GetMediaType (FS_MediaType* mediaType);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSFILE_Control (Handle handle, FS_FileAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSFILE_Control (Handle handle, FSFileAction action, void* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Opens a handle to a sub-section of a file.
@@ -1062,7 +1062,7 @@ Result FSFILE_OpenLinkFile (Handle handle, Handle* linkFile);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSDIR_Control (Handle handle, FS_DirectoryAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSDIR_Control (Handle handle, FSDirectoryAction action, void* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Reads one or more directory entries.

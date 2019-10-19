@@ -1,7 +1,10 @@
 module citro3d.renderqueue;
 
 import citro3d.framebuffer;
+import citro3d.texture;
 import ctru.gfx;
+import ctru.gpu.enums;
+import ctru.types;
 
 extern (C):
 
@@ -47,7 +50,7 @@ float C3D_GetProcessingTime();
 union C3D_DEPTHTYPE
 {
     int __i;
-    GPU_DEPTHBUF __e;
+    GPUDepthBuf __e;
 }
 
 extern (D) auto C3D_DEPTHTYPE_OK(T)(auto ref T _x)
@@ -67,7 +70,7 @@ void C3D_RenderTargetSetOutput(C3D_RenderTarget* target, GFXScreen screen, GFX3D
 
 void C3D_RenderTargetClear(
     C3D_RenderTarget* target,
-    C3D_ClearBits clearBits,
+    C3DClearBits clearBits,
     uint clearColor,
     uint clearDepth);
 

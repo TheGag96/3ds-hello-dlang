@@ -7,6 +7,7 @@ module ctru.services.pmdbg;
 
 import ctru.types;
 import ctru.services.pmapp;
+import ctru.services.fs;
 
 extern (C):
 

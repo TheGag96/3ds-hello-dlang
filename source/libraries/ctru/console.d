@@ -18,18 +18,18 @@
 module ctru.console;
 
 import ctru.types;
+import ctru.gfx;
 
 extern (C):
 
-extern (D) string CONSOLE_ESC(T)(auto ref T x)
-{
-    import std.conv : to;
+extern (D) enum string CONSOLE_ESC(size_t x) = () {
+    //import std.conv : to;
 
-    return "\x1b[" ~ to!string(x);
-}
+    return "\x1b[" ~ cast(char)(x / 10) ~ cast(char)(x % 10);
+}();
 
-enum CONSOLE_RESET = CONSOLE_ESC(0);
-enum CONSOLE_BLACK = CONSOLE_ESC(30);
+enum CONSOLE_RESET = CONSOLE_ESC!(0);
+enum CONSOLE_BLACK = CONSOLE_ESC!(30);
 
 /// A callback for printing a character.
 alias ConsolePrint = bool function (void* con, int c);

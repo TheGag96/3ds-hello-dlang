@@ -1,5 +1,10 @@
 module citro3d.light;
 
+import ctru.types;
+import ctru.gpu.enums;
+import citro3d.lightlut;
+import citro3d.types;
+
 extern (C):
 
 //-----------------------------------------------------------------------------
@@ -75,7 +80,7 @@ void C3D_LightEnvBind(C3D_LightEnv* env);
 
 void C3D_LightEnvMaterial(C3D_LightEnv* env, const(C3D_Material)* mtl);
 void C3D_LightEnvAmbient(C3D_LightEnv* env, float r, float g, float b);
-void C3D_LightEnvLut(C3D_LightEnv* env, GPU_LIGHTLUTID lutId, GPU_LIGHTLUTINPUT input, bool negative, C3D_LightLut* lut);
+void C3D_LightEnvLut(C3D_LightEnv* env, GPULightLutId lutId, GPULightLutInput input, bool negative, C3D_LightLut* lut);
 
 enum
 {
@@ -85,8 +90,8 @@ enum
     GPU_SHADOW_ALPHA     = BIT(19)
 }
 
-void C3D_LightEnvFresnel(C3D_LightEnv* env, GPU_FRESNELSEL selector);
-void C3D_LightEnvBumpMode(C3D_LightEnv* env, GPU_BUMPMODE mode);
+void C3D_LightEnvFresnel(C3D_LightEnv* env, GPUFresnelSel selector);
+void C3D_LightEnvBumpMode(C3D_LightEnv* env, GPUBumpMode mode);
 void C3D_LightEnvBumpSel(C3D_LightEnv* env, int texUnit);
 void C3D_LightEnvShadowMode(C3D_LightEnv* env, uint mode);
 void C3D_LightEnvShadowSel(C3D_LightEnv* env, int texUnit);

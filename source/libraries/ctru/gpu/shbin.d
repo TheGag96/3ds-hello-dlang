@@ -6,19 +6,20 @@
 module ctru.gpu.shbin;
 
 import ctru.gpu.gpu;
+import ctru.gpu.enums;
 import ctru.types;
 
 extern (C):
 
 /// DVLE type.
-enum DVLE_Type
+enum DVLEType
 {
-    vertex_shdr   = GpuShaderType.vertex_shader,  ///< Vertex shader.
-    geometry_shdr = GpuShaderType.geometry_shader ///< Geometry shader.
+    vertex_shdr   = GPUShaderType.vertex_shader,  ///< Vertex shader.
+    geometry_shdr = GPUShaderType.geometry_shader ///< Geometry shader.
 }
 
 /// Constant type.
-enum DVLE_ConstantType
+enum DVLEConstantType
 {
     _bool   = 0x0, ///< Bool.
     u8      = 0x1, ///< Unsigned 8-bit integer.
@@ -26,7 +27,7 @@ enum DVLE_ConstantType
 }
 
 /// Output attribute.
-enum DVLE_OutputAttribute
+enum DVLEOutputAttribute
 {
     position   = 0x0, ///< Position.
     normalquat = 0x1, ///< Normal Quaternion.
@@ -40,7 +41,7 @@ enum DVLE_OutputAttribute
 }
 
 /// Geometry shader operation modes.
-enum DVLE_GeoShaderMode
+enum DVLEGeoShaderMode
 {
     point         = 0, ///< Point processing mode.
     variable_prim = 1, ///< Variable-size primitive processing mode.
@@ -59,7 +60,7 @@ struct DVLP_s
 /// DVLE constant entry data.
 struct DVLE_constEntry_s
 {
-    ushort type; ///< Constant type. See @ref DVLE_ConstantType
+    ushort type; ///< Constant type. See @ref DVLEConstantType
     ushort id; ///< Constant ID.
     uint[4] data; ///< Constant data.
 }
@@ -67,7 +68,7 @@ struct DVLE_constEntry_s
 /// DVLE output entry data.
 struct DVLE_outEntry_s
 {
-    ushort type; ///< Output type. See @ref DVLE_OutputAttribute
+    ushort type; ///< Output type. See @ref DVLEOutputAttribute
     ushort regID; ///< Output register ID.
     ubyte mask; ///< Output mask.
     ubyte[3] unk; ///< Unknown.
@@ -84,9 +85,9 @@ struct DVLE_uniformEntry_s
 /// DVLE data.
 struct DVLE_s
 {
-    DVLE_Type type; ///< DVLE type.
+    DVLEType type; ///< DVLE type.
     bool mergeOutmaps; ///< true = merge vertex/geometry shader outmaps ('dummy' output attribute is present).
-    DVLE_GeoShaderMode gshMode; ///< Geometry shader operation mode.
+    DVLEGeoShaderMode gshMode; ///< Geometry shader operation mode.
     ubyte gshFixedVtxStart; ///< Starting float uniform register number for storing the fixed-size primitive vertex array.
     ubyte gshVariableVtxNum; ///< Number of fully-defined vertices in the variable-size primitive vertex array.
     ubyte gshFixedVtxNum; ///< Number of vertices in the fixed-size primitive vertex array.

@@ -62,7 +62,7 @@ void httpcExit();
  * @param url URL to connect to.
  * @param use_defaultproxy Whether the default proxy should be used (0 for default)
  */
-Result httpcOpenContext(httpcContext* context, HTTPC_RequestMethod method, const(char)* url, uint use_defaultproxy);
+Result httpcOpenContext(httpcContext* context, HTTPCRequestMethod method, const(char)* url, uint use_defaultproxy);
 
 /**
  * @brief Closes a HTTP context.
@@ -137,7 +137,7 @@ Result httpcReceiveDataTimeout(httpcContext* context, ubyte* buffer, uint size, 
  * @param context Context to use.
  * @param out Pointer to output the HTTP request state to.
  */
-Result httpcGetRequestState(httpcContext* context, HTTPC_RequestStatus* out_);
+Result httpcGetRequestState(httpcContext* context, HTTPCRequestStatus* out_);
 
 /**
  * @brief Gets the download size state of a HTTP context.
@@ -184,7 +184,7 @@ Result httpcAddTrustedRootCA(httpcContext* context, const(ubyte)* cert, uint cer
  * @param context Context to use.
  * @param certID ID of the cert to add, see sslc.h.
  */
-Result httpcAddDefaultCert(httpcContext* context, SSLC_DefaultRootCert certID);
+Result httpcAddDefaultCert(httpcContext* context, SSLCDefaultRootCert certID);
 
 /**
  * @brief Sets the RootCertChain for a HTTP context.
@@ -208,7 +208,7 @@ Result httpcSetClientCert(httpcContext* context, const(ubyte)* cert, uint certsi
  * @param context Context to use.
  * @param certID ID of the cert to add, see sslc.h.
  */
-Result httpcSetClientCertDefault(httpcContext* context, SSLC_DefaultClientCert certID);
+Result httpcSetClientCertDefault(httpcContext* context, SSLCDefaultClientCert certID);
 
 /**
  * @brief Sets the ClientCert contexthandle for a HTTP context.
@@ -260,7 +260,7 @@ Result httpcRootCertChainAddCert(uint RootCertChain_contexthandle, const(ubyte)*
  * @param certID ID of the cert to add, see sslc.h.
  * @param cert_contexthandle Optional output ptr for the cert contexthandle(this can be NULL).
  */
-Result httpcRootCertChainAddDefaultCert(uint RootCertChain_contexthandle, SSLC_DefaultRootCert certID, uint* cert_contexthandle);
+Result httpcRootCertChainAddDefaultCert(uint RootCertChain_contexthandle, SSLCDefaultRootCert certID, uint* cert_contexthandle);
 
 /**
  * @brief Removes a cert from a RootCertChain.
@@ -284,7 +284,7 @@ Result httpcOpenClientCertContext(const(ubyte)* cert, uint certsize, const(ubyte
  * @param certID ID of the cert to add, see sslc.h.
  * @param ClientCert_contexthandle Output ClientCert context handle.
  */
-Result httpcOpenDefaultClientCertContext(SSLC_DefaultClientCert certID, uint* ClientCert_contexthandle);
+Result httpcOpenDefaultClientCertContext(SSLCDefaultClientCert certID, uint* ClientCert_contexthandle);
 
 /**
  * @brief Closes a ClientCert context.
@@ -305,6 +305,6 @@ Result httpcDownloadData(httpcContext* context, ubyte* buffer, uint size, uint* 
 /**
  * @brief Sets Keep-Alive for the context.
  * @param context Context to set the KeepAlive flag on.
- * @param option HTTPC_KeepAlive option.
+ * @param option HTTPCKeepAlive option.
  */
-Result httpcSetKeepAlive(httpcContext* context, HTTPC_KeepAlive option);
+Result httpcSetKeepAlive(httpcContext* context, HTTPCKeepAlive option);

@@ -28,9 +28,10 @@ module citro3d.tex3ds;
 
 import ctru.types;
 import ctru.gfx;
+import ctru.util.decompress;
 import citro3d.texture;
-import core.stdc.stdint;
-import core.stdc.stdio;
+//import core.stdc.stdint;
+//import core.stdc.stdio;
 
 
 extern (C):
@@ -105,7 +106,7 @@ Tex3DS_Texture Tex3DS_TextureImportFD(int fd, C3D_Tex* tex, C3D_TexCube* texcube
  *  @param[in]  vram     Whether to store textures in VRAM
  *  @returns Tex3DS texture
  */
-Tex3DS_Texture Tex3DS_TextureImportStdio(FILE* fp, C3D_Tex* tex, C3D_TexCube* texcube, bool vram);
+//Tex3DS_Texture Tex3DS_TextureImportStdio(FILE* fp, C3D_Tex* tex, C3D_TexCube* texcube, bool vram);
 
 /** @brief Get number of subtextures
  *  @param[in] texture Tex3DS texture
