@@ -159,7 +159,6 @@ else version (Posix)
 }
 else version (DevkitARM)
 {
-    version (ARM) pragma(msg, "benis");
     alias int8_t   = byte;   ///
     alias int16_t  = short;  ///
     alias uint8_t  = ubyte;  ///
