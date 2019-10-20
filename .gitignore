@@ -1,0 +1,5 @@
+*.bak
+/build/
+*.3dsx
+*.smdh
+*.elf
