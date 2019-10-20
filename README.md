@@ -86,6 +86,8 @@ If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d), 
 
 ## Thanks to...
 
+* Wild for his minimal object.d from [PowerNex](https://github.com/PowerNex/PowerNex)
+* [DevkitPro](https://devkitpro.org/)
 * The devs of [libctru](https://github.com/smealum/ctrulib)
 * The devs of [citro3d](https://github.com/fincs/citro3d)
 * [dstep](https://github.com/jacob-carlborg/dstep) for C header file conversion
