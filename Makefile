@@ -56,7 +56,6 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 
 DFLAGS  := -g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
-			-nophoboslib \
 			-fno-druntime \
 			-fversion=DevkitARM \
 			-fversion=CRuntime_Newlib \

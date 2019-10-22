@@ -75,6 +75,7 @@ If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d), 
 * Using a betterC-like subset of D
 * (Mostly complete) bindings for libctru
 * (Mostly complete) bindings for citro3d
+* (Mostly complete) bindings for citro2d
 
 ## Known issues
 
