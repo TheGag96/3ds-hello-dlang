@@ -68,7 +68,7 @@ cd /path/to/3ds-hello-dlang
 make
 ```
 
-If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d), follow the setup instructions to install the library.
+If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d) and [citro2d](https://github.com/devkitPro/citro2d), follow the setup instructions to install those libraries.
 
 ## What's working so far
 
@@ -81,7 +81,7 @@ If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d), 
 
 * No support for core.stdc yet (needs to be modified to support newlib's libc implementation)
 * Bindings referencing things like sockets or other stuff in the C standard library are incomplete
-* Without the -betterC flag, doing stuff with CTFE is less comfy, and certain D standard library files have to be tweaked to compile properly.
+* Certain D standard library files have to be tweaked to compile properly, and I'm not sure if it can be made better or if that's just how it has to be in this environment.
 * The bindings I've written so far have enums renamed to fit the D naming convention, but nothing else really is. Still not sure how I plan on cleaning things like that up.
 * My hacky Makefile edits currently copy the path of every D source file into the compile command, which makes it HUGE... Need to figure out how to use `-I` properly. I tried, but I couldn't override the standard library files with my hacked-up versions that way.
 
