@@ -52,7 +52,15 @@ struct Tex3DS_SubTexture
 }
 
 /** @brief Texture */
-struct Tex3DS_Texture_s;
+struct Tex3DS_Texture_s
+{
+    ushort numSubTextures;               ///< Number of subtextures
+    ushort width;                        ///< Texture width
+    ushort height;                       ///< Texture height
+    ubyte  format;                       ///< Texture format
+    ubyte  mipmapLevels;                 ///< Number of mipmaps
+    Tex3DS_SubTexture[0] subTextures;  ///< Subtextures
+}
 alias Tex3DS_Texture = Tex3DS_Texture_s*;
 
 /** @brief Import Tex3DS texture

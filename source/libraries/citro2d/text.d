@@ -10,10 +10,33 @@ import ctru.font;
 import ctru.types;
 import citro2d.base;
 import citro2d.font;
+import citro3d.texture;
 
 extern (C):
 
-struct C2D_TextBuf_s;
+struct C2Di_Glyph
+{
+  uint lineNo;
+  C3D_Tex* sheet;
+  float xPos;
+  float width;
+
+  struct _anon
+  {
+    float left, top, right, bottom;
+  };
+
+  _anon texcoord;
+}
+
+struct C2D_TextBuf_s
+{
+  uint[2] reserved;
+  size_t glyphCount;
+  size_t glyphBufSize;
+  C2Di_Glyph[0] glyphs;
+}
+
 alias C2D_TextBuf = C2D_TextBuf_s*;
 
 /** @defgroup Text Text drawing functions

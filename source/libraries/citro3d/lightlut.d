@@ -27,17 +27,20 @@ void LightLut_FromArray(C3D_LightLut* lut, float* data);
 void LightLut_FromFunc(C3D_LightLut* lut, C3D_LightLutFunc func, float param, bool negative);
 void LightLutDA_Create(C3D_LightLutDA* lut, C3D_LightLutFuncDA func, float from, float to, float arg0, float arg1);
 
+pragma(inline)
 extern (D) auto LightLut_Phong(T0, T1)(auto ref T0 lut, auto ref T1 shininess)
 {
-    return LightLut_FromFunc(lut, powf, shininess, false);
+    return LightLut_FromFunc(lut, &powf, shininess, false);
 }
 
+pragma(inline)
 extern (D) auto LightLut_Spotlight(T0, T1)(auto ref T0 lut, auto ref T1 angle)
 {
-    return LightLut_FromFunc(lut, spot_step, cosf(angle), true);
+    return LightLut_FromFunc(lut, &spot_step, cosf(angle), true);
 }
 
+pragma(inline)
 extern (D) auto LightLutDA_Quadratic(T0, T1, T2, T3, T4)(auto ref T0 lut, auto ref T1 from, auto ref T2 to, auto ref T3 linear, auto ref T4 quad)
 {
-    return LightLutDA_Create(lut, quadratic_dist_attn, from, to, linear, quad);
+    return LightLutDA_Create(lut, &quadratic_dist_attn, from, to, linear, quad);
 }

@@ -72,13 +72,21 @@ struct C2D_ImageTint
  *  @param[in] max The upper bound
  *  @returns The clamped value
  */
-float C2D_Clamp(float x, float min, float max);
+pragma(inline, true)
+float C2D_Clamp(float x, float min, float max)
+{
+    return x <= min ? min : x >= max ? max : x;
+}
 
-/** @brief Converts a float to u8
+/** @brief Converts a float to ubyte
  *  @param[in] x Input value (0.0~1.0)
  *  @returns Output value (0~255)
  */
-ubyte C2D_FloatToU8(float x);
+pragma(inline, true)
+ubyte C2D_FloatToU8(float x)
+{
+    return cast(ubyte)(255.0f*C2D_Clamp(x, 0.0f, 1.0f)+0.5f);
+}
 
 /** @brief Builds a 32-bit RGBA color value
  *  @param[in] r Red component (0~255)
@@ -87,7 +95,11 @@ ubyte C2D_FloatToU8(float x);
  *  @param[in] a Alpha component (0~255)
  *  @returns The 32-bit RGBA color value
  */
-uint C2D_Color32(ubyte r, ubyte g, ubyte b, ubyte a);
+pragma(inline, true)
+uint C2D_Color32(ubyte r, ubyte g, ubyte b, ubyte a)
+{
+    return r | (g << cast(uint)8) | (b << cast(uint)16) | (a << cast(uint)24);
+}
 
 /** @brief Builds a 32-bit RGBA color value from float values
  *  @param[in] r Red component (0.0~1.0)
@@ -96,7 +108,11 @@ uint C2D_Color32(ubyte r, ubyte g, ubyte b, ubyte a);
  *  @param[in] a Alpha component (0.0~1.0)
  *  @returns The 32-bit RGBA color value
  */
-uint C2D_Color32f(float r, float g, float b, float a);
+pragma(inline, true)
+uint C2D_Color32f(float r, float g, float b, float a)
+{
+    return C2D_Color32(C2D_FloatToU8(r),C2D_FloatToU8(g),C2D_FloatToU8(b),C2D_FloatToU8(a));
+}
 
 /** @brief Configures one corner of an image tint structure
  *  @param[in] tint Image tint structure
@@ -104,52 +120,84 @@ uint C2D_Color32f(float r, float g, float b, float a);
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_SetImageTint(
-    C2D_ImageTint* tint,
-    C2DCorner corner,
-    uint color,
-    float blend);
+pragma(inline, true)
+void C2D_SetImageTint(C2D_ImageTint* tint, C2DCorner corner, uint color, float blend)
+{
+    tint.corners[corner].color = color;
+    tint.corners[corner].blend = blend;
+}
 
 /** @brief Configures an image tint structure with the specified tint parameters applied to all corners
  *  @param[in] tint Image tint structure
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_PlainImageTint(C2D_ImageTint* tint, uint color, float blend);
+pragma(inline, true)
+void C2D_PlainImageTint(C2D_ImageTint* tint, uint color, float blend)
+{
+    C2D_SetImageTint(tint, C2DCorner.top_left,  color, blend);
+    C2D_SetImageTint(tint, C2DCorner.top_right, color, blend);
+    C2D_SetImageTint(tint, C2DCorner.bottom_left,  color, blend);
+    C2D_SetImageTint(tint, C2DCorner.bottom_right, color, blend);
+}
 
 /** @brief Configures an image tint structure to just apply transparency to the image
  *  @param[in] tint Image tint structure
  *  @param[in] alpha Alpha transparency value to apply to the image
  */
-void C2D_AlphaImageTint(C2D_ImageTint* tint, float alpha);
+pragma(inline, true)
+void C2D_AlphaImageTint(C2D_ImageTint* tint, float alpha)
+{
+    C2D_PlainImageTint(tint, C2D_Color32f(0.0f, 0.0f, 0.0f, alpha), 0.0f);
+}
 
 /** @brief Configures an image tint structure with the specified tint parameters applied to the top side (e.g. for gradients)
  *  @param[in] tint Image tint structure
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_TopImageTint(C2D_ImageTint* tint, uint color, float blend);
+pragma(inline, true)
+void C2D_TopImageTint(C2D_ImageTint* tint, uint color, float blend)
+{
+    C2D_SetImageTint(tint, C2DCorner.top_left,  color, blend);
+    C2D_SetImageTint(tint, C2DCorner.top_right, color, blend);
+}
 
 /** @brief Configures an image tint structure with the specified tint parameters applied to the bottom side (e.g. for gradients)
  *  @param[in] tint Image tint structure
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_BottomImageTint(C2D_ImageTint* tint, uint color, float blend);
+pragma(inline, true)
+void C2D_BottomImageTint(C2D_ImageTint* tint, uint color, float blend)
+{
+    C2D_SetImageTint(tint, C2DCorner.bottom_left,  color, blend);
+    C2D_SetImageTint(tint, C2DCorner.bottom_right, color, blend);
+}
 
 /** @brief Configures an image tint structure with the specified tint parameters applied to the left side (e.g. for gradients)
  *  @param[in] tint Image tint structure
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_LeftImageTint(C2D_ImageTint* tint, uint color, float blend);
+pragma(inline, true)
+void C2D_LeftImageTint(C2D_ImageTint* tint, uint color, float blend)
+{
+    C2D_SetImageTint(tint, C2DCorner.top_left, color, blend);
+    C2D_SetImageTint(tint, C2DCorner.bottom_left, color, blend);
+}
 
 /** @brief Configures an image tint structure with the specified tint parameters applied to the right side (e.g. for gradients)
  *  @param[in] tint Image tint structure
  *  @param[in] color RGB tint color and Alpha transparency
  *  @param[in] blend Blending strength of the tint color (0.0~1.0)
  */
-void C2D_RightImageTint(C2D_ImageTint* tint, uint color, float blend);
+pragma(inline, true)
+void C2D_RightImageTint(C2D_ImageTint* tint, uint color, float blend)
+{
+    C2D_SetImageTint(tint, C2DCorner.top_right, color, blend);
+    C2D_SetImageTint(tint, C2DCorner.bottom_right, color, blend);
+}
 
 /** @} */
 
@@ -185,7 +233,11 @@ void C2D_SceneSize(uint width, uint height, bool tilt);
 /** @brief Configures the size of the 2D scene to match that of the specified render target.
  *  @param[in] target Render target
  */
-void C2D_SceneTarget(C3D_RenderTarget* target);
+pragma(inline, true)
+void C2D_SceneTarget(C3D_RenderTarget* target)
+{
+    C2D_SceneSize(target.frameBuf.width, target.frameBuf.height, target.linked);
+}
 
 /** @brief Helper function to create a render target for a screen
  *  @param[in] screen Screen (GFX_TOP or GFX_BOTTOM)
@@ -203,7 +255,13 @@ void C2D_TargetClear(C3D_RenderTarget* target, uint color);
 /** @brief Helper function to begin drawing a 2D scene on a render target
  *  @param[in] target Render target to draw the 2D scene to
  */
-void C2D_SceneBegin(C3D_RenderTarget* target);
+pragma(inline, true)
+void C2D_SceneBegin(C3D_RenderTarget* target)
+{
+    C2D_Flush();
+    C3D_FrameDrawOn(target);
+    C2D_SceneTarget(target);
+}
 
 /** @} */
 
@@ -243,14 +301,19 @@ bool C2D_DrawImage(C2D_Image img, const(C2D_DrawParams)* params, const(C2D_Image
  *  @param[in] scaleX Horizontal scaling factor to apply to the image (optional, by default 1.0f); negative values apply a horizontal flip
  *  @param[in] scaleY Vertical scaling factor to apply to the image (optional, by default 1.0f); negative values apply a vertical flip
  */
-bool C2D_DrawImageAt(
-    C2D_Image img,
-    float x,
-    float y,
-    float depth,
-    const(C2D_ImageTint)* tint,
-    float scaleX,
-    float scaleY);
+pragma(inline, true)
+bool C2D_DrawImageAt(C2D_Image img, float x, float y, float depth,
+    const(C2D_ImageTint)* tint = null,
+    float scaleX = 1.0f, float scaleY = 1.0f)
+{
+    C2D_DrawParams params = C2D_DrawParams
+    (
+        C2D_DrawParams._Anonymous_0( x, y, scaleX*img.subtex.width, scaleY*img.subtex.height ),
+        C2D_DrawParams._Anonymous_1( 0.0f, 0.0f ),
+        depth, 0.0f
+    );
+    return C2D_DrawImage(img, &params, tint);
+}
 
 /** @brief Draws an image using the GPU (variant accepting position/scaling/rotation)
  *  @param[in] img Handle of the image to draw

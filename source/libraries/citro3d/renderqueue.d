@@ -68,11 +68,11 @@ C3D_RenderTarget* C3D_RenderTargetCreateFromTex(C3D_Tex* tex, GPUTexFace face, i
 void C3D_RenderTargetDelete(C3D_RenderTarget* target);
 void C3D_RenderTargetSetOutput(C3D_RenderTarget* target, GFXScreen screen, GFX3DSide side, uint transferFlags);
 
-void C3D_RenderTargetClear(
-    C3D_RenderTarget* target,
-    C3DClearBits clearBits,
-    uint clearColor,
-    uint clearDepth);
+pragma(inline, true)
+void C3D_RenderTargetClear(C3D_RenderTarget* target, C3DClearBits clearBits, uint clearColor, uint clearDepth)
+{
+    C3D_FrameBufClear(&target.frameBuf, clearBits, clearColor, clearDepth);
+}
 
 void C3D_SyncDisplayTransfer(uint* inadr, uint indim, uint* outadr, uint outdim, uint flags);
 void C3D_SyncTextureCopy(uint* inadr, uint indim, uint* outadr, uint outdim, uint size, uint flags);

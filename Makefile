@@ -65,7 +65,7 @@ DFLAGS  := -g -Wall -O2 -mword-relocations \
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lctru -lm
+LIBS	:= -lcitro2d -lcitro3d -lctru -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -90,6 +90,7 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir))
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export SHBINDIR	:=	$(SOURCEDIR)/__SHBIN
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
@@ -242,17 +243,30 @@ define shader-as
 	bin2s $(CURBIN) | $(AS) -o $*.shbin.o
 endef
 
+define shader-as-d
+	$(eval CURBIN := $*.shbin)
+	rm -rf $(SHBINDIR)
+	mkdir $(SHBINDIR)
+	echo "module pica_`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`;" > $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end;" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
+	echo "extern (C) extern __gshared const uint" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
+	echo "const(ubyte)[]  `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_wrapped() { return (&`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`)[0..`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size]; }" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
+	picasso -o $(CURBIN) $1
+	bin2s $(CURBIN) | $(AS) -o $*.shbin.o
+endef
+
 %.shbin.o %_shbin.h : %.v.pica %.g.pica
 	@echo $(notdir $^)
-	@$(call shader-as,$^)
+	@$(call shader-as-d,$^)
 
 %.shbin.o %_shbin.h : %.v.pica
 	@echo $(notdir $<)
-	@$(call shader-as,$<)
+	@$(call shader-as-d,$<)
 
 %.shbin.o %_shbin.h : %.shlist
 	@echo $(notdir $<)
-	@$(call shader-as,$(foreach file,$(shell cat $<),$(dir $<)$(file)))
+	@$(call shader-as-d,$(foreach file,$(shell cat $<),$(dir $<)$(file)))
 
 #---------------------------------------------------------------------------------
 %.t3x	%.h	:	%.t3s

@@ -9,10 +9,16 @@ import ctru.services.cfgu;
 import ctru.font;
 import ctru.types;
 import citro2d.base;
+import citro3d.texture;
+import citro3d.tex3ds;
 
 extern (C):
 
-struct C2D_SpriteSheet_s;
+struct C2D_SpriteSheet_s
+{
+    Tex3DS_Texture t3x;
+    C3D_Tex        tex;
+}
 alias C2D_SpriteSheet = C2D_SpriteSheet_s*;
 
 /** @defgroup SpriteSheet Sprite sheet functions

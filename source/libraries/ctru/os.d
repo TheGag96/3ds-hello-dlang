@@ -6,6 +6,7 @@
 module ctru.os;
 
 import ctru.types;
+import ctru.svc;
 
 extern (C):
 
@@ -98,7 +99,11 @@ const(char)* osStrError(uint error);
  *
  * This can be used to compare system versions easily with @ref SYSTEM_VERSION.
  */
-uint osGetFirmVersion();
+pragma(inline, true)
+uint osGetFirmVersion()
+{
+    return (*cast(vu32*)0x1FF80060) & ~0xFF;
+}
 
 /**
  * @brief Gets the system's kernel version.
@@ -110,14 +115,26 @@ uint osGetFirmVersion();
  * if(osGetKernelVersion() > SYSTEM_VERSION(2,46,0)) printf("You are running 9.0 or higher\n");
  * @endcode
  */
-uint osGetKernelVersion();
+pragma(inline, true)
+uint osGetKernelVersion()
+{
+    return (*cast(vu32*)0x1FF80000) & ~0xFF;
+}
 
 /**
  * @brief Gets the size of the specified memory region.
  * @param region Memory region to check.
  * @return The size of the memory region, in bytes.
  */
-uint osGetMemRegionSize(MemRegion region);
+pragma(inline, true)
+uint osGetMemRegionSize(MemRegion region)
+{
+    if(region == MemRegion.all) {
+        return osGetMemRegionSize(MemRegion.application) + osGetMemRegionSize(MemRegion.system) + osGetMemRegionSize(MemRegion.base);
+    } else {
+        return *cast(vu32*) (0x1FF80040 + (region - 1) * 0x4);
+    }
+}
 
 /**
  * @brief Gets the number of used bytes within the specified memory region.
@@ -131,7 +148,11 @@ long osGetMemRegionUsed(MemRegion region);
  * @param region Memory region to check.
  * @return The number of free bytes of memory.
  */
-long osGetMemRegionFree(MemRegion region);
+pragma(inline, true)
+long osGetMemRegionFree(MemRegion region)
+{
+    return cast(long) osGetMemRegionSize(region) - osGetMemRegionUsed(region);
+}
 
 /**
  * @brief Gets the current time.
@@ -143,13 +164,23 @@ ulong osGetTime();
  * @brief Starts a tick counter.
  * @param cnt The tick counter.
  */
-void osTickCounterStart(TickCounter* cnt);
+pragma(inline, true)
+void osTickCounterStart(TickCounter* cnt)
+{
+    cnt.reference = svcGetSystemTick();
+}
 
 /**
  * @brief Updates the elapsed time in a tick counter.
  * @param cnt The tick counter.
  */
-void osTickCounterUpdate(TickCounter* cnt);
+pragma(inline, true)
+void osTickCounterUpdate(TickCounter* cnt)
+{
+    ulong now = svcGetSystemTick();
+    cnt.elapsed = now - cnt.reference;
+    cnt.reference = now;
+}
 
 /**
  * @brief Reads the elapsed time in a tick counter.
@@ -173,13 +204,21 @@ double osTickCounterRead(const(TickCounter)* cnt);
  *
  * These values correspond with the number of wifi bars displayed by Home Menu.
  */
-ubyte osGetWifiStrength();
+pragma(inline, true)
+ubyte osGetWifiStrength()
+{
+    return *cast(vu8*)0x1FF81066;
+}
 
 /**
  * @brief Gets the state of the 3D slider.
  * @return The state of the 3D slider(0.0~1.0)
  */
-float osGet3DSliderState();
+pragma(inline, true)
+float osGet3DSliderState()
+{
+    return *cast(float*)0x1FF81080;
+}
 
 /**
  * @brief Configures the New 3DS speedup.

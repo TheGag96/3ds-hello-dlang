@@ -6,6 +6,7 @@
 module ctru.romfs;
 
 import ctru.types;
+//import core.stdc.time;
 
 extern (C):
 
@@ -33,7 +34,7 @@ struct romfs_dir
     uint childFile; ///< Offset of the first file.
     uint nextHash; ///< Directory hash table pointer.
     uint nameLen; ///< Name length.
-    ushort[] name; ///< Name. (UTF-16)
+    ushort[0] name; ///< Name. (UTF-16)
 }
 
 /// RomFS file.
@@ -45,10 +46,23 @@ struct romfs_file
     ulong dataSize; ///< Length of the file's data.
     uint nextHash; ///< File hash table pointer.
     uint nameLen; ///< Name length.
-    ushort[] name; ///< Name. (UTF-16)
+    ushort[0] name; ///< Name. (UTF-16)
 }
 
-struct romfs_mount;
+//TODO: remove when newlib/c std lib compatibility fixed
+alias time_t = ulong;
+
+struct romfs_mount
+{
+    Handle             fd;
+    time_t             mtime;
+    uint               offset;
+    romfs_header       header;
+    romfs_dir*         cwd;
+    uint*              dirHashTable, fileHashTable;
+    void*              dirTable, fileTable;
+    romfs_mount*       next;
+}
 
 /**
  * @brief Mounts the Application's RomFS.

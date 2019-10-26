@@ -9,12 +9,18 @@ import citro2d.base;
 import ctru.font;
 import ctru.types;
 import ctru.services.cfgu;
+import citro3d.texture;
 
 extern (C):
 
 // #include <stdio.h>
 
-struct C2D_Font_s;
+struct C2D_Font_s
+{
+  CFNT_s* cfnt;
+  C3D_Tex* glyphSheets;
+  float textScale;
+};
 alias C2D_Font = C2D_Font_s*;
 
 /** @defgroup Font Font functions
