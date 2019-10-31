@@ -43,12 +43,12 @@ extern (D) auto GET_VERSION_REVISION(T)(auto ref T _version)
 }
 
 /// Memory regions.
-enum MemRegion
+enum MemRegion : ubyte
 {
-    all = 0,         ///< All regions.
+    all         = 0, ///< All regions.
     application = 1, ///< APPLICATION memory.
-    system = 2,      ///< SYSTEM memory.
-    base = 3         ///< BASE memory.
+    system      = 2, ///< SYSTEM memory.
+    base        = 3  ///< BASE memory.
 }
 
 /// Tick counter.

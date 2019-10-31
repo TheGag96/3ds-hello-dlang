@@ -31,14 +31,14 @@ enum NFC_ERR_DATACORRUPTION1 = 0xC8A17618;
 enum NFC_STARTSCAN_DEFAULTINPUT = 0;
 
 /// NFC operation type.
-enum NFCOpType
+enum NFCOpType : ubyte
 {
     unknown = 1, /// Unknown.
     nfc_tag = 2, /// This is the default.
     raw_nfc = 3 /// Use Raw NFC tag commands. Only available with > = 10.0.0-X.
 }
 
-enum NFCTagState
+enum NFCTagState : ubyte
 {
     uninitialized    = 0, /// nfcInit() was not used yet.
     scanning_stopped = 1, /// Not currently scanning for NFC tags. Set by nfcStopScanning() and nfcInit(), when successful.

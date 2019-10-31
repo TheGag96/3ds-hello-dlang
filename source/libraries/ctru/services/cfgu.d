@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Configuration region values.
-enum CFGRegion
+enum CFGRegion : ubyte
 {
     jpn = 0, ///< Japan
     usa = 1, ///< USA
@@ -22,7 +22,7 @@ enum CFGRegion
 }
 
 /// Configuration language values.
-enum CFGLanguage
+enum CFGLanguage : ubyte
 {
     jp = 0,  ///< Japanese
     en = 1,  ///< English

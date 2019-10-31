@@ -12,14 +12,14 @@ import ctru.types;
 extern (C):
 
 /// DVLE type.
-enum DVLEType
+enum DVLEType : ubyte
 {
     vertex_shdr   = GPUShaderType.vertex_shader,  ///< Vertex shader.
     geometry_shdr = GPUShaderType.geometry_shader ///< Geometry shader.
 }
 
 /// Constant type.
-enum DVLEConstantType
+enum DVLEConstantType : ubyte
 {
     _bool   = 0x0, ///< Bool.
     u8      = 0x1, ///< Unsigned 8-bit integer.
@@ -27,7 +27,7 @@ enum DVLEConstantType
 }
 
 /// Output attribute.
-enum DVLEOutputAttribute
+enum DVLEOutputAttribute : ubyte
 {
     position   = 0x0, ///< Position.
     normalquat = 0x1, ///< Normal Quaternion.
@@ -41,7 +41,7 @@ enum DVLEOutputAttribute
 }
 
 /// Geometry shader operation modes.
-enum DVLEGeoShaderMode
+enum DVLEGeoShaderMode : ubyte
 {
     point         = 0, ///< Point processing mode.
     variable_prim = 1, ///< Variable-size primitive processing mode.

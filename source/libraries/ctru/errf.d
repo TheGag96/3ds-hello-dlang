@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Types of errors that can be thrown by err:f.
-enum ERRF_ErrType
+enum ERRF_ErrType : ubyte
 {
     generic      = 0, ///< For generic errors. Shows miscellaneous info.
     mem_corrupt  = 1, ///< Same output as generic, but informs the user that "the System Memory has been damaged".
@@ -21,7 +21,7 @@ enum ERRF_ErrType
 }
 
 /// Types of 'Exceptions' thrown for ERRF_ERRTYPE_EXCEPTION
-enum ERRF_ExceptionType
+enum ERRF_ExceptionType : ubyte
 {
     prefetch_abort = 0, ///< Prefetch Abort
     data_abort     = 1, ///< Data abort
@@ -69,16 +69,16 @@ struct ERRF_FatalErrInfo
 }
 
 /// Initializes ERR:f. Unless you plan to call ERRF_Throw yourself, do not use this.
-Result errfInit ();
+Result errfInit();
 
 /// Exits ERR:f. Unless you plan to call ERRF_Throw yourself, do not use this.
-void errfExit ();
+void errfExit();
 
 /**
  * @brief Gets the current err:f API session handle.
  * @return The current err:f API session handle.
  */
-Handle* errfGetSessionHandle ();
+Handle* errfGetSessionHandle();
 
 /**
  * @brief Throws a system error and possibly results in ErrDisp triggering.
@@ -92,7 +92,7 @@ Handle* errfGetSessionHandle ();
  * You may wish to use ERRF_ThrowResult() or ERRF_ThrowResultWithMessage() instead of
  * constructing the ERRF_FatalErrInfo struct yourself.
  */
-Result ERRF_Throw (const(ERRF_FatalErrInfo)* error);
+Result ERRF_Throw(const(ERRF_FatalErrInfo)* error);
 
 /**
  * @brief Throws a system error with the given Result code.
@@ -105,7 +105,7 @@ Result ERRF_Throw (const(ERRF_FatalErrInfo)* error);
  * See https://3dbrew.org/wiki/ERR:Throw#Generic for expected top screen output
  * on development units/patched ErrDisp.
  */
-Result ERRF_ThrowResult (Result failure);
+Result ERRF_ThrowResult(Result failure);
 
 /**
  * @brief Throws a system error with the given Result code and message.
@@ -122,7 +122,7 @@ Result ERRF_ThrowResult (Result failure);
  * See https://3dbrew.org/wiki/ERR:Throw#Result_Failure for expected top screen output
  * on development units/patched ErrDisp.
  */
-Result ERRF_ThrowResultWithMessage (Result failure, const(char)* message);
+Result ERRF_ThrowResultWithMessage(Result failure, const(char)* message);
 
 /**
  * @brief Handles an exception using ErrDisp.
@@ -132,4 +132,4 @@ Result ERRF_ThrowResultWithMessage (Result failure, const(char)* message);
  * You might want to clear ENVINFO's bit0 to be able to see any debugging information.
  * @sa threadOnException
  */
-void ERRF_ExceptionHandler (ERRF_ExceptionInfo* excep, CpuRegisters* regs);
+void ERRF_ExceptionHandler(ERRF_ExceptionInfo* excep, CpuRegisters* regs);

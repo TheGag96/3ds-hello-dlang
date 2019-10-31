@@ -28,7 +28,7 @@ struct GSPGPU_FramebufferInfo
 }
 
 /// Framebuffer format.
-enum GSPGPUFramebufferFormats
+enum GSPGPUFramebufferFormats : ubyte
 {
     rgba8_oes   = 0, ///< RGBA8.  (4 bytes)
     bgr8_oes    = 1, ///< BGR8.   (3 bytes)
@@ -53,7 +53,7 @@ struct GSPGPU_CaptureInfo
 }
 
 /// GSPGPU events.
-enum GSPGPUEvent
+enum GSPGPUEvent : ubyte
 {
     psc0    = 0, ///< Memory fill completed.
     psc1    = 1, ///< TODO

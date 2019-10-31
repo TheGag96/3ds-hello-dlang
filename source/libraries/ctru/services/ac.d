@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Wifi security modes.
-enum ACSecurityMode
+enum ACSecurityMode : ubyte
 {
     open       = 0, ///< Open authentication.
     wep_40bit  = 1, ///< WEP 40-bit authentication.

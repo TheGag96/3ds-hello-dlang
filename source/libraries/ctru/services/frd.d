@@ -10,9 +10,9 @@ import ctru.mii;
 
 extern (C):
 
-enum FRIEND_SCREEN_NAME_SIZE = 0xB; ///< 11-byte UTF-16 screen name
-enum FRIEND_COMMENT_SIZE = 0x21; ///< 33-byte UTF-16 comment
-enum FRIEND_LIST_SIZE = 0x64; ///< 100 (Max number of friends)
+enum FRIEND_SCREEN_NAME_SIZE = 0xB;  ///< 11-byte UTF-16 screen name
+enum FRIEND_COMMENT_SIZE     = 0x21; ///< 33-byte UTF-16 comment
+enum FRIEND_LIST_SIZE        = 0x64; ///< 100 (Max number of friends)
 
 /// Friend key data
 struct FriendKey
@@ -58,17 +58,17 @@ struct NotificationEvent
 }
 
 /// Enum to use with FRD_GetNotificationEvent
-enum NotificationTypes
+enum NotificationTypes : ubyte
 {
-    user_went_online = 1, ///< Self went online
-    user_went_offline = 2, ///< Self went offline
-    friend_went_online = 3, ///< Friend Went Online 
+    user_went_online        = 1, ///< Self went online
+    user_went_offline       = 2, ///< Self went offline
+    friend_went_online      = 3, ///< Friend Went Online
     friend_updated_presence = 4, ///< Friend Presence changed
-    friend_updated_mii = 5, ///< Friend Mii changed
-    friend_updated_profile = 6, ///< Friend Profile changed
-    friend_went_offline = 7, ///< Friend went offline
-    friend_registered_user = 8, ///< Friend registered self as friend
-    friend_sent_invitation = 9 ///< Friend Sent invitation
+    friend_updated_mii      = 5, ///< Friend Mii changed
+    friend_updated_profile  = 6, ///< Friend Profile changed
+    friend_went_offline     = 7, ///< Friend went offline
+    friend_registered_user  = 8, ///< Friend registered self as friend
+    friend_sent_invitation  = 9  ///< Friend Sent invitation
 }
 
 /// Initializes FRD service.

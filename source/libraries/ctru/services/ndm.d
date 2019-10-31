@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Exclusive states.
-enum NDMExclusiveState
+enum NDMExclusiveState : ubyte
 {
     none                 = 0,
     infrastructure       = 1,
@@ -20,7 +20,7 @@ enum NDMExclusiveState
 }
 
 /// Current states.
-enum NDMState
+enum NDMState : ubyte
 {
     initial                            = 0,
     suspended                          = 1,
@@ -37,7 +37,7 @@ enum NDMState
 }
 
 // Daemons.
-enum NDMDaemon
+enum NDMDaemon : ubyte
 {
     cec     = 0,
     boss    = 1,
@@ -46,7 +46,7 @@ enum NDMDaemon
 }
 
 /// Used to specify multiple daemons.
-enum NDMDaemonMask
+enum NDMDaemonMask : ubyte
 {
     cec         = BIT(NDMDaemon.cec),
     boss        = BIT(NDMDaemon.boss),
@@ -58,7 +58,7 @@ enum NDMDaemonMask
 }
 
 // Daemon status.
-enum NDMDaemonStatus
+enum NDMDaemonStatus : ubyte
 {
     busy       = 0,
     idle       = 1,

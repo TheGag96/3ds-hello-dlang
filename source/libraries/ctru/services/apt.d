@@ -14,7 +14,7 @@ extern (C):
  *
  * Retrieved from http://3dbrew.org/wiki/NS_and_APT_Services#AppIDs
  */
-enum NSAppID
+enum NSAppID : ushort
 {
     none               = 0,
     homemenu           = 0x101, ///< Home Menu
@@ -40,7 +40,7 @@ enum NSAppID
 }
 
 /// APT applet position.
-enum APTAppletPos
+enum APTAppletPos : byte
 {
     none     = -1, ///< No position specified.
     app      = 0,  ///< Application.
@@ -67,7 +67,7 @@ enum APTQueryReply
 }
 
 /// APT signals.
-enum APTSignal
+enum APTSignal : ubyte
 {
     none         = 0,  ///< No signal received.
     homebutton   = 1,  ///< HOME button pressed.
@@ -84,7 +84,7 @@ enum APTSignal
 }
 
 /// APT commands.
-enum APTCommand
+enum APTCommand : ubyte
 {
     none               = 0,  ///< No command received.
     wakeup             = 1,  ///< Applet should wake up.
@@ -152,52 +152,52 @@ alias aptHookCookie = tag_aptHookCookie;
 alias aptMessageCb = void function (void* user, NSAppID sender, void* msg, size_t msgsize);
 
 /// Initializes APT.
-Result aptInit ();
+Result aptInit();
 
 /// Exits APT.
-void aptExit ();
+void aptExit();
 
 /**
  * @brief Sends an APT command through IPC, taking care of locking, opening and closing an APT session.
  * @param aptcmdbuf Pointer to command buffer (should have capacity for at least 16 words).
  */
-Result aptSendCommand (uint* aptcmdbuf);
+Result aptSendCommand(uint* aptcmdbuf);
 
 /**
  * @brief Gets whether to allow the system to enter sleep mode.
  * @return Whether sleep mode is allowed.
  */
-bool aptIsSleepAllowed ();
+bool aptIsSleepAllowed();
 
 /**
  * @brief Sets whether to allow the system to enter sleep mode.
  * @param allowed Whether to allow sleep mode.
  */
-void aptSetSleepAllowed (bool allowed);
+void aptSetSleepAllowed(bool allowed);
 
 /**
  * @brief Gets whether to allow the system to go back to HOME menu.
  * @return Whether going back to HOME menu is allowed.
  */
-bool aptIsHomeAllowed ();
+bool aptIsHomeAllowed();
 
 /**
  * @brief Sets whether to allow the system to go back to HOME menu.
  * @param allowed Whether going back to HOME menu is allowed.
  */
-void aptSetHomeAllowed (bool allowed);
+void aptSetHomeAllowed(bool allowed);
 
 /**
  * @brief Returns when the HOME button is pressed.
  * @return Whether the HOME button is being pressed.
  */
-bool aptIsHomePressed ();
+bool aptIsHomePressed();
 
 /**
  * @brief Processes the current APT status. Generally used within a main loop.
  * @return Whether the application should continue running.
  */
-bool aptMainLoop ();
+bool aptMainLoop();
 
 /**
  * @brief Sets up an APT status hook.
@@ -205,20 +205,20 @@ bool aptMainLoop ();
  * @param callback Function to call when APT's status changes.
  * @param param User-defined parameter to pass to the callback.
  */
-void aptHook (aptHookCookie* cookie, aptHookFn callback, void* param);
+void aptHook(aptHookCookie* cookie, aptHookFn callback, void* param);
 
 /**
  * @brief Removes an APT status hook.
  * @param cookie Hook cookie to remove.
  */
-void aptUnhook (aptHookCookie* cookie);
+void aptUnhook(aptHookCookie* cookie);
 
 /**
  * @brief Sets the function to be called when an APT message from another applet is received.
  * @param callback Callback function.
  * @param user User-defined data to be passed to the callback.
  */
-void aptSetMessageCallback (aptMessageCb callback, void* user);
+void aptSetMessageCallback(aptMessageCb callback, void* user);
 
 /**
  * @brief Launches a library applet.
@@ -228,21 +228,21 @@ void aptSetMessageCallback (aptMessageCb callback, void* user);
  * @param handle Handle to pass to the library applet.
  * @return Whether the application should continue running after the library applet launch.
  */
-bool aptLaunchLibraryApplet (NSAppID appId, void* buf, size_t bufsize, Handle handle);
+bool aptLaunchLibraryApplet(NSAppID appId, void* buf, size_t bufsize, Handle handle);
 
 /**
  * @brief Sets the chainloader target.
  * @param programID ID of the program to chainload to.
  * @param mediatype Media type of the program to chainload to.
  */
-void aptSetChainloader (ulong programID, ubyte mediatype);
+void aptSetChainloader(ulong programID, ubyte mediatype);
 
 /**
  * @brief Gets an APT lock handle.
  * @param flags Flags to use.
  * @param lockHandle Pointer to output the lock handle to.
  */
-Result APT_GetLockHandle (ushort flags, Handle* lockHandle);
+Result APT_GetLockHandle(ushort flags, Handle* lockHandle);
 
 /**
  * @brief Initializes an application's registration with APT.
@@ -251,22 +251,22 @@ Result APT_GetLockHandle (ushort flags, Handle* lockHandle);
  * @param signalEvent Pointer to output the signal event handle to.
  * @param resumeEvent Pointer to output the resume event handle to.
  */
-Result APT_Initialize (NSAppID appId, APT_AppletAttr attr, Handle* signalEvent, Handle* resumeEvent);
+Result APT_Initialize(NSAppID appId, APT_AppletAttr attr, Handle* signalEvent, Handle* resumeEvent);
 
 /**
  * @brief Terminates an application's registration with APT.
  * @param appID ID of the application.
  */
-Result APT_Finalize (NSAppID appId);
+Result APT_Finalize(NSAppID appId);
 
 /// Asynchronously resets the hardware.
-Result APT_HardwareResetAsync ();
+Result APT_HardwareResetAsync();
 
 /**
  * @brief Enables APT.
  * @param attr Attributes of the application.
  */
-Result APT_Enable (APT_AppletAttr attr);
+Result APT_Enable(APT_AppletAttr attr);
 
 /**
  * @brief Gets applet management info.
@@ -276,13 +276,13 @@ Result APT_Enable (APT_AppletAttr attr);
  * @param menu_appid Pointer to output the HOME menu AppID to.
  * @param active_appid Pointer to output the AppID of the currently active applet to.
  */
-Result APT_GetAppletManInfo (APTAppletPos inpos, APTAppletPos* outpos, NSAppID* req_appid, NSAppID* menu_appid, NSAppID* active_appid);
+Result APT_GetAppletManInfo(APTAppletPos inpos, APTAppletPos* outpos, NSAppID* req_appid, NSAppID* menu_appid, NSAppID* active_appid);
 
 /**
  * @brief Gets the menu's app ID.
  * @return The menu's app ID.
  */
-NSAppID aptGetMenuAppID ();
+NSAppID aptGetMenuAppID();
 
 /**
  * @brief Gets an applet's information.
@@ -293,7 +293,7 @@ NSAppID aptGetMenuAppID ();
  * @param pLoadState Pointer to output the load state to.
  * @param pAttributes Pointer to output the applet atrributes to.
  */
-Result APT_GetAppletInfo (NSAppID appID, ulong* pProgramID, ubyte* pMediaType, bool* pRegistered, bool* pLoadState, APT_AppletAttr* pAttributes);
+Result APT_GetAppletInfo(NSAppID appID, ulong* pProgramID, ubyte* pMediaType, bool* pRegistered, bool* pLoadState, APT_AppletAttr* pAttributes);
 
 /**
  * @brief Gets an applet's program information.
@@ -309,16 +309,16 @@ Result APT_GetAppletInfo (NSAppID appID, ulong* pProgramID, ubyte* pMediaType, b
  * - 0x20: Input ID is a program ID. Must be set if 0x10 is not.
  * - 0x100: Sets program ID high to 0x00040000, else it is 0x00040010. Only used when 0x20 is set.
  */
-Result APT_GetAppletProgramInfo (uint id, uint flags, ushort* titleversion);
+Result APT_GetAppletProgramInfo(uint id, uint flags, ushort* titleversion);
 
 /**
  * @brief Gets the current application's program ID.
  * @param pProgramID Pointer to output the program ID to.
  */
-Result APT_GetProgramID (ulong* pProgramID);
+Result APT_GetProgramID(ulong* pProgramID);
 
 /// Prepares to jump to the home menu.
-Result APT_PrepareToJumpToHomeMenu ();
+Result APT_PrepareToJumpToHomeMenu();
 
 /**
  * @brief Jumps to the home menu.
@@ -326,13 +326,13 @@ Result APT_PrepareToJumpToHomeMenu ();
  * @param Size of the parameter buffer.
  * @param handle Handle to pass.
  */
-Result APT_JumpToHomeMenu (const(void)* param, size_t paramSize, Handle handle);
+Result APT_JumpToHomeMenu(const(void)* param, size_t paramSize, Handle handle);
 
 /**
  * @brief Prepares to jump to an application.
  * @param exiting Specifies whether the applet is exiting.
  */
-Result APT_PrepareToJumpToApplication (bool exiting);
+Result APT_PrepareToJumpToApplication(bool exiting);
 
 /**
  * @brief Jumps to an application.
@@ -340,27 +340,27 @@ Result APT_PrepareToJumpToApplication (bool exiting);
  * @param Size of the parameter buffer.
  * @param handle Handle to pass.
  */
-Result APT_JumpToApplication (const(void)* param, size_t paramSize, Handle handle);
+Result APT_JumpToApplication(const(void)* param, size_t paramSize, Handle handle);
 
 /**
  * @brief Gets whether an application is registered.
  * @param appID ID of the application.
  * @param out Pointer to output the registration state to.
  */
-Result APT_IsRegistered (NSAppID appID, bool* out_);
+Result APT_IsRegistered(NSAppID appID, bool* out_);
 
 /**
  * @brief Inquires as to whether a signal has been received.
  * @param appID ID of the application.
  * @param signalType Pointer to output the signal type to.
  */
-Result APT_InquireNotification (uint appID, APTSignal* signalType);
+Result APT_InquireNotification(uint appID, APTSignal* signalType);
 
 /**
  * @brief Notifies an application to wait.
  * @param appID ID of the application.
  */
-Result APT_NotifyToWait (NSAppID appID);
+Result APT_NotifyToWait(NSAppID appID);
 
 /**
  * @brief Calls an applet utility function.
@@ -370,23 +370,23 @@ Result APT_NotifyToWait (NSAppID appID);
  * @param in Pointer to the input data.
  * @param inSize Size of the input buffer.
  */
-Result APT_AppletUtility (int id, void* out_, size_t outSize, const(void)* in_, size_t inSize);
+Result APT_AppletUtility(int id, void* out_, size_t outSize, const(void)* in_, size_t inSize);
 
 /// Sleeps if shell is closed (?).
-Result APT_SleepIfShellClosed ();
+Result APT_SleepIfShellClosed();
 
 /**
  * @brief Tries to lock a transition (?).
  * @param transition Transition ID.
  * @param succeeded Pointer to output whether the lock was successfully applied.
  */
-Result APT_TryLockTransition (uint transition, bool* succeeded);
+Result APT_TryLockTransition(uint transition, bool* succeeded);
 
 /**
  * @brief Unlocks a transition (?).
  * @param transition Transition ID.
  */
-Result APT_UnlockTransition (uint transition);
+Result APT_UnlockTransition(uint transition);
 
 /**
  * @brief Glances at a receieved parameter without removing it from the queue.
@@ -398,7 +398,7 @@ Result APT_UnlockTransition (uint transition);
  * @param actualSize Pointer to output the actual received data size to.
  * @param parameter Pointer to output the parameter handle to.
  */
-Result APT_GlanceParameter (NSAppID appID, void* buffer, size_t bufferSize, NSAppID* sender, APTCommand* command, size_t* actualSize, Handle* parameter);
+Result APT_GlanceParameter(NSAppID appID, void* buffer, size_t bufferSize, NSAppID* sender, APTCommand* command, size_t* actualSize, Handle* parameter);
 
 /**
  * @brief Receives a parameter.
@@ -410,7 +410,7 @@ Result APT_GlanceParameter (NSAppID appID, void* buffer, size_t bufferSize, NSAp
  * @param actualSize Pointer to output the actual received data size to.
  * @param parameter Pointer to output the parameter handle to.
  */
-Result APT_ReceiveParameter (NSAppID appID, void* buffer, size_t bufferSize, NSAppID* sender, APTCommand* command, size_t* actualSize, Handle* parameter);
+Result APT_ReceiveParameter(NSAppID appID, void* buffer, size_t bufferSize, NSAppID* sender, APTCommand* command, size_t* actualSize, Handle* parameter);
 
 /**
  * @brief Sends a parameter.
@@ -421,7 +421,7 @@ Result APT_ReceiveParameter (NSAppID appID, void* buffer, size_t bufferSize, NSA
  * @param bufferSize Size of the buffer.
  * @param parameter Parameter handle to pass.
  */
-Result APT_SendParameter (NSAppID source, NSAppID dest, APTCommand command, const(void)* buffer, uint bufferSize, Handle parameter);
+Result APT_SendParameter(NSAppID source, NSAppID dest, APTCommand command, const(void)* buffer, uint bufferSize, Handle parameter);
 
 /**
  * @brief Cancels a parameter which matches the specified source and dest AppIDs.
@@ -429,32 +429,32 @@ Result APT_SendParameter (NSAppID source, NSAppID dest, APTCommand command, cons
  * @param dest AppID of the destination application (use APPID_NONE to disable the check).
  * @param success Pointer to output true if a parameter was cancelled, or false otherwise.
  */
-Result APT_CancelParameter (NSAppID source, NSAppID dest, bool* success);
+Result APT_CancelParameter(NSAppID source, NSAppID dest, bool* success);
 
 /**
  * @brief Sends capture buffer information.
  * @param captureBuf Capture buffer information to send.
  */
-Result APT_SendCaptureBufferInfo (const(aptCaptureBufInfo)* captureBuf);
+Result APT_SendCaptureBufferInfo(const(aptCaptureBufInfo)* captureBuf);
 
 /**
  * @brief Replies to a sleep query.
  * @param appID ID of the application.
  * @param reply Query reply value.
  */
-Result APT_ReplySleepQuery (NSAppID appID, APTQueryReply reply);
+Result APT_ReplySleepQuery(NSAppID appID, APTQueryReply reply);
 
 /**
  * @brief Replies that a sleep notification has been completed.
  * @param appID ID of the application.
  */
-Result APT_ReplySleepNotificationComplete (NSAppID appID);
+Result APT_ReplySleepNotificationComplete(NSAppID appID);
 
 /**
  * @brief Prepares to close the application.
  * @param cancelPreload Whether applet preloads should be cancelled.
  */
-Result APT_PrepareToCloseApplication (bool cancelPreload);
+Result APT_PrepareToCloseApplication(bool cancelPreload);
 
 /**
  * @brief Closes the application.
@@ -462,25 +462,25 @@ Result APT_PrepareToCloseApplication (bool cancelPreload);
  * @param paramSize Size of param.
  * @param handle Handle to pass.
  */
-Result APT_CloseApplication (const(void)* param, size_t paramSize, Handle handle);
+Result APT_CloseApplication(const(void)* param, size_t paramSize, Handle handle);
 
 /**
  * @brief Sets the application's CPU time limit.
  * @param percent CPU time limit percentage to set.
  */
-Result APT_SetAppCpuTimeLimit (uint percent);
+Result APT_SetAppCpuTimeLimit(uint percent);
 
 /**
  * @brief Gets the application's CPU time limit.
  * @param percent Pointer to output the CPU time limit percentage to.
  */
-Result APT_GetAppCpuTimeLimit (uint* percent);
+Result APT_GetAppCpuTimeLimit(uint* percent);
 
 /**
  * @brief Checks whether the system is a New 3DS.
  * @param out Pointer to write the New 3DS flag to.
  */
-Result APT_CheckNew3DS (bool* out_);
+Result APT_CheckNew3DS(bool* out_);
 
 /**
  * @brief Prepares for an applicaton jump.
@@ -488,7 +488,7 @@ Result APT_CheckNew3DS (bool* out_);
  * @param programID ID of the program to jump to.
  * @param mediatype Media type of the program to jump to.
  */
-Result APT_PrepareToDoApplicationJump (ubyte flags, ulong programID, ubyte mediatype);
+Result APT_PrepareToDoApplicationJump(ubyte flags, ulong programID, ubyte mediatype);
 
 /**
  * @brief Performs an application jump.
@@ -496,13 +496,13 @@ Result APT_PrepareToDoApplicationJump (ubyte flags, ulong programID, ubyte media
  * @param paramSize Size of parameter buffer.
  * @param hmac HMAC buffer (should be 0x20 bytes long).
  */
-Result APT_DoApplicationJump (const(void)* param, size_t paramSize, const(void)* hmac);
+Result APT_DoApplicationJump(const(void)* param, size_t paramSize, const(void)* hmac);
 
 /**
  * @brief Prepares to start a library applet.
  * @param appID AppID of the applet to start.
  */
-Result APT_PrepareToStartLibraryApplet (NSAppID appID);
+Result APT_PrepareToStartLibraryApplet(NSAppID appID);
 
 /**
  * @brief Starts a library applet.
@@ -511,13 +511,13 @@ Result APT_PrepareToStartLibraryApplet (NSAppID appID);
  * @param paramsize Size of the buffer.
  * @param handle Handle to pass to the applet.
  */
-Result APT_StartLibraryApplet (NSAppID appID, const(void)* param, size_t paramSize, Handle handle);
+Result APT_StartLibraryApplet(NSAppID appID, const(void)* param, size_t paramSize, Handle handle);
 
 /**
  * @brief Prepares to start a system applet.
  * @param appID AppID of the applet to start.
  */
-Result APT_PrepareToStartSystemApplet (NSAppID appID);
+Result APT_PrepareToStartSystemApplet(NSAppID appID);
 
 /**
  * @brief Starts a system applet.
@@ -526,14 +526,14 @@ Result APT_PrepareToStartSystemApplet (NSAppID appID);
  * @param paramSize Size of the parameter buffer.
  * @param handle Handle to pass to the applet.
  */
-Result APT_StartSystemApplet (NSAppID appID, const(void)* param, size_t paramSize, Handle handle);
+Result APT_StartSystemApplet(NSAppID appID, const(void)* param, size_t paramSize, Handle handle);
 
 /**
  * @brief Retrieves the shared system font.
  * @brief fontHandle Pointer to write the handle of the system font memory block to.
  * @brief mapAddr Pointer to write the mapping address of the system font memory block to.
  */
-Result APT_GetSharedFont (Handle* fontHandle, uint* mapAddr);
+Result APT_GetSharedFont(Handle* fontHandle, uint* mapAddr);
 
 /**
  * @brief Receives the deliver (launch) argument
@@ -543,4 +543,4 @@ Result APT_GetSharedFont (Handle* fontHandle, uint* mapAddr);
  * @param sender Pointer to output the sender's AppID to.
  * @param received Pointer to output whether an argument was received to.
  */
-Result APT_ReceiveDeliverArg (const(void)* param, size_t paramSize, const(void)* hmac, ulong* sender, bool* received);
+Result APT_ReceiveDeliverArg(const(void)* param, size_t paramSize, const(void)* hmac, ulong* sender, bool* received);

@@ -12,13 +12,13 @@ import ctru.types;
 extern (C):
 
 /// DSP interrupt types.
-enum DSPInterruptType
+enum DSPInterruptType : ubyte
 {
     pipe = 2 ///< Pipe interrupt.
 }
 
 /// DSP pipe directions.
-enum DSPPipeDirection
+enum DSPPipeDirection : ubyte
 {
     input  = 0, ///< DSP to ARM
     output = 1  ///< ARM to DSP

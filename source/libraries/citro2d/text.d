@@ -54,10 +54,10 @@ struct C2D_Text
     C2D_Font font; ///< Font used to draw the text, or NULL for system font
 }
 
-enum
+enum : ubyte
 {
     C2D_AtBaseline = BIT(0), ///< Matches the Y coordinate with the baseline of the font.
-    C2D_WithColor = BIT(1) ///< Draws text with color.
+    C2D_WithColor  = BIT(1)  ///< Draws text with color.
 }
 
 /** @brief Creates a new text buffer.

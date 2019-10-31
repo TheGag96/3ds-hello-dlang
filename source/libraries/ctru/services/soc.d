@@ -20,7 +20,7 @@ extern (C):
 //enum SOL_CONFIG = 0xfffe;
 
 ///// Options to be used with @ref SOCU_GetNetworkOpt
-//enum NetworkOpt
+//enum NetworkOpt : ushort
 //{
 //    mac_address     = 0x1004, ///< The mac address of the interface (u32 mac[6])
 //    arp_table       = 0x3002, ///< The ARP table @see SOCU_ARPTableEntry

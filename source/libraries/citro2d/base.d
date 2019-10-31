@@ -43,7 +43,7 @@ struct C2D_Tint
     float blend; ///< Blending strength of the tint color (0.0~1.0)
 }
 
-enum C2DCorner
+enum C2DCorner : ubyte
 {
     top_left     = 0, ///< Top left corner
     top_right    = 1, ///< Top right corner

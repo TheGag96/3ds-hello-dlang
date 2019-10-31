@@ -11,7 +11,7 @@ import ctru.services.fs;
 extern (C):
 
 /// Card SPI wait operation type.
-enum PXIDEVWaitType
+enum PXIDEVWaitType : ubyte
 {
     none          = 0, ///< Do not wait.
     sleep         = 1, ///< Sleep for the specified number of nanoseconds.
@@ -20,7 +20,7 @@ enum PXIDEVWaitType
 }
 
 /// Card SPI register deassertion type.
-enum PXIDEVDeassertType
+enum PXIDEVDeassertType : ubyte
 {
     none        = 0, ///< Do not deassert.
     before_wait = 1, ///< Deassert before waiting.

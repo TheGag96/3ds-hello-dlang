@@ -12,12 +12,12 @@ extern (C):
 //New3DS-only, see also: http://3dbrew.org/wiki/MVD_Services
 
 ///These values are the data returned as "result-codes" by MVDSTD.
-enum MVD_STATUS_OK = 0x17000;
-enum MVD_STATUS_PARAMSET = 0x17001; ///"Returned after processing NAL-unit parameter-sets."
-enum MVD_STATUS_BUSY = 0x17002;
-enum MVD_STATUS_FRAMEREADY = 0x17003;
+enum MVD_STATUS_OK                   = 0x17000;
+enum MVD_STATUS_PARAMSET             = 0x17001; ///"Returned after processing NAL-unit parameter-sets."
+enum MVD_STATUS_BUSY                 = 0x17002;
+enum MVD_STATUS_FRAMEREADY           = 0x17003;
 enum MVD_STATUS_INCOMPLETEPROCESSING = 0x17004; ///"Returned when not all of the input NAL-unit buffer was processed."
-enum MVD_STATUS_NALUPROCFLAG = 0x17007; ///See here: https://www.3dbrew.org/wiki/MVDSTD:ProcessNALUnit
+enum MVD_STATUS_NALUPROCFLAG         = 0x17007; ///See here: https://www.3dbrew.org/wiki/MVDSTD:ProcessNALUnit
 
 ///This can be used to check whether mvdstdProcessVideoFrame() was successful.
 extern (D) auto MVD_CHECKNALUPROC_SUCCESS(T)(auto ref T x)
@@ -29,21 +29,21 @@ extern (D) auto MVD_CHECKNALUPROC_SUCCESS(T)(auto ref T x)
 enum MVD_DEFAULT_WORKBUF_SIZE = 0x9006C8;
 
 /// Processing mode.
-enum MVDSTDMode
+enum MVDSTDMode : ubyte
 {
     color_format_conv = 0, ///< Converting color formats.
     video_processing  = 1  ///< Processing video.
 }
 
 /// Input format.
-enum MVDSTDInputFormat
+enum MVDSTDInputFormat : uint
 {
     yuyv422 = 0x00010001, ///< YUYV422
     h264    = 0x00020001  ///< H264
 }
 
 /// Output format.
-enum MVDSTDOutputFormat
+enum MVDSTDOutputFormat : uint
 {
     yuyv422 = 0x00010001, ///< YUYV422
     bgr565  = 0x00040002, ///< BGR565

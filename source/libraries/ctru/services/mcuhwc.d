@@ -9,7 +9,7 @@ import ctru.types;
 
 extern (C):
 
-enum PowerLEDState
+enum PowerLEDState : ubyte
 {
     normal     = 1, ///< The normal mode of the led
     sleep_mode = 2, ///< The led pulses slowly as it does in the sleep mode

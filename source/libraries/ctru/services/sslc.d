@@ -17,7 +17,7 @@ struct sslcContext
     Handle sharedmem_handle;
 }
 
-enum SSLCDefaultRootCert
+enum SSLCDefaultRootCert : ubyte
 {
     nintendo_ca           = 0x1, //"Nintendo CA"
     nintendo_ca_g2        = 0x2, //"Nintendo CA - G2"
@@ -32,7 +32,7 @@ enum SSLCDefaultRootCert
     digicert_ev           = 0xB  //"DigiCert High Assurance EV Root CA"
 }
 
-enum SSLCDefaultClientCert
+enum SSLCDefaultClientCert : ubyte
 {
     default_client_cert_cl_cert_a = 0x40
 }

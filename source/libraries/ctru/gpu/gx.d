@@ -23,7 +23,7 @@ extern (D) auto GX_BUFFER_DIM(T0, T1)(auto ref T0 w, auto ref T1 h)
  * @brief Supported transfer pixel formats.
  * @sa GSPGPU_FramebufferFormats
  */
-enum GxTransferFormat
+enum GxTransferFormat : ubyte
 {
     rgba8  = 0, /// < 8-bit Red + 8-bit Green + 8-bit Blue + 8-bit Alpha
     rgb8   = 1, /// < 8-bit Red + 8-bit Green + 8-bit Blue
@@ -38,7 +38,7 @@ enum GxTransferFormat
  * Please remember that the framebuffer is sideways.
  * Hence if you activate 2x1 anti-aliasing the destination dimensions are w = 240*2 and h = 400
  */
-enum GxTransferScale
+enum GxTransferScale : ubyte
 {
     no = 0, /// < No anti-aliasing
     x  = 1, /// < 2x1 anti-aliasing
@@ -46,7 +46,7 @@ enum GxTransferScale
 }
 
 /// GX transfer control flags
-enum GxFillControl
+enum GxFillControl : ushort
 {
     trigger      = 0x001, /// < Trigger the PPF event
     finished     = 0x002, /// < Indicates if the memory fill is complete. You should not use it when requesting a transfer.

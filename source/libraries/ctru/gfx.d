@@ -26,10 +26,10 @@ extern (D) auto RGB8_to_565(T0, T1, T2)(auto ref T0 r, auto ref T1 g, auto ref T
 }
 
 /// Available screens.
-enum GFXScreen
+enum GFXScreen : ubyte
 {
-    top = 0,   ///< Top screen
-    bottom = 1 ///< Bottom screen
+    top    = 0, ///< Top screen
+    bottom = 1  ///< Bottom screen
 }
 
 /**
@@ -38,10 +38,10 @@ enum GFXScreen
  * This is to be used only when the 3D is enabled.
  * Use only GFX_LEFT if this concerns the bottom screen or if 3D is disabled.
  */
-enum GFX3DSide
+enum GFX3DSide : ubyte
 {
-    left = 0, ///< Left eye framebuffer
-    right = 1 ///< Right eye framebuffer
+    left  = 0, ///< Left eye framebuffer
+    right = 1  ///< Right eye framebuffer
 }
 
 ///@name System related

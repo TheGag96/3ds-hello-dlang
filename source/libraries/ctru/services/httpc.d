@@ -18,7 +18,7 @@ struct httpcContext
 }
 
 /// HTTP request method.
-enum HTTPCRequestMethod
+enum HTTPCRequestMethod : ubyte
 {
     get     = 0x1,
     post    = 0x2,
@@ -28,14 +28,14 @@ enum HTTPCRequestMethod
 }
 
 /// HTTP request status.
-enum HTTPCRequestStatus
+enum HTTPCRequestStatus : ubyte
 {
     request_in_progress = 0x5, ///< Request in progress.
     download_ready      = 0x7  ///< Download ready.
 }
 
 /// HTTP KeepAlive option.
-enum HTTPCKeepAlive
+enum HTTPCKeepAlive : ubyte
 {
     disabled = 0x0,
     enabled  = 0x1

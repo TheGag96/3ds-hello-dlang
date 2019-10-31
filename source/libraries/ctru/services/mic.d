@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Microphone audio encodings.
-enum MICUEncoding
+enum MICUEncoding : ubyte
 {
     pcm8         = 0, ///< Unsigned 8-bit PCM.
     pcm16        = 1, ///< Unsigned 16-bit PCM.
@@ -19,7 +19,7 @@ enum MICUEncoding
 }
 
 /// Microphone audio sampling rates.
-enum MICUSampleRate
+enum MICUSampleRate : ubyte
 {
     hz_32730 = 0, ///< 32728.498 Hz
     hz_16360 = 1, ///< 16364.479 Hz

@@ -14,7 +14,7 @@ extern (C):
  *
  * For the 16-bit per component formats, bits 15-8 are padding and 7-0 contains the value.
  */
-enum Y2RUInputFormat
+enum Y2RUInputFormat : ubyte
 {
     yuv422_indiv_8  = 0x0, ///< 8-bit per component, planar YUV 4:2:2, 16bpp, (1 Cr & Cb sample per 2x1 Y samples).\n Usually named YUV422P.
     yuv420_indiv_8  = 0x1, ///< 8-bit per component, planar YUV 4:2:0, 12bpp, (1 Cr & Cb sample per 2x2 Y samples).\n Usually named YUV420P.
@@ -28,7 +28,7 @@ enum Y2RUInputFormat
  *
  * Those are the same as the framebuffer and GPU texture formats.
  */
-enum Y2RUOutputFormat
+enum Y2RUOutputFormat : ubyte
 {
     rgb_32     = 0x0, ///< 32-bit RGBA8888. The alpha component is the 8-bit value set by @ref Y2RU_SetAlpha
     rgb_24     = 0x1, ///< 24-bit RGB888.
@@ -37,7 +37,7 @@ enum Y2RUOutputFormat
 }
 
 /// Rotation to be applied to the output.
-enum Y2RURotation
+enum Y2RURotation : ubyte
 {
     none          = 0x0, ///< No rotation.
     clockwise_90  = 0x1, ///< Clockwise 90 degrees.
@@ -50,7 +50,7 @@ enum Y2RURotation
  *
  * Defines the way the output will be laid out in memory.
  */
-enum Y2RUBlockAlignment
+enum Y2RUBlockAlignment : ubyte
 {
     line    = 0x0, ///< The result buffer will be laid out in linear format, the usual way.
     _8_by_8 = 0x1  ///< The result will be stored as 8x8 blocks in Z-order.\n Useful for textures since it is the format used by the PICA200.
@@ -87,7 +87,7 @@ struct Y2RU_ColorCoefficients
  *
  * For more details refer to @ref Y2RU_ColorCoefficients
  */
-enum Y2RUStandardCoefficient
+enum Y2RUStandardCoefficient : ubyte
 {
     itu_r_bt_601         = 0x0, ///< Coefficients from the ITU-R BT.601 standard with PC ranges.
     itu_r_bt_709         = 0x1, ///< Coefficients from the ITU-R BT.709 standard with PC ranges.

@@ -111,7 +111,7 @@ enum CONSOLE_CONCEAL       = BIT(7); ///< Concealed text
 enum CONSOLE_CROSSED_OUT   = BIT(8); ///< Crossed out text
 
 /// Console debug devices supported by libnds.
-enum debugDevice
+enum debugDevice : ubyte
 {
     _null   = 0,  ///< Swallows prints to stderr
     svc     = 1,  ///< Outputs stderr debug statements using svcOutputDebugString, which can then be captured by interactive debuggers

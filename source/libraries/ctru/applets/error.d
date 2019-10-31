@@ -18,7 +18,7 @@ enum
 
 ///< Type of Error applet to be called
 
-enum ErrorType
+enum ErrorType : ushort
 {
     code                    = 0,                                                ///< Displays the infrastructure communications-related error message corresponding to the error code.
     text                    = 1,                                                ///< Displays text passed to this applet.
@@ -35,7 +35,7 @@ enum ErrorType
 
 ///< Flags for the Upper Screen.Does nothing even if specified.
 
-enum ErrorScreenFlag
+enum ErrorScreenFlag : ubyte
 {
     normal = 0,
     stereo = 1
@@ -43,7 +43,7 @@ enum ErrorScreenFlag
 
 ///< Return code of the Error module.Use UNKNOWN for simple apps.
 
-enum ErrorReturnCode
+enum ErrorReturnCode : byte
 {
     unknown        = -1,
     none           = 0,

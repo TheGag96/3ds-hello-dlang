@@ -35,7 +35,7 @@ enum
 }
 
 /// Media types.
-enum FSMediaType
+enum FSMediaType : ubyte
 {
     nand      = 0, ///< NAND.
     sd        = 1, ///< SD card.
@@ -43,7 +43,7 @@ enum FSMediaType
 }
 
 /// System media types.
-enum FSSystemMediaType
+enum FSSystemMediaType : ubyte
 {
     ctr_nand  = 0, ///< CTR NAND.
     twl_nand  = 1, ///< TWL NAND.
@@ -52,7 +52,7 @@ enum FSSystemMediaType
 }
 
 /// Archive IDs.
-enum FSArchiveID
+enum FSArchiveID : uint
 {
     romfs                    = 0x00000003, ///< RomFS archive.
     savedata                 = 0x00000004, ///< Save data archive.
@@ -81,7 +81,7 @@ enum FSArchiveID
 }
 
 /// Path types.
-enum FSPathType
+enum FSPathType : ubyte
 {
     invalid = 0, ///< Invalid path.
     empty   = 1, ///< Empty path.
@@ -91,13 +91,13 @@ enum FSPathType
 }
 
 /// Secure value slot.
-enum FSSecureValueSlot
+enum FSSecureValueSlot : ushort
 {
     sd = 0x1000 ///< SD application.
 }
 
 /// Card SPI baud rate.
-enum FSCardSPIBaudRate
+enum FSCardSPIBaudRate : ubyte
 {
     _512khz = 0, ///< 512KHz.
     _1mhz   = 1, ///< 1MHz.
@@ -108,54 +108,54 @@ enum FSCardSPIBaudRate
 }
 
 /// Card SPI bus mode.
-enum FSCardSPIBusMode
+enum FSCardSPIBusMode : ubyte
 {
     _1bit = 0, ///< 1-bit.
     _4bit = 1  ///< 4-bit.
 }
 
 /// Card SPI bus mode.
-enum FSSpecialContentType
+enum FSSpecialContentType : ubyte
 {
     update    = 1, ///< Update.
     manual    = 2, ///< Manual.
     dlp_child = 3  ///< DLP child.
 }
 
-enum FSCardType
+enum FSCardType : ubyte
 {
     ctr = 0, ///< CTR card.
     twl = 1  ///< TWL card.
 }
 
 /// FS control actions.
-enum FSAction
+enum FSAction : ubyte
 {
     unknown = 0
 }
 
 /// Archive control actions.
-enum FSArchiveAction
+enum FSArchiveAction : ubyte
 {
     commit_save_data = 0, ///< Commits save data changes. No inputs/outputs.
     get_timestamp    = 1  ///< Retrieves a file's last-modified timestamp. In: "u16*, UTF-16 Path", Out: "u64, Time Stamp".
 }
 
 /// Secure save control actions.
-enum FSSecureSaveAction
+enum FSSecureSaveAction : ubyte
 {
     _delete = 0, ///< Deletes a save's secure value. In: "u64, ((SecureValueSlot << 32) | (TitleUniqueId << 8) | TitleVariation)", Out: "u8, Value Existed"
     format  = 1  ///< Formats a save. No inputs/outputs.
 }
 
 /// File control actions.
-enum FSFileAction
+enum FSFileAction : ubyte
 {
     unknown = 0
 }
 
 /// Directory control actions.
-enum FSDirectoryAction
+enum FSDirectoryAction : ubyte
 {
     unknown = 0
 }

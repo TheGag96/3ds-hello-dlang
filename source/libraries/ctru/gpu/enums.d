@@ -64,14 +64,14 @@ extern (D) auto GPU_TEV_BUFFER_WRITE_CONFIG(T0, T1, T2, T3)(auto ref T0 stage0, 
 }
 
 /// Texture filters.
-enum GPUTextureFilterParam
+enum GPUTextureFilterParam : ubyte
 {
     nearest = 0x0, ///< Nearest-neighbor interpolation.
     linear  = 0x1  ///< Linear interpolation.
 }
 
 /// Texture wrap modes.
-enum GPUTextureWrapParam
+enum GPUTextureWrapParam : ubyte
 {
     clamp_to_edge   = 0x0, ///< Clamps to edge.
     clamp_to_border = 0x1, ///< Clamps to border.
@@ -80,7 +80,7 @@ enum GPUTextureWrapParam
 }
 
 /// Texture modes.
-enum GPUTextureModeParam
+enum GPUTextureModeParam : ubyte
 {
     _2d         = 0x0, ///< 2D texture
     cube_map    = 0x1, ///< Cube map
@@ -91,7 +91,7 @@ enum GPUTextureModeParam
 }
 
 /// Supported texture units.
-enum GPUTexUnit
+enum GPUTexUnit : ubyte
 {
     texunit0 = 0x1, ///< Texture unit 0.
     texunit1 = 0x2, ///< Texture unit 1.
@@ -99,7 +99,7 @@ enum GPUTexUnit
 }
 
 /// Supported texture formats.
-enum GPUTexColor
+enum GPUTexColor : ubyte
 {
     rgba8    = 0x0, ///< 8-bit Red + 8-bit Green + 8-bit Blue + 8-bit Alpha
     rgb8     = 0x1, ///< 8-bit Red + 8-bit Green + 8-bit Blue
@@ -118,7 +118,7 @@ enum GPUTexColor
 }
 
 // Texture faces.
-enum GPUTexFace
+enum GPUTexFace : ubyte
 {
     texface_2d = 0, // 2D face
     positive_x = 0, // +X face
@@ -130,7 +130,7 @@ enum GPUTexFace
 }
 
 /// Procedural texture clamp modes.
-enum GPUProcTexClamp
+enum GPUProcTexClamp : ubyte
 {
     clamp_to_zero   = 0, ///< Clamp to zero.
     clamp_to_edge   = 1, ///< Clamp to edge.
@@ -140,7 +140,7 @@ enum GPUProcTexClamp
 }
 
 /// Procedural texture mapping functions.
-enum GPUProcTexMapFunc
+enum GPUProcTexMapFunc : ubyte
 {
     u     = 0, ///< U
     u2    = 1, ///< U2
@@ -155,7 +155,7 @@ enum GPUProcTexMapFunc
 }
 
 /// Procedural texture shift values.
-enum GPUProcTexShift
+enum GPUProcTexShift : ubyte
 {
     none = 0, ///< No shift.
     odd  = 1, ///< Odd shift.
@@ -163,7 +163,7 @@ enum GPUProcTexShift
 }
 
 /// Procedural texture filter values.
-enum GPUProcTexFilter
+enum GPUProcTexFilter : ubyte
 {
     nearest             = 0, ///< Nearest-neighbor
     linear              = 1, ///< Linear interpolation
@@ -174,7 +174,7 @@ enum GPUProcTexFilter
 }
 
 /// Procedural texture LUT IDs.
-enum GPUProcTexLutId
+enum GPUProcTexLutId : ubyte
 {
     noise    = 0, ///< Noise table
     rgbmap   = 2, ///< RGB mapping function table
@@ -184,7 +184,7 @@ enum GPUProcTexLutId
 }
 
 /// Supported color buffer formats.
-enum GPUColorBuf
+enum GPUColorBuf : ubyte
 {
     rgba8    = 0, ///< 8-bit Red + 8-bit Green + 8-bit Blue + 8-bit Alpha
     rgb8     = 1, ///< 8-bit Red + 8-bit Green + 8-bit Blue
@@ -194,7 +194,7 @@ enum GPUColorBuf
 }
 
 /// Supported depth buffer formats.
-enum GPUDepthBuf
+enum GPUDepthBuf : ubyte
 {
     depth16          = 0, ///< 16-bit Depth
     depth24          = 2, ///< 24-bit Depth
@@ -202,7 +202,7 @@ enum GPUDepthBuf
 }
 
 /// Test functions.
-enum GPUTestFunc
+enum GPUTestFunc : ubyte
 {
     never    = 0, ///< Never pass.
     always   = 1, ///< Always pass.
@@ -215,7 +215,7 @@ enum GPUTestFunc
 }
 
 /// Early depth test functions.
-enum GPUEarlyDepthFunc
+enum GPUEarlyDepthFunc : ubyte
 {
     gequal  = 0, ///< Pass if greater than or equal.
     greater = 1, ///< Pass if greater than.
@@ -224,7 +224,7 @@ enum GPUEarlyDepthFunc
 }
 
 /// Gas depth functions.
-enum GPUGasDepthFunc
+enum GPUGasDepthFunc : ubyte
 {
     never   = 0, ///< Never pass (0).
     always  = 1, ///< Always pass (1).
@@ -240,7 +240,7 @@ extern (D) auto GPU_MAKEGASDEPTHFUNC(T)(auto ref T n)
 }
 
 /// Scissor test modes.
-enum GPUScissorMode
+enum GPUScissorMode : ubyte
 {
     disable = 0, ///< Disable.
     invert  = 1, ///< Exclude pixels inside the scissor box.
@@ -249,7 +249,7 @@ enum GPUScissorMode
 }
 
 /// Stencil operations.
-enum GPUStencilOp
+enum GPUStencilOp : ubyte
 {
     keep      = 0, ///< Keep old value. (old_stencil)
     zero      = 1, ///< Zero. (0)
@@ -262,7 +262,7 @@ enum GPUStencilOp
 }
 
 /// Pixel write mask.
-enum GPUWriteMask
+enum GPUWriteMask : ubyte
 {
     red   = 0x01, ///< Write red.
     green = 0x02, ///< Write green.
@@ -275,7 +275,7 @@ enum GPUWriteMask
 }
 
 /// Blend modes.
-enum GPUBlendEquation
+enum GPUBlendEquation : ubyte
 {
     add              = 0, ///< Add colors.
     subtract         = 1, ///< Subtract colors.
@@ -285,7 +285,7 @@ enum GPUBlendEquation
 }
 
 /// Blend factors.
-enum GPUBlendFactor
+enum GPUBlendFactor : ubyte
 {
     zero                     = 0,  ///< Zero.
     one                      = 1,  ///< One.
@@ -305,7 +305,7 @@ enum GPUBlendFactor
 }
 
 /// Logical operations.
-enum GPULogicOp
+enum GPULogicOp : ubyte
 {
     clear         = 0,  ///< Clear.
     and           = 1,  ///< Bitwise AND.
@@ -326,7 +326,7 @@ enum GPULogicOp
 }
 
 /// Fragment operation modes.
-enum GPUFragOpMode
+enum GPUFragOpMode : ubyte
 {
     gl      = 0, ///< OpenGL mode.
     gas_acc = 1, ///< Gas mode (?).
@@ -334,16 +334,16 @@ enum GPUFragOpMode
 }
 
 /// Supported component formats.
-enum GPUFormats
+enum GPUFormats : ubyte
 {
-    _byte          = 0, ///< 8-bit byte.
+    _byte         = 0, ///< 8-bit byte.
     unsigned_byte = 1, ///< 8-bit unsigned byte.
-    _short         = 2, ///< 16-bit short.
-    _float         = 3  ///< 32-bit float.
+    _short        = 2, ///< 16-bit short.
+    _float        = 3  ///< 32-bit float.
 }
 
 /// Cull modes.
-enum GPUCullMode
+enum GPUCullMode : ubyte
 {
     none      = 0, ///< Disabled.
     front_ccw = 1, ///< Front, counter-clockwise.
@@ -358,7 +358,7 @@ extern (D) auto GPU_ATTRIBFMT(T0, T1, T2)(auto ref T0 i, auto ref T1 n, auto ref
 }
 
 /// Texture combiner sources.
-enum GPUTevSrc
+enum GPUTevSrc : ubyte
 {
     primary_color            = 0x00, ///< Primary color.
     fragment_primary_color   = 0x01, ///< Primary fragment color.
@@ -373,7 +373,7 @@ enum GPUTevSrc
 }
 
 /// Texture RGB combiner operands.
-enum GPUTevOpRGB
+enum GPUTevOpRGB : ubyte
 {
     src_color           = 0x00, /// < Source color.
     one_minus_src_color = 0x01, /// < Source color - 1.
@@ -394,7 +394,7 @@ enum GPUTevOpRGB
 }
 
 /// Texture Alpha combiner operands.
-enum GPUTevOpA
+enum GPUTevOpA : ubyte
 {
     src_alpha           = 0x00, ///< Source alpha.
     one_minus_src_alpha = 0x01, ///< Source alpha - 1.
@@ -407,7 +407,7 @@ enum GPUTevOpA
 }
 
 /// Texture combiner functions.
-enum GPUCombineFunc
+enum GPUCombineFunc : ubyte
 {
     replace      = 0x00, ///< Replace.
     modulate     = 0x01, ///< Modulate.
@@ -421,7 +421,7 @@ enum GPUCombineFunc
 }
 
 /// Texture scale factors.
-enum GPUTevScale
+enum GPUTevScale : ubyte
 {
     x1 = 0x0, ///< 1x
     x2 = 0x1, ///< 2x
@@ -501,7 +501,7 @@ extern (D) auto GPU_LIGHTCOLOR(T0, T1, T2)(auto ref T0 r, auto ref T1 g, auto re
 }
 
 /// Fresnel options.
-enum GPUFresnelSel
+enum GPUFresnelSel : ubyte
 {
     no_fresnel            = 0, ///< None.
     pri_alpha_fresnel     = 1, ///< Primary alpha.
@@ -510,7 +510,7 @@ enum GPUFresnelSel
 }
 
 /// Bump map modes.
-enum GPUBumpMode
+enum GPUBumpMode : ubyte
 {
     bump_not_used = 0, ///< Disabled.
     bump_as_bump  = 1, ///< Bump as bump mapping.
@@ -518,7 +518,7 @@ enum GPUBumpMode
 }
 
 /// LUT IDs.
-enum GPULightLutId
+enum GPULightLutId : ubyte
 {
     d0 = 0, ///< D0 LUT.
     d1 = 1, ///< D1 LUT.
@@ -531,7 +531,7 @@ enum GPULightLutId
 }
 
 /// LUT inputs.
-enum GPULightLutInput
+enum GPULightLutInput : ubyte
 {
     nh = 0, ///< Normal*HalfVector
     vh = 1, ///< View*HalfVector
@@ -542,7 +542,7 @@ enum GPULightLutInput
 }
 
 /// LUT scalers.
-enum GPULightLutScaler
+enum GPULightLutScaler : ubyte
 {
     x1    = 0, ///< 1x scale.
     x2    = 1, ///< 2x scale.
@@ -553,7 +553,7 @@ enum GPULightLutScaler
 }
 
 /// LUT selection.
-enum GPULightLutSelect
+enum GPULightLutSelect : ubyte
 {
     common = 0, ///< LUTs that are common to all lights.
     sp     = 1, ///< Spotlight LUT.
@@ -561,7 +561,7 @@ enum GPULightLutSelect
 }
 
 /// Fog modes.
-enum GPUFogMode
+enum GPUFogMode : ubyte
 {
     no_fog = 0, ///< Fog/Gas unit disabled.
     fog    = 5, ///< Fog/Gas unit configured in Fog mode.
@@ -569,21 +569,21 @@ enum GPUFogMode
 }
 
 /// Gas shading density source values.
-enum GPUGasMode
+enum GPUGasMode : ubyte
 {
     plain_density = 0, ///< Plain density.
     depth_density = 1  ///< Depth density.
 }
 
 /// Gas color LUT inputs.
-enum GPUGasLutInput
+enum GPUGasLutInput : ubyte
 {
     gas_density  = 0, ///< Gas density used as input.
     light_factor = 1  ///< Light factor used as input.
 }
 
 /// Supported primitives.
-enum GPUPrimitive
+enum GPUPrimitive : ushort
 {
     triangles      = 0x0000, ///< Triangles.
     triangle_strip = 0x0100, ///< Triangle strip.
@@ -592,7 +592,7 @@ enum GPUPrimitive
 }
 
 /// Shader types.
-enum GPUShaderType
+enum GPUShaderType : ubyte
 {
     vertex_shader   = 0x0, ///< Vertex shader.
     geometry_shader = 0x1  ///< Geometry shader.

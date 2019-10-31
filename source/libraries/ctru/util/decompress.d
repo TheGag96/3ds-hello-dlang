@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /** @brief Compression types */
-enum DecompressType
+enum DecompressType : ubyte
 {
     dummy = 0x00, ///< Dummy compression
     lzss  = 0x10, ///< LZSS/LZ10 compression

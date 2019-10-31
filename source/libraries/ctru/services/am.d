@@ -27,7 +27,7 @@ enum
 }
 
 /// Pending title status values.
-enum AMInstallStatus
+enum AMInstallStatus : ushort
 {
     aborted               = 0x0002, ///< Install aborted.
     saved                 = 0x0003, ///< Title saved, but not installed.

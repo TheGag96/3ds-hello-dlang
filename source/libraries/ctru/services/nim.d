@@ -20,7 +20,7 @@ extern (C):
 // FSMediaType
 
 /// Mode that NIM downloads/installs a title with.
-enum NIMInstallationMode
+enum NIMInstallationMode : ubyte
 {
     _default  = 0, ///< Initial installation
     unknown1  = 1, ///< Unknown
@@ -29,7 +29,7 @@ enum NIMInstallationMode
 }
 
 /// Current state of a NIM download/installation.
-enum NIMDownloadState
+enum NIMDownloadState : ubyte
 {
     not_initialized   = 0,  ///< Download not yet initialized
     initialized       = 1,  ///< Download initialized

@@ -51,7 +51,7 @@ enum
 }
 
 /// Interpolation types.
-enum NDSPInterpType
+enum NDSPInterpType : ubyte
 {
     polyphase = 0, ///< Polyphase interpolation
     linear    = 1, ///< Linear interpolation

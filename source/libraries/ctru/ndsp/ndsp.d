@@ -15,7 +15,7 @@ enum NDSP_SAMPLE_RATE = SYSCLOCK_SOC / 512.0;
 ///@name Data types
 ///@{
 /// Sound output modes.
-enum NDSPOutputMode
+enum NDSPOutputMode : ubyte
 {
     mono     = 0, ///< Mono sound
     stereo   = 1, ///< Stereo sound
@@ -23,14 +23,14 @@ enum NDSPOutputMode
 }
 
 // Clipping modes.
-enum NDSPClippingMode
+enum NDSPClippingMode : ubyte
 {
     normal = 0, ///< "Normal" clipping mode (?)
     soft   = 1  ///< "Soft" clipping mode (?)
 }
 
 // Surround speaker positions.
-enum NDSPSpeakerPos
+enum NDSPSpeakerPos : ubyte
 {
     square = 0, ///< ?
     wide   = 1, ///< ?
@@ -94,7 +94,7 @@ alias ndspAuxCallback = void function (void* data, int nsamples, void*[4] sample
  * @param progMask Program RAM block mask to load the binary to.
  * @param dataMask Data RAM block mask to load the binary to.
  */
-void ndspUseComponent (const(void)* binary, uint size, ushort progMask, ushort dataMask);
+void ndspUseComponent(const(void)* binary, uint size, ushort progMask, ushort dataMask);
 
 /// Initializes NDSP.
 Result ndspInit ();
@@ -121,38 +121,38 @@ uint ndspGetFrameCount ();
  * @brief Sets the master volume.
  * @param volume Volume to set. Defaults to 1.0f.
  */
-void ndspSetMasterVol (float volume);
+void ndspSetMasterVol(float volume);
 
 /**
  * @brief Sets the output mode.
  * @param mode Output mode to set. Defaults to NDSP_OUTPUT_STEREO.
  */
-void ndspSetOutputMode (NDSPOutputMode mode);
+void ndspSetOutputMode(NDSPOutputMode mode);
 
 /**
  * @brief Sets the clipping mode.
  * @param mode Clipping mode to set. Defaults to NDSP_CLIP_SOFT.
  */
-void ndspSetClippingMode (NDSPClippingMode mode);
+void ndspSetClippingMode(NDSPClippingMode mode);
 
 /**
  * @brief Sets the output count.
  * @param count Output count to set. Defaults to 2.
  */
-void ndspSetOutputCount (int count);
+void ndspSetOutputCount(int count);
 
 /**
  * @brief Sets the wave buffer to capture audio to.
  * @param capture Wave buffer to capture to.
  */
-void ndspSetCapture (ndspWaveBuf* capture);
+void ndspSetCapture(ndspWaveBuf* capture);
 
 /**
  * @brief Sets the sound frame callback.
  * @param callback Callback to set.
  * @param data User-defined data to pass to the callback.
  */
-void ndspSetCallback (ndspCallback callback, void* data);
+void ndspSetCallback(ndspCallback callback, void* data);
 ///@}
 
 ///@name Surround
@@ -161,19 +161,19 @@ void ndspSetCallback (ndspCallback callback, void* data);
  * @brief Sets the surround sound depth.
  * @param depth Depth to set. Defaults to 0x7FFF.
  */
-void ndspSurroundSetDepth (ushort depth);
+void ndspSurroundSetDepth(ushort depth);
 
 /**
  * @brief Sets the surround sound position.
  * @param pos Position to set. Defaults to NDSP_SPKPOS_SQUARE.
  */
-void ndspSurroundSetPos (NDSPSpeakerPos pos);
+void ndspSurroundSetPos(NDSPSpeakerPos pos);
 
 /**
  * @brief Sets the surround sound rear ratio.
  * @param ratio Rear ratio to set. Defaults to 0x8000.
  */
-void ndspSurroundSetRearRatio (ushort ratio);
+void ndspSurroundSetRearRatio(ushort ratio);
 ///@}
 
 ///@name Auxiliary output
@@ -183,21 +183,21 @@ void ndspSurroundSetRearRatio (ushort ratio);
  * @param id ID of the auxiliary output.
  * @param enable Whether to enable the auxiliary output.
  */
-void ndspAuxSetEnable (int id, bool enable);
+void ndspAuxSetEnable(int id, bool enable);
 
 /**
  * @brief Configures whether an auxiliary output should use front bypass.
  * @param id ID of the auxiliary output.
  * @param bypass Whether to use front bypass.
  */
-void ndspAuxSetFrontBypass (int id, bool bypass);
+void ndspAuxSetFrontBypass(int id, bool bypass);
 
 /**
  * @brief Sets the volume of an auxiliary output.
  * @param id ID of the auxiliary output.
  * @param volume Volume to set.
  */
-void ndspAuxSetVolume (int id, float volume);
+void ndspAuxSetVolume(int id, float volume);
 
 /**
  * @brief Sets the callback of an auxiliary output.
@@ -205,5 +205,5 @@ void ndspAuxSetVolume (int id, float volume);
  * @param callback Callback to set.
  * @param data User-defined data to pass to the callback.
  */
-void ndspAuxSetCallback (int id, ndspAuxCallback callback, void* data);
+void ndspAuxSetCallback(int id, ndspAuxCallback callback, void* data);
 ///@}

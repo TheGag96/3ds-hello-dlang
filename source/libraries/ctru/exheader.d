@@ -52,7 +52,7 @@ enum
 }
 
 /// The resource limit category of a title
-enum ResourceLimitCategory
+enum ResourceLimitCategory : ubyte
 {
     application = 0, ///< Regular application
     sys_applet  = 1, ///< System applet
@@ -61,7 +61,7 @@ enum ResourceLimitCategory
 }
 
 /// The system mode a title should be launched under
-enum SystemMode
+enum SystemMode : ubyte
 {
     o3ds_prod = 0, ///< 64MB of usable application memory
     n3ds_prod = 1, ///< 124MB of usable application memory. Unusable on O3DS

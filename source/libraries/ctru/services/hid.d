@@ -12,7 +12,7 @@ extern (C):
 //See also: http://3dbrew.org/wiki/HID_Services http://3dbrew.org/wiki/HID_Shared_Memory
 
 /// Key values.
-enum Key
+enum Key : uint
 {
     a            = BIT(0),  ///< A
     b            = BIT(1),  ///< B
@@ -76,7 +76,7 @@ struct angularRate
 }
 
 /// HID events.
-enum HIDEvent
+enum HIDEvent : ubyte
 {
     pad0     = 0, ///< Event signaled by HID-module, when the sharedmem+0(PAD/circle-pad)/+0xA8(touch-screen) region was updated.
     pad1     = 1, ///< Event signaled by HID-module, when the sharedmem+0(PAD/circle-pad)/+0xA8(touch-screen) region was updated.

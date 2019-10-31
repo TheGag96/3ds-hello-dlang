@@ -32,7 +32,7 @@ struct C3D_TexEnv
     ushort scaleAlpha;
 }
 
-enum C3DTexEnvMode
+enum C3DTexEnvMode : ubyte
 {
     rgb   = BIT(0),
     alpha = BIT(1),

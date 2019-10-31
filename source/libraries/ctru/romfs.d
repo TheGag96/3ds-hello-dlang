@@ -69,7 +69,12 @@ struct romfs_mount
  * @param mount Output mount handle
  */
 Result romfsMount(romfs_mount** mount);
-Result romfsInit();
+
+pragma(inline, true)
+Result romfsInit()
+{
+    return romfsMount(null);
+}
 
 /**
  * @brief Mounts RomFS from an open file.
@@ -78,11 +83,22 @@ Result romfsInit();
  * @param mount Output mount handle
  */
 Result romfsMountFromFile(Handle file, uint offset, romfs_mount** mount);
-Result romfsInitFromFile(Handle file, uint offset);
+
+pragma(inline, true)
+Result romfsInitFromFile(Handle file, uint offset)
+{
+    return romfsMountFromFile(file, offset, null);
+}
 
 /// Bind the RomFS mount
 Result romfsBind(romfs_mount* mount);
 
 /// Unmounts the RomFS device.
 Result romfsUnmount(romfs_mount* mount);
-Result romfsExit();
+
+pragma(inline, true)
+Result romfsExit()
+{
+    return romfsUnmount(null);
+}
+

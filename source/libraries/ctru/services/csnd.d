@@ -29,19 +29,19 @@ uint CSND_VOL(float vol, float pan);
 /// CSND encodings.
 enum
 {
-    CSND_ENCODING_PCM8 = 0, ///< PCM8
+    CSND_ENCODING_PCM8  = 0, ///< PCM8
     CSND_ENCODING_PCM16 = 1, ///< PCM16
     CSND_ENCODING_ADPCM = 2, ///< IMA-ADPCM
-    CSND_ENCODING_PSG = 3 ///< PSG (Similar to DS?)
+    CSND_ENCODING_PSG   = 3  ///< PSG (Similar to DS?)
 }
 
 /// CSND loop modes.
 enum
 {
-    CSND_LOOPMODE_MANUAL = 0, ///< Manual loop.
-    CSND_LOOPMODE_NORMAL = 1, ///< Normal loop.
-    CSND_LOOPMODE_ONESHOT = 2, ///< Do not loop.
-    CSND_LOOPMODE_NORELOAD = 3 ///< Don't reload.
+    CSND_LOOPMODE_MANUAL   = 0, ///< Manual loop.
+    CSND_LOOPMODE_NORMAL   = 1, ///< Normal loop.
+    CSND_LOOPMODE_ONESHOT  = 2, ///< Do not loop.
+    CSND_LOOPMODE_NORELOAD = 3  ///< Don't reload.
 }
 
 /// Creates a sound channel value from a channel number.
@@ -86,7 +86,7 @@ enum
 }
 
 /// Duty cycles for a PSG channel.
-enum CSNDDutyCycle
+enum CSNDDutyCycle : ubyte
 {
     _0  = 7, ///< 0.0% duty cycle
     _12 = 0, ///< 12.5% duty cycle
@@ -183,7 +183,7 @@ void csndExit();
  * @param cmdid ID of the command to add.
  * @return A buffer to write command arguments to.
  */
-uint* csndAddCmd (int cmdid);
+uint* csndAddCmd(int cmdid);
 
 /**
  * @brief Adds a command to the list, copying its arguments from a buffer.

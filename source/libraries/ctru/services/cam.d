@@ -37,7 +37,7 @@ enum
 }
 
 /// Camera contexts.
-enum CAMUContext
+enum CAMUContext : ubyte
 {
     none = 0x0,                  ///< No context.
     a    = BIT(0),               ///< Context A.
@@ -48,7 +48,7 @@ enum CAMUContext
 }
 
 /// Ways to flip the camera image.
-enum CAMUFlip
+enum CAMUFlip : ubyte
 {
     none       = 0x0, ///< No flip.
     horizontal = 0x1, ///< Horizontal flip.
@@ -57,7 +57,7 @@ enum CAMUFlip
 }
 
 /// Camera image resolutions.
-enum CAMUSize
+enum CAMUSize : ubyte
 {
     vga            = 0x0,      ///< VGA size.         (640x480)
     qvga           = 0x1,      ///< QVGA size.        (320x240)
@@ -73,7 +73,7 @@ enum CAMUSize
 }
 
 /// Camera capture frame rates.
-enum CAMUFrameRate
+enum CAMUFrameRate : ubyte
 {
     _15       = 0x0, ///< 15 FPS.
     _15_to_5  = 0x1, ///< 15-5 FPS.
@@ -91,7 +91,7 @@ enum CAMUFrameRate
 }
 
 /// Camera white balance modes.
-enum CAMUWhiteBalance
+enum CAMUWhiteBalance : ubyte
 {
     _auto                    = 0x0, ///< Auto white balance.
     _3200k                   = 0x1, ///< 3200K white balance.
@@ -111,7 +111,7 @@ enum CAMUWhiteBalance
 }
 
 /// Camera photo modes.
-enum CAMUPhotoMode
+enum CAMUPhotoMode : ubyte
 {
     normal    = 0x0, ///< Normal mode.
     portrait  = 0x1, ///< Portrait mode.
@@ -121,7 +121,7 @@ enum CAMUPhotoMode
 }
 
 /// Camera special effects.
-enum CAMUEffect
+enum CAMUEffect : ubyte
 {
     none     = 0x0, ///< No effects.
     mono     = 0x1, ///< Mono effect.
@@ -132,7 +132,7 @@ enum CAMUEffect
 }
 
 /// Camera contrast patterns.
-enum CAMUContrast
+enum CAMUContrast : ubyte
 {
     pattern_01 = 0x0, ///< Pattern 1.
     pattern_02 = 0x1, ///< Pattern 2.
@@ -153,7 +153,7 @@ enum CAMUContrast
 }
 
 /// Camera lens correction modes.
-enum CAMULensCorrection
+enum CAMULensCorrection : ubyte
 {
     off    = 0x0,   ///< No lens correction.
     on_70  = 0x1,   ///< Edge-to-center brightness ratio of 70.
@@ -166,14 +166,14 @@ enum CAMULensCorrection
 }
 
 /// Camera image output formats.
-enum CAMUOutputFormat
+enum CAMUOutputFormat : ubyte
 {
     yuv_422 = 0x0, ///< YUV422
     rgb_565 = 0x1  ///< RGB565
 }
 
 /// Camera shutter sounds.
-enum CAMUShutterSoundType
+enum CAMUShutterSoundType : ubyte
 {
     normal    = 0x0, ///< Normal shutter sound.
     movie     = 0x1, ///< Shutter sound to begin a movie.

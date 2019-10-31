@@ -20,7 +20,7 @@ enum CUR_PROCESS_HANDLE = 0xFFFF8001;
  *
  * The lowest 8 bits are the operation
  */
-enum MemOp
+enum MemOp : uint
 {
     free          = 1, ///< Memory un-mapping
     reserve       = 2, ///< Reserve memory
@@ -41,7 +41,7 @@ enum MemOp
 }
 
 /// The state of a memory block.
-enum MemState
+enum MemState : ubyte
 {
     FREE       = 0,  /// < Free memory
     RESERVED   = 1,  /// < Reserved memory
@@ -58,7 +58,7 @@ enum MemState
 }
 
 /// Memory permission flags
-enum MemPerm
+enum MemPerm : uint
 {
     read     = 1,         /// < readable
     write    = 2,         /// < writable
@@ -82,7 +82,7 @@ struct PageInfo
 }
 
 /// Arbitration modes.
-enum ArbitrationType
+enum ArbitrationType : ubyte
 {
     signal                                  = 0, ///< Signal #value threads for wake-up.
     wait_if_less_than                       = 1, ///< If the memory at the address is strictly lower than #value, then wait for signal.
@@ -100,7 +100,7 @@ enum ARBITRATION_SIGNAL_ALL = -1;
 ///@{
 
 /// Reset types(for use with events and timers)
-enum ResetType
+enum ResetType : ubyte
 {
     oneshot = 0, ///< When the primitive is signaled, it will wake up exactly one thread and will clear itself automatically.
     sticky  = 1, ///< When the primitive is signaled, it will wake up all threads and it won't clear itself automatically.
@@ -114,7 +114,7 @@ enum ThreadInfoType
 }
 
 /// Types of resource limit
-enum ResourceLimitType
+enum ResourceLimitType : uint
 {
     priority       = 0, ///< Thread priority
     commit         = 1, ///< Quantity of allocatable memory
@@ -185,7 +185,7 @@ struct ExitThreadEvent
 }
 
 /// Reasons for a user break.
-enum UserBreakType
+enum UserBreakType : ubyte
 {
     panic     = 0, ///< Panic.
     _assert   = 1, ///< Assertion failed.
@@ -195,7 +195,7 @@ enum UserBreakType
 }
 
 /// Reasons for an exception event.
-enum ExceptionEventType
+enum ExceptionEventType : ubyte
 {
     undefined_instruction = 0, ///< Undefined instruction.
     prefetch_abort        = 1, ///< Prefetch abort.
@@ -215,7 +215,7 @@ struct FaultExceptionEvent
 }
 
 /// Stop point types
-enum StopPointType
+enum StopPointType : ubyte
 {
     svc_ff     = 0, ///< See @ref SVC_STOP_POINT.
     breakpoint = 1, ///< Breakpoint.
@@ -287,7 +287,7 @@ struct MapEvent
 }
 
 /// Debug event type.
-enum DebugEventType
+enum DebugEventType : ubyte
 {
     attach_process = 0,  /// < Process attached event.
     attach_thread  = 1,  /// < Thread attached event.
@@ -327,7 +327,7 @@ struct DebugEventInfo
 }
 
 /// Debug flags for an attached process, set by @ref svcContinueDebugEvent
-enum DebugFlags
+enum DebugFlags : ubyte
 {
     inhibit_user_cpu_exception_handlers = BIT(0), /// < Inhibit user-defined CPU exception handlers(including watchpoints and breakpoints, regardless of any @ref svcKernelSetState call).
     signal_fault_exception_events       = BIT(1), /// < Signal fault exception events. See @ref FaultExceptionEvent.
@@ -343,7 +343,7 @@ struct ThreadContext
 }
 
 /// Control flags for @ref svcGetDebugThreadContext and @ref svcSetDebugThreadContext
-enum ThreadContextControlFlags
+enum ThreadContextControlFlags : ubyte
 {
     control_cpu_gprs = BIT(0), ///< Control r0-r12.
     control_cpu_sprs = BIT(1), ///< Control sp, lr, pc, cpsr.
@@ -357,7 +357,7 @@ enum ThreadContextControlFlags
 }
 
 /// Thread parameter field for @ref svcGetDebugThreadParameter
-enum DebugThreadParameter
+enum DebugThreadParameter : ubyte
 {
     parameter_priority            = 0, ///< Thread priority.
     parameter_scheduling_mask_low = 1, ///< Low scheduling mask.

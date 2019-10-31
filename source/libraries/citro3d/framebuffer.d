@@ -25,7 +25,7 @@ struct C3D_FrameBuf
 }
 
 // Flags for C3D_FrameBufClear
-enum C3DClearBits
+enum C3DClearBits : ubyte
 {
     clear_color = BIT(0),
     clear_depth = BIT(1),

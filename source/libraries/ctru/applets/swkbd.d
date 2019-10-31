@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// Keyboard types.
-enum SWKBDType
+enum SWKBDType : ubyte
 {
     normal  = 0, ///< Normal keyboard with several pages (QWERTY/accents/symbol/mobile)
     qwerty  = 1, ///< QWERTY keyboard only.
@@ -19,7 +19,7 @@ enum SWKBDType
 }
 
 /// Accepted input types.
-enum SWKBDValidInput
+enum SWKBDValidInput : ubyte
 {
     anything          = 0, ///< All inputs are accepted.
     notempty          = 1, ///< Empty inputs are not accepted.
@@ -30,7 +30,7 @@ enum SWKBDValidInput
 }
 
 /// Keyboard dialog buttons.
-enum SWKBDButton
+enum SWKBDButton : ubyte
 {
     left    = 0, ///< Left button (usually Cancel)
     middle  = 1, ///< Middle button (usually I Forgot)
@@ -40,7 +40,7 @@ enum SWKBDButton
 }
 
 /// Keyboard password modes.
-enum SWKBDPasswordMode
+enum SWKBDPasswordMode : ubyte
 {
     NONE       = 0, ///< Characters are not concealed.
     HIDE       = 1, ///< Characters are concealed immediately.
@@ -73,7 +73,7 @@ enum
 }
 
 /// Keyboard filter callback return values.
-enum SWKBDCallbackResult
+enum SWKBDCallbackResult : ubyte
 {
     ok        = 0, ///< Specifies that the input is valid.
     close     = 1, ///< Displays an error message, then closes the keyboard.
@@ -81,7 +81,7 @@ enum SWKBDCallbackResult
 }
 
 /// Keyboard return values.
-enum SWKBDResult
+enum SWKBDResult : byte
 {
     none          = -1, ///< Dummy/unused.
     invalid_input = -2, ///< Invalid parameters to swkbd.

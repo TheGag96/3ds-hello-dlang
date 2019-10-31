@@ -10,7 +10,7 @@ import ctru.types;
 extern (C):
 
 /// PS AES algorithms.
-enum PSAESAlgorithm
+enum PSAESAlgorithm : ubyte
 {
     cbc_enc = 0, ///< CBC encryption.
     cbc_dec = 1, ///< CBC decryption.
@@ -21,7 +21,7 @@ enum PSAESAlgorithm
 }
 
 /// PS key slots.
-enum PSAESKeyType
+enum PSAESKeyType : ubyte
 {
     slot_0d     = 0, ///< Key slot 0x0D.
     slot_2d     = 1, ///< Key slot 0x2D.

@@ -169,7 +169,7 @@ enum
     UDS_SENDFLAG_Broadcast = BIT(1)  //When set, broadcast the data frame via the destination MAC address even when UDS_BROADCAST_NETWORKNODEID isn't used.
 }
 
-enum UDSConnectionType
+enum UDSConnectionType : ubyte
 {
     client    = 0x1,
     spectator = 0x2
