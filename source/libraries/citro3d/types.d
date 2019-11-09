@@ -4,7 +4,11 @@ extern (C):
 
 alias C3D_IVec = uint;
 
-C3D_IVec IVec_Pack (ubyte x, ubyte y, ubyte z, ubyte w);
+pragma(inline, true)
+C3D_IVec IVec_Pack (ubyte x, ubyte y, ubyte z, ubyte w)
+{
+    return cast(uint)x | (cast(uint)y << 8) | (cast(uint)z << 16) | (cast(uint)w << 24);
+}
 
 /**
  * @defgroup math_support Math Support Library

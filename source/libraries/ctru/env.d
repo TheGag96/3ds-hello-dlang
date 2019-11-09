@@ -34,28 +34,53 @@ Handle envGetHandle(const(char)* name);
  * @brief Gets the environment-recommended app ID to use with APT.
  * @return The APT app ID.
  */
-uint envGetAptAppId();
+pragma(inline, true)
+uint envGetAptAppId()
+{
+    extern uint __apt_appid;
+    return __apt_appid;
+}
 
 /**
  * @brief Gets the size of the application heap.
  * @return The application heap size.
  */
-uint envGetHeapSize();
+pragma(inline, true)
+uint envGetHeapSize()
+{
+    extern uint __ctru_heap_size;
+    return __ctru_heap_size;
+}
 
 /**
  * @brief Gets the size of the linear heap.
  * @return The linear heap size.
  */
-uint envGetLinearHeapSize();
+pragma(inline, true)
+uint envGetLinearHeapSize()
+{
+    extern uint __ctru_linear_heap_size;
+    return __ctru_linear_heap_size;
+}
 
 /**
  * @brief Gets the environment argument list.
  * @return The argument list.
  */
-const(char)* envGetSystemArgList();
+pragma(inline, true)
+const(char)* envGetSystemArgList()
+{
+    extern const(char*) __system_arglist;
+    return __system_arglist;
+}
 
 /**
  * @brief Gets the environment run flags.
  * @return The run flags.
  */
-uint envGetSystemRunFlags();
+pragma(inline, true)
+uint envGetSystemRunFlags()
+{
+    extern uint __system_runflags;
+    return __system_runflags;
+}

@@ -15,7 +15,11 @@ struct C3D_GasLut
     uint[8] color;
 }
 
-float FogLut_CalcZ (float depth, float near, float far);
+pragma(inline, true)
+float FogLut_CalcZ (float depth, float near, float far)
+{
+    return far*near/(depth*(far-near)+near);
+}
 
 void FogLut_FromArray (C3D_FogLut* lut, ref const(float)[256] data);
 void FogLut_Exp (C3D_FogLut* lut, float density, float gradient, float near, float far);

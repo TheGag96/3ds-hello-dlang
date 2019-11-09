@@ -48,9 +48,13 @@ void pxiDevExit();
  * @param busMode Bus mode to use when transferring.
  * @return A packed card SPI transfer option value.
  */
+pragma(inline, true)
 ubyte pxiDevMakeTransferOption(
     FSCardSPIBaudRate baudRate,
-    FSCardSPIBusMode busMode);
+    FSCardSPIBusMode busMode)
+{
+    return (baudRate & 0x3F) | ((busMode & 0x3) << 6);
+}
 
 /**
  * @brief Creates a packed card SPI wait operation value.
@@ -59,10 +63,14 @@ ubyte pxiDevMakeTransferOption(
  * @param timeout Timeout, in nanoseconds, to wait, if applicable.
  * @return A packed card SPI wait operation value.
  */
+pragma(inline, true)
 ulong pxiDevMakeWaitOperation(
     PXIDEVWaitType waitType,
     PXIDEVDeassertType deassertType,
-    ulong timeout);
+    ulong timeout)
+{
+    return (waitType & 0xF) | ((deassertType & 0xF) << 4) | ((timeout & 0xFFFFFFFFFFFFFF) << 8);
+}
 
 /**
  * @brief Performs multiple card SPI writes and reads.

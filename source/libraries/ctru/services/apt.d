@@ -53,10 +53,14 @@ enum APTAppletPos : byte
 alias APT_AppletAttr = ubyte;
 
 /// Create an APT_AppletAttr bitfield from its components.
+pragma(inline, true)
 APT_AppletAttr aptMakeAppletAttr (
     APTAppletPos pos,
     bool manualGpuRights,
-    bool manualDspRights);
+    bool manualDspRights)
+{
+    return cast(ubyte) ((pos&7) | (manualGpuRights ? BIT(3) : 0) | (manualDspRights ? BIT(4) : 0));
+}
 
 /// APT query reply.
 enum APTQueryReply
@@ -282,7 +286,13 @@ Result APT_GetAppletManInfo(APTAppletPos inpos, APTAppletPos* outpos, NSAppID* r
  * @brief Gets the menu's app ID.
  * @return The menu's app ID.
  */
-NSAppID aptGetMenuAppID();
+pragma(inline, true)
+NSAppID aptGetMenuAppID()
+{
+    NSAppID menu_appid = NSAppID.none;
+    APT_GetAppletManInfo(APTAppletPos.none, null, null, &menu_appid, null);
+    return menu_appid;
+}
 
 /**
  * @brief Gets an applet's information.
@@ -425,8 +435,8 @@ Result APT_SendParameter(NSAppID source, NSAppID dest, APTCommand command, const
 
 /**
  * @brief Cancels a parameter which matches the specified source and dest AppIDs.
- * @param source AppID of the source application (use APPID_NONE to disable the check).
- * @param dest AppID of the destination application (use APPID_NONE to disable the check).
+ * @param source AppID of the source application (use NSAppID.none to disable the check).
+ * @param dest AppID of the destination application (use NSAppID.none to disable the check).
  * @param success Pointer to output true if a parameter was cancelled, or false otherwise.
  */
 Result APT_CancelParameter(NSAppID source, NSAppID dest, bool* success);

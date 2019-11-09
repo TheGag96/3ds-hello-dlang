@@ -101,12 +101,20 @@ bool decompressV(
  *  @param[in] insize   Size of userdata (see decompressV())
  *  @returns Whether succeeded
  */
+pragma(inline, true)
 bool decompress(
     void* output,
     size_t size,
     decompressCallback callback,
     void* userdata,
-    size_t insize);
+    size_t insize)
+{
+    decompressIOVec iov;
+    iov.data = output;
+    iov.size = size;
+
+    return decompressV(&iov, 1, callback, userdata, insize);
+}
 
 /** @brief Decompress LZSS/LZ10
  *  @param[in] iov      Output vector
@@ -131,12 +139,20 @@ bool decompressV_LZSS(
  *  @param[in] insize   Size of userdata (see decompressV())
  *  @returns Whether succeeded
  */
+pragma(inline, true)
 bool decompress_LZSS(
     void* output,
     size_t size,
     decompressCallback callback,
     void* userdata,
-    size_t insize);
+    size_t insize)
+{
+    decompressIOVec iov;
+    iov.data = output;
+    iov.size = size;
+
+    return decompressV_LZSS(&iov, 1, callback, userdata, insize);
+}
 
 /** @brief Decompress LZ11
  *  @param[in] iov      Output vector
@@ -161,12 +177,20 @@ bool decompressV_LZ11(
  *  @param[in] insize   Size of userdata (see decompressV())
  *  @returns Whether succeeded
  */
+pragma(inline, true)
 bool decompress_LZ11(
     void* output,
     size_t size,
     decompressCallback callback,
     void* userdata,
-    size_t insize);
+    size_t insize)
+{
+    decompressIOVec iov;
+    iov.data = output;
+    iov.size = size;
+
+    return decompressV_LZ11(&iov, 1, callback, userdata, insize);
+}
 
 /** @brief Decompress Huffman
  *  @param[in] bits     Data size in bits (usually 4 or 8)
@@ -194,13 +218,21 @@ bool decompressV_Huff(
  *  @param[in] insize   Size of userdata (see decompressV())
  *  @returns Whether succeeded
  */
+pragma(inline, true)
 bool decompress_Huff(
     size_t bits,
     void* output,
     size_t size,
     decompressCallback callback,
     void* userdata,
-    size_t insize);
+    size_t insize)
+{
+    decompressIOVec iov;
+    iov.data = output;
+    iov.size = size;
+
+    return decompressV_Huff(bits, &iov, 1, callback, userdata, insize);
+}
 
 /** @brief Decompress run-length encoding
  *  @param[in] iov      Output vector
@@ -225,10 +257,18 @@ bool decompressV_RLE(
  *  @param[in] insize   Size of userdata (see decompressV())
  *  @returns Whether succeeded
  */
+pragma(inline, true)
 bool decompress_RLE(
     void* output,
     size_t size,
     decompressCallback callback,
     void* userdata,
-    size_t insize);
+    size_t insize)
+{
+    decompressIOVec iov;
+    iov.data = output;
+    iov.size = size;
+
+    return decompressV_RLE(&iov, 1, callback, userdata, insize);
+}
 

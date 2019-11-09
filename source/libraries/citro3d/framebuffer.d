@@ -41,12 +41,48 @@ void C3D_FrameBufTex(C3D_FrameBuf* fb, C3D_Tex* tex, GPUTexFace face, int level)
 void C3D_FrameBufClear(C3D_FrameBuf* fb, C3DClearBits clearBits, uint clearColor, uint clearDepth);
 void C3D_FrameBufTransfer(C3D_FrameBuf* fb, GFXScreen screen, GFX3DSide side, uint transferFlags);
 
+pragma(inline, true)
 void C3D_FrameBufAttrib(
     C3D_FrameBuf* fb,
     ushort width,
     ushort height,
-    bool block32);
+    bool block32)
+{
+    fb.width   = width;
+    fb.height  = height;
+    fb.block32 = block32;
+}
 
-void C3D_FrameBufColor(C3D_FrameBuf* fb, void* buf, GPUColorBuf fmt);
+pragma(inline, true)
+void C3D_FrameBufColor(C3D_FrameBuf* fb, void* buf, GPUColorBuf fmt)
+{
+    if (buf)
+    {
+        fb.colorBuf  = buf;
+        fb.colorFmt  = fmt;
+        fb.colorMask = 0xF;
+    } else
+    {
+        fb.colorBuf  = null;
+        fb.colorFmt  = GPUColorBuf.rgba8;
+        fb.colorMask = 0;
+    }
+}
 
-void C3D_FrameBufDepth(C3D_FrameBuf* fb, void* buf, GPUDepthBuf fmt);
+pragma(inline, true)
+void C3D_FrameBufDepth(C3D_FrameBuf* fb, void* buf, GPUDepthBuf fmt)
+{
+    if (buf)
+    {
+        fb.depthBuf  = buf;
+        fb.depthFmt  = fmt;
+        fb.depthMask = fmt == GPUDepthBuf.depth24_stencil8 ? 0x3 : 0x2;
+    } 
+    else
+    {
+        fb.depthBuf  = null;
+        fb.depthFmt  = GPUDepthBuf.depth24;
+        fb.depthMask = 0;
+    }
+}
+

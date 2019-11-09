@@ -17,7 +17,12 @@ struct C3D_MtxStack
     bool isDirty;
 }
 
-C3D_Mtx* MtxStack_Cur(C3D_MtxStack* stk);
+pragma(inline, true)
+C3D_Mtx* MtxStack_Cur(C3D_MtxStack* stk)
+{
+    stk.isDirty = true;
+    return &stk.m[stk.pos];
+}
 
 void MtxStack_Init(C3D_MtxStack* stk);
 void MtxStack_Bind(C3D_MtxStack* stk, GPUShaderType unifType, int unifPos, int unifLen);

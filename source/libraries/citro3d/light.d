@@ -165,4 +165,11 @@ void C3D_LightSpotLut(C3D_Light* light, C3D_LightLut* lut);
 void C3D_LightDistAttnEnable(C3D_Light* light, bool enable);
 void C3D_LightDistAttn(C3D_Light* light, C3D_LightLutDA* lut);
 
-void C3D_LightColor(C3D_Light* light, float r, float g, float b);
+pragma(inline, true)
+void C3D_LightColor(C3D_Light* light, float r, float g, float b)
+{
+    C3D_LightDiffuse(light, r, g, b);
+    C3D_LightSpecular0(light, r, g, b);
+    C3D_LightSpecular1(light, r, g, b);
+}
+

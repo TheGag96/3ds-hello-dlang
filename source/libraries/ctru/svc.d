@@ -406,19 +406,33 @@ struct StartupInfo
  * @brief Gets the thread local storage buffer.
  * @return The thread local storage bufger.
  */
-void* getThreadLocalStorage();
+pragma(inline, true)
+void* getThreadLocalStorage()
+{
+    void* ret;
+    asm { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
+    return ret;
+}
 
 /**
  * @brief Gets the thread command buffer.
  * @return The thread command bufger.
  */
-uint* getThreadCommandBuffer();
+pragma(inline, true)
+uint* getThreadCommandBuffer()
+{
+    return cast(uint*)(cast(ubyte*)getThreadLocalStorage() + 0x80);
+}
 
 /**
  * @brief Gets the thread static buffer.
  * @return The thread static bufger.
  */
-uint* getThreadStaticBuffers();
+pragma(inline, true)
+uint* getThreadStaticBuffers()
+{
+    return cast(uint*)(cast(ubyte*)getThreadLocalStorage() + 0x180);
+}
 
 ///@name Memory management
 ///@{

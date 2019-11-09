@@ -1,5 +1,5 @@
-// PowerNexOS runtime
-// Based on object.d in druntime
+// Basic 3DS runtime
+// Based on the PowerNexOS runtime, which is based on the object.d in druntime
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file BOOST-LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
@@ -181,3 +181,65 @@ extern (C) TTo[] __ArrayCast(TFrom, TTo)(TFrom[] from) @nogc pure @trusted {
 //    jmp loop;
 //  }
 //}
+
+/**
+Destroys the given object and optionally resets to initial state. It's used to
+_destroy an object, calling its destructor or finalizer so it no longer
+references any other objects. It does $(I not) initiate a GC cycle or free
+any GC memory.
+If `initialize` is supplied `false`, the object is considered invalid after
+destruction, and should not be referenced.
+*/
+void destroy(bool initialize = true, T)(ref T obj) if (is(T == struct))
+{
+  destructRecurse(obj);
+
+  static if (initialize)
+  {
+    // We need to re-initialize `obj`.  Previously, an immutable static
+    // and memcpy were used to hold an initializer. With improved unions, this is no longer
+    // needed.
+    union UntypedInit
+    {
+      T dummy;
+    }
+    static struct UntypedStorage
+    {
+      align(T.alignof) void[T.sizeof] dummy;
+    }
+
+    () @trusted {
+      *cast(UntypedStorage*) &obj = cast(UntypedStorage) UntypedInit.init;
+    } ();
+  }
+}
+
+public void destructRecurse(E, size_t n)(ref E[n] arr)
+{
+  import core.internal.traits : hasElaborateDestructor;
+
+  static if (hasElaborateDestructor!E)
+  {
+    foreach_reverse (ref elem; arr)
+      destructRecurse(elem);
+  }
+}
+
+public void destructRecurse(S)(ref S s)
+  if (is(S == struct))
+{
+  static if (__traits(hasMember, S, "__xdtor") &&
+      // Bugzilla 14746: Check that it's the exact member of S.
+      __traits(isSame, S, __traits(parent, s.__xdtor)))
+    s.__xdtor();
+}
+
+// Test static struct
+nothrow @safe @nogc unittest
+{
+  static int i = 0;
+  static struct S { ~this() nothrow @safe @nogc { i = 42; } }
+  S s;
+  destructRecurse(s);
+  assert(i == 42);
+}

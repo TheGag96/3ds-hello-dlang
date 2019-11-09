@@ -14,6 +14,7 @@ extern (C):
  * @param w buffer width for GX_DisplayTransfer, linesize for GX_TextureCopy
  * @param h buffer height for GX_DisplayTransfer, gap for GX_TextureCopy
  */
+pragma(inline, true)
 extern (D) auto GX_BUFFER_DIM(T0, T1)(auto ref T0 w, auto ref T1 h)
 {
     return (h << 16) | (w & 0xFFFF);
@@ -56,36 +57,42 @@ enum GxFillControl : ushort
 }
 
 /// Creates a transfer vertical flip flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_FLIP_VERT(T)(auto ref T x)
 {
     return x << 0;
 }
 
 /// Creates a transfer tiled output flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_OUT_TILED(T)(auto ref T x)
 {
     return x << 1;
 }
 
 /// Creates a transfer raw copy flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_RAW_COPY(T)(auto ref T x)
 {
     return x << 3;
 }
 
 /// Creates a transfer input format flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_IN_FORMAT(T)(auto ref T x)
 {
     return x << 8;
 }
 
 /// Creates a transfer output format flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_OUT_FORMAT(T)(auto ref T x)
 {
     return x << 12;
 }
 
 /// Creates a transfer scaling flag.
+pragma(inline, true)
 extern (D) auto GX_TRANSFER_SCALING(T)(auto ref T x)
 {
     return x << 24;
@@ -165,10 +172,15 @@ bool gxCmdQueueWait (gxCmdQueue_s* queue, long timeout);
  * @param callback The completion callback.
  * @param user User data.
  */
+pragma(inline, true)
 void gxCmdQueueSetCallback (
     gxCmdQueue_s* queue,
     void function (gxCmdQueue_s*) callback,
-    void* user);
+    void* user)
+{
+    queue.callback = callback;
+    queue.user = user;
+}
 
 /**
  * @brief Selects a command queue to which GX_* functions will add commands instead of immediately submitting them to GX.

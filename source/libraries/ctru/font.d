@@ -184,26 +184,50 @@ Result fontEnsureMapped();
 void fontFixPointers(CFNT_s* font);
 
 /// Gets the currently loaded system font
-CFNT_s* fontGetSystemFont();
+pragma(inline, true)
+CFNT_s* fontGetSystemFont()
+{
+    extern CFNT_s* g_sharedFont;
+    if (!g_sharedFont)
+        fontEnsureMapped();
+    return g_sharedFont;
+}
 
 /**
  * @brief Retrieves the font information structure of a font.
  * @param font Pointer to font structure. If NULL, the shared system font is used.
  */
-FINF_s* fontGetInfo(CFNT_s* font);
+pragma(inline, true)
+FINF_s* fontGetInfo(CFNT_s* font)
+{
+    if (!font)
+        font = fontGetSystemFont();
+    return &font.finf;
+}
 
 /**
  * @brief Retrieves the texture sheet information of a font.
  * @param font Pointer to font structure. If NULL, the shared system font is used.
  */
-TGLP_s* fontGetGlyphInfo(CFNT_s* font);
+TGLP_s* fontGetGlyphInfo(CFNT_s* font)
+{
+    if (!font)
+        font = fontGetSystemFont();
+    return fontGetInfo(font).tglp;
+}
 
 /**
  * @brief Retrieves the pointer to texture data for the specified texture sheet.
  * @param font Pointer to font structure. If NULL, the shared system font is used.
  * @param sheetIndex Index of the texture sheet.
  */
-void* fontGetGlyphSheetTex(CFNT_s* font, int sheetIndex);
+void* fontGetGlyphSheetTex(CFNT_s* font, int sheetIndex)
+{
+    if (!font)
+        font = fontGetSystemFont();
+    TGLP_s* tglp = fontGetGlyphInfo(font);
+    return &tglp.sheetData[sheetIndex*tglp.sheetSize];
+}
 
 /**
  * @brief Retrieves the glyph index of the specified Unicode codepoint.

@@ -49,15 +49,22 @@ float C3D_GetProcessingTime();
 
 union C3D_DEPTHTYPE
 {
-    int __i;
-    GPUDepthBuf __e;
+    private:
+        int __i;
+        GPUDepthBuf __e;
+
+    public:
+        this(GPUDepthBuf e) { __e = e; }
+        this(int i) { __i = i; }
 }
 
+pragma(inline, true)
 extern (D) auto C3D_DEPTHTYPE_OK(T)(auto ref T _x)
 {
     return _x.__i >= 0;
 }
 
+pragma(inline, true)
 extern (D) auto C3D_DEPTHTYPE_VAL(T)(auto ref T _x)
 {
     return _x.__e;

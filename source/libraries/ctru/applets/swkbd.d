@@ -210,7 +210,11 @@ void swkbdInit(SWKBDState* swkbd, SWKBDType type, int numButtons, int maxTextLen
  * @param swkbd Pointer to swkbd state.
  * @param mode Password mode.
  */
-void swkbdSetPasswordMode(SWKBDState* swkbd, SWKBDPasswordMode mode);
+pragma(inline, true)
+void swkbdSetPasswordMode(SWKBDState* swkbd, SWKBDPasswordMode mode)
+{
+    swkbd.password_mode = mode;
+}
 
 /**
  * @brief Configures input validation in a software keyboard.
@@ -219,11 +223,18 @@ void swkbdSetPasswordMode(SWKBDState* swkbd, SWKBDPasswordMode mode);
  * @param filterFlags Bitmask specifying which characters are disallowed (filtered).
  * @param maxDigits In case digits are disallowed, specifies how many digits are allowed at maximum in input strings (0 completely restricts digit input).
  */
+pragma(inline, true)
 void swkbdSetValidation(
     SWKBDState* swkbd,
     SWKBDValidInput validInput,
     uint filterFlags,
-    int maxDigits);
+    int maxDigits)
+{
+    swkbd.valid_input = validInput;
+    swkbd.filter_flags = filterFlags;
+    swkbd.max_digits = cast(ushort) ((filterFlags & SWKBD_FILTER_DIGITS) ? maxDigits : 0);
+}
+
 
 /**
  * @brief Configures what characters will the two bottom keys in a numpad produce.
@@ -231,7 +242,12 @@ void swkbdSetValidation(
  * @param left Unicode codepoint produced by the leftmost key in the bottom row (0 hides the key).
  * @param left Unicode codepoint produced by the rightmost key in the bottom row (0 hides the key).
  */
-void swkbdSetNumpadKeys(SWKBDState* swkbd, int left, int right);
+pragma(inline, true)
+void swkbdSetNumpadKeys(SWKBDState* swkbd, int left, int right)
+{
+    swkbd.numpad_keys[0] = cast(ushort)left;
+    swkbd.numpad_keys[1] = cast(ushort)right;
+}
 
 /**
  * @brief Specifies which special features are enabled in a software keyboard.
@@ -319,4 +335,8 @@ SWKBDButton swkbdInputText(SWKBDState* swkbd, char* buf, size_t bufsize);
  * @param swkbd Pointer to swkbd state.
  * @return The result value.
  */
-SWKBDResult swkbdGetResult(SWKBDState* swkbd);
+pragma(inline, true)
+SWKBDResult swkbdGetResult(SWKBDState* swkbd)
+{
+    return swkbd.result;
+}

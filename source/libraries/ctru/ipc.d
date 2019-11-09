@@ -10,7 +10,7 @@ import ctru.types;
 extern(C):
 
 /// IPC buffer access rights.
-enum IPC_BufferRights
+enum IPC_BufferRights : ubyte
 {
     r  = BIT(1), /// < Readable
     w  = BIT(2), /// < Writable
@@ -29,10 +29,14 @@ enum IPC_BufferRights
  *
  * @note While #normal_params is equivalent to the number of normal parameters, #translate_params includes the size occupied by the translate parameters headers.
  */
+pragma(inline, true)
 uint IPC_MakeHeader(
     ushort command_id,
     uint normal_params,
-    uint translate_params);
+    uint translate_params)
+{
+    return (cast(uint) command_id << 16) | ((cast(uint) normal_params & 0x3F) << 6) | ((cast(uint) translate_params & 0x3F) << 0);
+}
 
 /**
  * @brief Creates a header to share handles
@@ -43,7 +47,11 @@ uint IPC_MakeHeader(
  *
  * @note Zero values will have no effect.
  */
-uint IPC_Desc_SharedHandles(uint number);
+pragma(inline, true)
+uint IPC_Desc_SharedHandles(uint number)
+{
+    return (cast(uint)(number - 1) << 26);
+}
 
 /**
  * @brief Creates the header to transfer handle ownership
@@ -54,7 +62,11 @@ uint IPC_Desc_SharedHandles(uint number);
  *
  * @note Zero values will have no effect.
  */
-uint IPC_Desc_MoveHandles(uint number);
+pragma(inline, true) 
+uint IPC_Desc_MoveHandles(uint number)
+{
+    return (cast(uint)(number - 1) << 26) | 0x10;
+}
 
 /**
  * @brief Returns the code to ask the kernel to fill the handle with the current process ID.
@@ -62,9 +74,17 @@ uint IPC_Desc_MoveHandles(uint number);
  *
  * The next value is a placeholder that will be replaced by the current process ID by the kernel.
  */
-uint IPC_Desc_CurProcessId();
+pragma(inline, true) 
+uint IPC_Desc_CurProcessId()
+{
+    return 0x20;
+}
 
-uint IPC_Desc_CurProcessHandle();
+pragma(inline, true) deprecated 
+uint IPC_Desc_CurProcessHandle()
+{
+    return IPC_Desc_CurProcessId();
+}
 
 /**
  * @brief Creates a header describing a static buffer.
@@ -74,7 +94,11 @@ uint IPC_Desc_CurProcessHandle();
  *
  * The next value is a pointer to the buffer. It will be copied to TLS offset 0x180 + static_buffer_id*8.
  */
-uint IPC_Desc_StaticBuffer(size_t size, uint buffer_id);
+pragma(inline, true) 
+uint IPC_Desc_StaticBuffer(size_t size, uint buffer_id)
+{
+    return (size << 14) | ((buffer_id & 0xF) << 10) | 0x2;
+}
 
 /**
  * @brief Creates a header describing a buffer to be sent over PXI.
@@ -85,7 +109,13 @@ uint IPC_Desc_StaticBuffer(size_t size, uint buffer_id);
  *
  * The next value is a phys-address of a table located in the BASE memregion.
  */
-uint IPC_Desc_PXIBuffer(size_t size, uint buffer_id, bool is_read_only);
+pragma(inline, true) 
+uint IPC_Desc_PXIBuffer(size_t size, uint buffer_id, bool is_read_only)
+{
+    ubyte type = 0x4;
+    if(is_read_only)type = 0x6;
+    return (size << 8) | ((buffer_id & 0xF) << 4) | type;
+}
 
 /**
  * @brief Creates a header describing a buffer from the main memory.
@@ -95,4 +125,9 @@ uint IPC_Desc_PXIBuffer(size_t size, uint buffer_id, bool is_read_only);
  *
  * The next value is a pointer to the buffer.
  */
-uint IPC_Desc_Buffer(size_t size, IPC_BufferRights rights);
+pragma(inline, true) 
+uint IPC_Desc_Buffer(size_t size, IPC_BufferRights rights)
+{
+    return (size << 4) | 0x8 | rights;
+}
+

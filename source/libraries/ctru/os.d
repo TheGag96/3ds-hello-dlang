@@ -19,24 +19,28 @@ enum CPU_TICKS_PER_MSEC = SYSCLOCK_ARM11 / 1000.0;
 enum CPU_TICKS_PER_USEC = SYSCLOCK_ARM11 / 1000000.0;
 
 /// Packs a system version from its components.
+pragma(inline, true)
 extern (D) auto SYSTEM_VERSION(T0, T1, T2)(auto ref T0 major, auto ref T1 minor, auto ref T2 revision)
 {
     return (major << 24) | (minor << 16) | (revision << 8);
 }
 
 /// Retrieves the major version from a packed system version.
+pragma(inline, true)
 extern (D) auto GET_VERSION_MAJOR(T)(auto ref T _version)
 {
     return _version >> 24;
 }
 
 /// Retrieves the minor version from a packed system version.
+pragma(inline, true)
 extern (D) auto GET_VERSION_MINOR(T)(auto ref T _version)
 {
     return (_version >> 16) & 0xFF;
 }
 
 /// Retrieves the revision version from a packed system version.
+pragma(inline, true)
 extern (D) auto GET_VERSION_REVISION(T)(auto ref T _version)
 {
     return (_version >> 8) & 0xFF;

@@ -1,8 +1,12 @@
 module citro3d.base;
 
 import citro3d.types;
+import ctru.gfx;
 import ctru.gpu.enums;
+import ctru.gpu.gpu;
+import ctru.gpu.registers;
 import ctru.gpu.shaderprogram;
+import ctru.services.gspgpu;
 
 extern (C):
 
@@ -33,15 +37,42 @@ void C3D_ImmDrawBegin(GPUPrimitive primitive);
 void C3D_ImmSendAttrib(float x, float y, float z, float w);
 void C3D_ImmDrawEnd();
 
-void C3D_ImmDrawRestartPrim();
+pragma(inline, true)
+void C3D_ImmDrawRestartPrim()
+{
+    GPUCMD_AddWrite(GPUREG_RESTART_PRIMITIVE, 1);
+}
 
-void C3D_FlushAwait();
+pragma(inline, true)
+void C3D_FlushAwait()
+{
+    gspWaitForP3D();
+}
 
-void C3D_Flush();
+pragma(inline, true)
+void C3D_Flush()
+{
+    C3D_FlushAsync();
+    C3D_FlushAwait();
+}
 
-void C3D_VideoSync();
+pragma(inline, true)
+void C3D_VideoSync()
+{
+    gspWaitForEvent(GSPGPUEvent.vblank0, false);
+    gfxSwapBuffersGpu();
+}
 
 // Fixed vertex attributes
 C3D_FVec* C3D_FixedAttribGetWritePtr(int id);
 
-void C3D_FixedAttribSet(int id, float x, float y, float z, float w);
+pragma(inline, true)
+void C3D_FixedAttribSet(int id, float x, float y, float z, float w)
+{
+    C3D_FVec* ptr = C3D_FixedAttribGetWritePtr(id);
+    ptr.x = x;
+    ptr.y = y;
+    ptr.z = z;
+    ptr.w = w;
+}
+

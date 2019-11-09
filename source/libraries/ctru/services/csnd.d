@@ -24,7 +24,23 @@ extern (D) auto CSND_TIMER(T)(auto ref T n)
  * @param pan Pan to use.
  * @return A left/right volume pair for use by hardware.
  */
-uint CSND_VOL(float vol, float pan);
+pragma(inline, true)
+uint CSND_VOL(float vol, float pan)
+{
+    float rpan;
+    uint lvol, rvol;
+
+    if (vol < 0.0f) vol = 0.0f;
+    else if (vol > 1.0f) vol = 1.0f;
+
+    rpan = (pan+1) / 2;
+    if (rpan < 0.0f) rpan = 0.0f;
+    else if (rpan > 1.0f) rpan = 1.0f;
+
+    lvol = cast(uint)(vol*(1-rpan) * 0x8000);
+    rvol = cast(uint)(vol*rpan * 0x8000);
+    return lvol | (rvol << 16);
+}
 
 /// CSND encodings.
 enum
@@ -45,18 +61,21 @@ enum
 }
 
 /// Creates a sound channel value from a channel number.
+pragma(inline, true)
 extern (D) auto SOUND_CHANNEL(T)(auto ref T n)
 {
     return cast(uint) n & 0x1F;
 }
 
 /// Creates a sound format value from an encoding.
+pragma(inline, true)
 extern (D) auto SOUND_FORMAT(T)(auto ref T n)
 {
     return cast(uint) n << 12;
 }
 
 /// Creates a sound loop mode value from a loop mode.
+pragma(inline, true)
 extern (D) auto SOUND_LOOPMODE(T)(auto ref T n)
 {
     return cast(uint) n << 10;
