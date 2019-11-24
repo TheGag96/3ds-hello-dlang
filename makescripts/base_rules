@@ -4,7 +4,12 @@ include $(DEVKITARM)/base_tools
 # add portlibs path
 #---------------------------------------------------------------------------------
 export PORTLIBS_PATH	:=	$(DEVKITPRO)/portlibs
+
+#---------------------------------------------------------------------------------
+# D-specific stuff
+#---------------------------------------------------------------------------------
 export GDC := $(DEVKITARM)/bin/arm-none-eabi-gdc
+export LDC := ldc2
 
 #---------------------------------------------------------------------------------
 %.a:
@@ -106,7 +111,13 @@ export GDC := $(DEVKITARM)/bin/arm-none-eabi-gdc
 
 %.o: $(DFILES)
 	@echo $(notdir $<)
+ifeq ($(DCOMPILER),LDC)
+	$(LDC) $(DFLAGS) -c $^ -of=$@ $(ERROR_FILTER)
+else ifeq ($(DCOMPILER),GDC)
 	$(GDC) $(DFLAGS) -c $^ -o $@ $(ERROR_FILTER)
+else
+	@echo ERROR: Please specify a D compiler in the Makefile or command line args!
+endif
 
 #---------------------------------------------------------------------------------
 %.o: %.m

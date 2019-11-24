@@ -410,7 +410,14 @@ pragma(inline, true)
 void* getThreadLocalStorage()
 {
     void* ret;
-    asm { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
+    version (LDC) 
+    {
+        //ret = __asm!(void*)( "mrc p15, 0, {data}, c13, c0, 3"); 
+    }
+    else 
+    {
+        asm { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
+    }
     return ret;
 }
 
