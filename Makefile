@@ -73,8 +73,8 @@ else
 				--d-version=DevkitARM \
 				--d-version=CRuntime_Newlib \
 				--d-version=_3DS \
-				-mtriple=armv6k-unknown-eabi -float-abi=hard 	
-endif		
+				-mtriple=armv6k-none-eabi -float-abi=hard -mcpu=mpcorenovfp -mattr=-read-tp-hard
+endif
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
@@ -263,10 +263,10 @@ define shader-as-d
 	rm -rf $(SHBINDIR)
 	mkdir $(SHBINDIR)
 	echo "module pica_`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`;" > $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
-	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end;" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
-	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
-	echo "extern (C) extern __gshared const uint" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
-	echo "const(ubyte)[]  `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_wrapped() { return (&`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`)[0..`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size]; }" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d	
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end;" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const uint" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "const(ubyte)[]  `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_wrapped() { return (&`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`)[0..`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size]; }" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
 	picasso -o $(CURBIN) $1
 	bin2s $(CURBIN) | $(AS) -o $*.shbin.o
 endef
