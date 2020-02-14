@@ -73,7 +73,7 @@ else
 				--d-version=DevkitARM \
 				--d-version=CRuntime_Newlib \
 				--d-version=_3DS \
-				-mtriple=armv6k-none-eabi -float-abi=hard -mcpu=mpcorenovfp -mattr=-read-tp-hard
+				-mtriple=armv6k-none-eabi -float-abi=hard -mcpu=mpcorenovfp -mattr=+vfp2d16
 endif
 
 ASFLAGS	:=	-g $(ARCH)
