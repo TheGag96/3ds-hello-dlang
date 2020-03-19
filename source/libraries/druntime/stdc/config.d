@@ -144,13 +144,13 @@ else version (Posix)
     alias ulong cpp_ulonglong;
   }
 }
-else version (_3DS) 
+else version (_3DS)
 {
-    alias long  c_long;
-    alias ulong c_ulong;
+    alias int  c_long;
+    alias uint c_ulong;
 
-    alias long   cpp_long;
-    alias ulong  cpp_ulong;
+    alias int   cpp_long;
+    alias uint  cpp_ulong;
 
     alias long  cpp_longlong;
     alias ulong cpp_ulonglong;

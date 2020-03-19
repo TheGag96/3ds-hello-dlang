@@ -6,10 +6,6 @@
 import ctru;
 import citro3d;
 
-extern(C) int printf(
-  scope const(char*) format, ...
-) nothrow @nogc; 
-
 extern(C) int main(int argc, char** argv) {
 	gfxInitDefault();
 
