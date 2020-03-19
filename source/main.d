@@ -9,10 +9,6 @@ import ctru;
 import citro2d;
 import citro3d;
 
-extern(C) int printf(
-  scope const(char*) format, ...
-) nothrow @nogc;
-
 enum MAX_SPRITES   = 768;
 enum SCREEN_WIDTH  = 400;
 enum SCREEN_HEIGHT = 240;
