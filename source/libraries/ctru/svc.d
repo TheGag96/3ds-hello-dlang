@@ -404,17 +404,17 @@ struct StartupInfo
 
 /**
  * @brief Gets the thread local storage buffer.
- * @return The thread local storage bufger.
+ * @return The thread local storage buffer.
  */
 pragma(inline, true)
 void* getThreadLocalStorage()
 {
     void* ret;
-    version (LDC) 
+    version (LDC)
     {
-        //ret = __asm!(void*)( "mrc p15, 0, {data}, c13, c0, 3"); 
+        //ret = __asm!(void*)( "mrc p15, 0, {data}, c13, c0, 3");
     }
-    else 
+    else
     {
         asm { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
     }
