@@ -43,12 +43,12 @@ extern (C):
  */
 struct Tex3DS_SubTexture
 {
-    ushort width; ///< Sub-texture width (pixels)
+    ushort width;  ///< Sub-texture width (pixels)
     ushort height; ///< Sub-texture height (pixels)
-    float left; ///< Left u-coordinate
-    float top; ///< Top v-coordinate
-    float right; ///< Right u-coordinate
-    float bottom; ///< Bottom v-coordinate
+    float left;    ///< Left u-coordinate
+    float top;     ///< Top v-coordinate
+    float right;   ///< Right u-coordinate
+    float bottom;  ///< Bottom v-coordinate
 }
 
 /** @brief Texture */
@@ -59,7 +59,7 @@ struct Tex3DS_Texture_s
     ushort height;                       ///< Texture height
     ubyte  format;                       ///< Texture format
     ubyte  mipmapLevels;                 ///< Number of mipmaps
-    Tex3DS_SubTexture[0] subTextures;  ///< Subtextures
+    Tex3DS_SubTexture[0] subTextures;    ///< Subtextures
 }
 alias Tex3DS_Texture = Tex3DS_Texture_s*;
 
@@ -133,47 +133,91 @@ const(Tex3DS_SubTexture)* Tex3DS_GetSubTexture (const Tex3DS_Texture texture, si
  *  @param[in] subtex Subtexture to check
  *  @returns whether subtexture is rotated
  */
-bool Tex3DS_SubTextureRotated(const(Tex3DS_SubTexture)* subtex);
+pragma(inline, true)
+bool Tex3DS_SubTextureRotated(const(Tex3DS_SubTexture)* subtex)
+{
+    return subtex.top < subtex.bottom;
+}
 
 /** @brief Get bottom-left texcoords
  *  @param[in]  subtex Subtexture
  *  @param[out] u      u-coordinate
  *  @param[out] v      v-coordinate
  */
-void Tex3DS_SubTextureBottomLeft(
-    const(Tex3DS_SubTexture)* subtex,
-    float* u,
-    float* v);
+pragma(inline, true)
+void Tex3DS_SubTextureBottomLeft(const(Tex3DS_SubTexture)* subtex, float* u, float* v)
+{
+    if (!Tex3DS_SubTextureRotated(subtex))
+    {
+        *u = subtex.left;
+        *v = subtex.bottom;
+    }
+    else
+    {
+        *u = subtex.bottom;
+        *v = subtex.left;
+    }
+}
 
 /** @brief Get bottom-right texcoords
  *  @param[in]  subtex Subtexture
  *  @param[out] u      u-coordinate
  *  @param[out] v      v-coordinate
  */
-void Tex3DS_SubTextureBottomRight(
-    const(Tex3DS_SubTexture)* subtex,
-    float* u,
-    float* v);
+pragma(inline, true)
+void Tex3DS_SubTextureBottomRight(const(Tex3DS_SubTexture)* subtex, float* u, float* v)
+{
+    if (!Tex3DS_SubTextureRotated(subtex))
+    {
+        *u = subtex.right;
+        *v = subtex.bottom;
+    }
+    else
+    {
+        *u = subtex.bottom;
+        *v = subtex.right;
+    }
+}
 
 /** @brief Get top-left texcoords
  *  @param[in]  subtex Subtexture
  *  @param[out] u      u-coordinate
  *  @param[out] v      v-coordinate
  */
-void Tex3DS_SubTextureTopLeft(
-    const(Tex3DS_SubTexture)* subtex,
-    float* u,
-    float* v);
+pragma(inline, true)
+void Tex3DS_SubTextureTopLeft(const(Tex3DS_SubTexture)* subtex, float* u, float* v)
+{
+    if (!Tex3DS_SubTextureRotated(subtex))
+    {
+        *u = subtex.left;
+        *v = subtex.top;
+    }
+    else
+    {
+        *u = subtex.top;
+        *v = subtex.left;
+    }
+}
 
 /** @brief Get top-right texcoords
  *  @param[in]  subtex Subtexture
  *  @param[out] u      u-coordinate
  *  @param[out] v      v-coordinate
  */
-void Tex3DS_SubTextureTopRight(
-    const(Tex3DS_SubTexture)* subtex,
-    float* u,
-    float* v);
+pragma(inline, true)
+void Tex3DS_SubTextureTopRight(const(Tex3DS_SubTexture)* subtex, float* u, float* v)
+{
+    if (!Tex3DS_SubTextureRotated(subtex))
+    {
+        *u = subtex.right;
+        *v = subtex.top;
+    }
+    else
+    {
+        *u = subtex.top;
+        *v = subtex.right;
+    }
+}
 
 /** @brief Free Tex3DS texture
  *  @param[in] texture Tex3DS texture to free
