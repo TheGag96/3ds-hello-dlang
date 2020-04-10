@@ -2,9 +2,44 @@
 
 ![Screenshot](https://i.imgur.com/aEsHC4w.png)
 
-## Compiling
+## Compiling with LDC
 
-I'd like to improve on this in the future, as right now it's really hacky... I think things will get better once GCC 10 comes out and GDC gets way updated with `-betterC` and all that.
+LDC has made this process very simple! 
+
+First, go [install devkitPro](https://devkitpro.org/wiki/Getting_Started) like normal. Make sure to install 3DS support!
+
+Then, clone this repo.
+
+```sh
+git clone https://github.com/TheGag96/3ds-hello-dlang
+```
+
+Go download/install the latest version of [LDC](https://github.com/ldc-developers/ldc).
+
+From the `makescripts` folder in this repo, open up `base_rules`. On the line where it says:
+
+```Makefile
+export LDC := ldc2
+```
+
+Edit this to be command/path to your LDC executable. (I may remove this hacky line in the future and just force you to put ldc2 in your path.)
+
+Copy the `base_rules` and `3ds_rules` files into `/opt/devkitpro/devkitARM`:
+
+```sh
+sudo cp -r /path/to/3ds-hello-dlang/makescripts/* /opt/devkitpro/devkitARM
+```
+
+Then, finally...
+
+```sh
+cd /path/to/3ds-hello-dlang
+make
+```
+
+## Compiling with GDC (not recommended)
+
+This is how I first got this working, though I don't recommend it due to how difficult it is and how outdated GDC is. 
 
 First, go [install devkitPro](https://devkitpro.org/wiki/Getting_Started) like normal. Make sure to install 3DS support!
 
@@ -68,6 +103,8 @@ cd /path/to/3ds-hello-dlang
 make
 ```
 
+## Extra libraries
+
 If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d) and [citro2d](https://github.com/devkitPro/citro2d), follow the setup instructions to install those libraries.
 
 ## What's working so far
@@ -76,10 +113,10 @@ If you want to use my bindings for [citro3d](https://github.com/fincs/citro3d) a
 * (Mostly complete) bindings for libctru
 * (Mostly complete) bindings for citro3d
 * (Mostly complete) bindings for citro2d
+* Some support for core.stdc (needs to be modified to support newlib's libc implementation)
 
 ## Known issues
 
-* No support for core.stdc yet (needs to be modified to support newlib's libc implementation)
 * Bindings referencing things like sockets or other stuff in the C standard library are incomplete
 * Certain D standard library files have to be tweaked to compile properly, and I'm not sure if it can be made better or if that's just how it has to be in this environment.
 * The bindings I've written so far have enums renamed to fit the D naming convention, but nothing else really is. Still not sure how I plan on cleaning things like that up.
