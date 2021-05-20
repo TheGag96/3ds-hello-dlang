@@ -14,7 +14,7 @@
 
 module core.stdc.stdlib;
 
-private import core.stdc.config;
+import core.stdc.config;
 public import core.stdc.stddef; // for wchar_t
 
 version (OSX)
@@ -165,13 +165,13 @@ void*   realloc(void* ptr, size_t size);
 void    free(void* ptr);
 
 ///
-void    abort() @safe;
+noreturn abort() @safe;
 ///
-void    exit(int status);
+noreturn exit(int status);
 ///
 int     atexit(void function() func);
 ///
-void    _Exit(int status);
+noreturn _Exit(int status);
 
 ///
 char*   getenv(scope const char* name);

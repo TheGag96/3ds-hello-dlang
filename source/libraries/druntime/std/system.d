@@ -31,13 +31,17 @@ immutable
         win64,     /// Microsoft 64 bit Windows systems
         linux,     /// All Linux Systems, except for Android
         osx,       /// Mac OS X
+        iOS,       /// iOS
+        tvOS,      /// tvOS
+        watchOS,   /// watchOS
         freeBSD,   /// FreeBSD
         netBSD,    /// NetBSD
         dragonFlyBSD, /// DragonFlyBSD
         solaris,   /// Solaris
         android,   /// Android
-        otherPosixm, /// Other Posix Systems
-        _3ds /// Other Posix Systems
+        otherPosix, /// Other Posix Systems
+        _3ds,      /// Nintendo 3DS
+        unknown,   /// Unknown
     }
 
     /// The OS that the program was compiled for.
@@ -51,7 +55,7 @@ immutable
     else version (DragonFlyBSD) OS os = OS.dragonFlyBSD;
     else version (Posix)   OS os = OS.otherPosix;
     else version (_3DS)    OS os = OS._3ds;
-    else static assert(0, "Unknown OS.");
+    else OS os = OS.unknown;
 
     /++
         Byte order endianness.
