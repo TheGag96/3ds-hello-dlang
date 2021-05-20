@@ -7,7 +7,7 @@ module ctru.services.ns;
 
 import ctru.types; 
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes NS.
 Result nsInit();

@@ -2,7 +2,7 @@ module citro3d.buffers;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_BufCfg
 {

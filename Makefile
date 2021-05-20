@@ -46,7 +46,8 @@ GFXBUILD	:=	$(ROMFS)/gfx
 #---------------------------------------------------------------------------------
 
 # Can be GDC or LDC
-export DCOMPILER	:=	GDC
+export DCOMPILER	:=	LDC
+export BUILD_TYPE	:=	DEBUG_FAST
 
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
@@ -63,17 +64,25 @@ ifeq ($(DCOMPILER),GDC)
 				-fomit-frame-pointer -ffunction-sections \
 				-fno-druntime \
 				-fversion=DevkitARM \
-				-fversion=CRuntime_Newlib \
+				-fversion=CRuntime_Newlib_3DS \
 				-fversion=_3DS \
 				$(ARCH)
-else
-	DFLAGS := -g -O2 \
+else # LDC
+	ifeq ($(BUILD_TYPE),RELEASE)
+		PERF_FLAGS	:=	-O3 -release -boundscheck=off --enable-cross-module-inlining=true
+	else ifeq ($(BUILD_TYPE),DEBUG_FAST)
+		PERF_FLAGS	:=	-g -O --d-debug --enable-cross-module-inlining=true
+	else
+		PERF_FLAGS	:=	-g --d-debug
+	endif
+
+	DFLAGS := $(PERF_FLAGS) \
 				-frame-pointer=none -function-sections \
 				-betterC \
 				--d-version=DevkitARM \
-				--d-version=CRuntime_Newlib \
+				--d-version=CRuntime_Newlib_3DS \
 				--d-version=_3DS \
-				-mtriple=armv6k-none-eabi -float-abi=hard -mcpu=mpcorenovfp -mattr=+vfp2d16
+				-mtriple=armv6k-none-eabi -float-abi=hard -mcpu=mpcorenovfp -mattr=+vfp2
 endif
 
 ASFLAGS	:=	-g $(ARCH)

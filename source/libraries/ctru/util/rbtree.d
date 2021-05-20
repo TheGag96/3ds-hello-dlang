@@ -7,7 +7,7 @@ module ctru.util.rbtree;
 
 import core.stdc.stdint;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Retrieves an rbtree item.
 

@@ -8,7 +8,7 @@ module ctru.services.am;
 import ctru.types;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Contains basic information about a title.
 struct AM_TitleEntry

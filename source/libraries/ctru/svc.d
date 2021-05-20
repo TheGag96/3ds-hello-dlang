@@ -7,7 +7,7 @@ module ctru.svc;
 
 import ctru.types;
 
-extern(C):
+extern (C): nothrow: @nogc:
 
 /// Pseudo handle for the current process
 enum CUR_PROCESS_HANDLE = 0xFFFF8001;

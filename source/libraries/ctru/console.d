@@ -20,7 +20,7 @@ module ctru.console;
 import ctru.types;
 import ctru.gfx;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 extern (D) enum string CONSOLE_ESC(size_t x) = () {
     //import std.conv : to;

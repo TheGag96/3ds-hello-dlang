@@ -7,7 +7,7 @@ module ctru.services.ac;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Wifi security modes.
 enum ACSecurityMode : ubyte

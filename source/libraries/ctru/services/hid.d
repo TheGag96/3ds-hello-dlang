@@ -7,7 +7,7 @@ module ctru.services.hid;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //See also: http://3dbrew.org/wiki/HID_Services http://3dbrew.org/wiki/HID_Shared_Memory
 

@@ -7,7 +7,7 @@ module ctru.gpu.gx;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Creates a buffer dimension parameter from width and height values.

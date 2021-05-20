@@ -3,7 +3,7 @@ module citro3d.texenv;
 import ctru.types;
 import ctru.gpu.enums;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_TexEnv
 {

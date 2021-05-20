@@ -11,7 +11,7 @@ module ctru.gfx;
 import ctru.types;
 import ctru.services.gspgpu;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Converts red, green, and blue components to packed RGB565.
 extern (D) auto RGB565(T0, T1, T2)(auto ref T0 r, auto ref T1 g, auto ref T2 b)

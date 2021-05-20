@@ -9,7 +9,7 @@ module ctru.services.dsp;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// DSP interrupt types.
 enum DSPInterruptType : ubyte

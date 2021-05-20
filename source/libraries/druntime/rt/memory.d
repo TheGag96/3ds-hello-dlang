@@ -8,7 +8,7 @@
  */
 module rt.memory;
 
-extern (C):
+extern (C): @nogc:
 
 pure void* memset(return void* s, int c, size_t n) @trusted nothrow;
 

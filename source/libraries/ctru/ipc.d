@@ -7,7 +7,7 @@ module ctru.ipc;
 
 import ctru.types;
 
-extern(C):
+extern (C): nothrow: @nogc:
 
 /// IPC buffer access rights.
 enum IPC_BufferRights : ubyte

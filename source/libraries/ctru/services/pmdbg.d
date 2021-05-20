@@ -9,7 +9,7 @@ import ctru.types;
 import ctru.services.pmapp;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes pm:dbg.
 Result pmDbgInit();

@@ -8,7 +8,7 @@ import ctru.gpu.registers;
 import ctru.gpu.shaderprogram;
 import ctru.services.gspgpu;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum C3D_DEFAULT_CMDBUF_SIZE = 0x40000;
 

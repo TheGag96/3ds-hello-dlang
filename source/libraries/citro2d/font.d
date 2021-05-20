@@ -11,7 +11,7 @@ import ctru.types;
 import ctru.services.cfgu;
 import citro3d.texture;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // #include <stdio.h>
 

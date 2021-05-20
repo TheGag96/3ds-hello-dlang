@@ -7,7 +7,7 @@ module ctru.services.uds;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Maximum number of nodes(devices) that can be connected to the network.
 enum UDS_MAXNODES = 16;

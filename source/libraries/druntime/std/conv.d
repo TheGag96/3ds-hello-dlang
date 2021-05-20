@@ -290,3 +290,27 @@ if (is(T == class))
     }
     return result;
 }
+
+
+/**
+    Returns the corresponding _unsigned value for `x` (e.g. if `x` has type
+    `int`, it returns $(D cast(uint) x)). The advantage compared to the cast
+    is that you do not need to rewrite the cast if `x` later changes type
+    (e.g from `int` to `long`).
+
+    Note that the result is always mutable even if the original type was const
+    or immutable. In order to retain the constness, use $(REF Unsigned, std,traits).
+ */
+auto unsigned(T)(T x)
+if (isIntegral!T)
+{
+    return cast(Unqual!(Unsigned!T))x;
+}
+
+auto unsigned(T)(T x)
+if (isSomeChar!T)
+{
+    // All characters are unsigned
+    static assert(T.min == 0);
+    return cast(Unqual!T) x;
+}

@@ -7,7 +7,7 @@ module ctru.services.ps;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// PS AES algorithms.
 enum PSAESAlgorithm : ubyte

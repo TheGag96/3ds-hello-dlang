@@ -8,7 +8,7 @@ module ctru.ndsp.channel;
 import ctru.types;
 import ctru.ndsp.ndsp;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 ///@name Data types
 ///@{
@@ -21,12 +21,14 @@ enum
 }
 
 /// Specifies the number of channels used in a sample.
+pragma(inline, true)
 extern (D) auto NDSP_CHANNELS(T)(auto ref T n)
 {
     return cast(uint) n & 3;
 }
 
 /// Specifies the encoding used in a sample.
+pragma(inline, true)
 extern (D) auto NDSP_ENCODING(T)(auto ref T n)
 {
     return (cast(uint) n & 3) << 2;

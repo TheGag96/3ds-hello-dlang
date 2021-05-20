@@ -7,7 +7,7 @@ module ctru.util.decompress;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /** @brief Compression types */
 enum DecompressType : ubyte

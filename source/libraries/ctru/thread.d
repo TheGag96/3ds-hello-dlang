@@ -8,7 +8,7 @@ module ctru.thread;
 import ctru.types, ctru.result, ctru.synchronization, ctru.svc, ctru.errf;
 import core.stdc.stddef;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Makes the exception handler reuse the stack of the faulting thread as-is
 enum RUN_HANDLER_ON_FAULTING_STACK = cast(void*) 1;

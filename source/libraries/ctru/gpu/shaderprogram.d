@@ -8,7 +8,7 @@ module ctru.gpu.shaderprogram;
 import ctru.types;
 import ctru.gpu.shbin;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// 24-bit float uniforms.
 struct float24Uniform_s

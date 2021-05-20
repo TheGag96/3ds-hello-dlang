@@ -7,7 +7,7 @@ module ctru.services.y2r;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Input color formats

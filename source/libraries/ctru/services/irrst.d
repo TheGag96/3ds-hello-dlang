@@ -8,7 +8,7 @@ module ctru.services.irrst;
 import ctru.types;
 import ctru.services.hid;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //See also: http://3dbrew.org/wiki/IR_Services http://3dbrew.org/wiki/IRRST_Shared_Memory
 

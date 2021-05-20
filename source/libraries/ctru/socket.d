@@ -2,7 +2,7 @@ module ctru.socket;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum SOL_SOCKET = 0xFFFF;
 

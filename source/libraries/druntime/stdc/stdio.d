@@ -347,7 +347,7 @@ else version (CRuntime_UClibc)
         L_tmpnam     = 20
     }
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     enum
     {
@@ -816,7 +816,7 @@ else version (CRuntime_UClibc)
     ///
     alias shared(__STDIO_FILE_STRUCT) FILE;
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     import core.stdc.wchar_ : mbstate_t;
     import core.stdc.stddef : wchar_t;
@@ -1329,7 +1329,7 @@ else version (CRuntime_UClibc)
     ///
     extern shared FILE* stderr;
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     enum
     {
@@ -1916,7 +1916,7 @@ else version (CRuntime_UClibc)
     ///
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
   // No unsafe pointer manipulation.
   @trusted

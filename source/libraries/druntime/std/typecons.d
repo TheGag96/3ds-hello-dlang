@@ -1183,7 +1183,7 @@ if (distinctFieldNames!(Specs))
             Returns:
                 A `size_t` representing the hash of this `Tuple`.
          */
-        size_t toHash() const nothrow @safe
+/*        size_t toHash() const nothrow @safe
         {
             size_t h = 0;
             static foreach (i, T; Types)
@@ -1202,7 +1202,7 @@ if (distinctFieldNames!(Specs))
                     h ^= k + 0x9e3779b9 + (h << 6) + (h >>> 2);
             }}
             return h;
-        }
+        }*/
 
         /**
          * Converts to string.

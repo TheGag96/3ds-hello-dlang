@@ -7,7 +7,7 @@ module ctru.services.sslc;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// sslc context.
 struct sslcContext

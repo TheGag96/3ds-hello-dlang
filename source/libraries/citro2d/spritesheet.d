@@ -12,7 +12,7 @@ import citro2d.base;
 import citro3d.texture;
 import citro3d.tex3ds;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C2D_SpriteSheet_s
 {

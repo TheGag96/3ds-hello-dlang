@@ -8,7 +8,7 @@ module ctru.services.gspgpu;
 import ctru.types;
 import ctru.gfx;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 extern (D) auto GSPGPU_REBASE_REG(T)(auto ref T r)
 {

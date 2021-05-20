@@ -15,7 +15,7 @@ module ctru.services.nim;
 import ctru.types;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // FSMediaType
 

@@ -5,10 +5,10 @@
 
 module ctru.romfs;
 
-import ctru.types;
+import ctru.types, ctru.services.fs;
 //import core.stdc.time;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// RomFS header.
 struct romfs_header
@@ -66,39 +66,47 @@ struct romfs_mount
 
 /**
  * @brief Mounts the Application's RomFS.
- * @param mount Output mount handle
+ * @param name Device mount name.
+ * @remark This function is intended to be used to access one's own RomFS.
+ *         If the application is running as 3DSX, it mounts the embedded RomFS section inside the 3DSX.
+ *         If on the other hand it's an NCCH, it behaves identically to \ref romfsMountFromCurrentProcess.
  */
-Result romfsMount(romfs_mount** mount);
+Result romfsMountSelf(const(char)* name);
+
+/**
+ * @brief Mounts RomFS from an open file.
+ * @param fd FSFILE handle of the RomFS image.
+ * @param offset Offset of the RomFS within the file.
+ * @param name Device mount name.
+ */
+Result romfsMountFromFile(Handle fd, uint offset, const(char)* name);
+
+/**
+ * @brief Mounts RomFS using the current process host program RomFS.
+ * @param name Device mount name.
+ */
+Result romfsMountFromCurrentProcess(const(char)* name);
+
+/**
+ * @brief Mounts RomFS from the specified title.
+ * @param tid Title ID
+ * @param mediatype Mediatype
+ * @param name Device mount name.
+ */
+Result romfsMountFromTitle(ulong tid, FSMediaType mediatype, const(char)* name);
+
+/// Unmounts the RomFS device.
+Result romfsUnmount(const(char)* name);
 
 pragma(inline, true)
 Result romfsInit()
 {
-    return romfsMount(null);
+    return romfsMountSelf("romfs".ptr);
 }
-
-/**
- * @brief Mounts RomFS from an open file.
- * @param file Handle of the RomFS file.
- * @param offset Offset of the RomFS within the file.
- * @param mount Output mount handle
- */
-Result romfsMountFromFile(Handle file, uint offset, romfs_mount** mount);
-
-pragma(inline, true)
-Result romfsInitFromFile(Handle file, uint offset)
-{
-    return romfsMountFromFile(file, offset, null);
-}
-
-/// Bind the RomFS mount
-Result romfsBind(romfs_mount* mount);
-
-/// Unmounts the RomFS device.
-Result romfsUnmount(romfs_mount* mount);
 
 pragma(inline, true)
 Result romfsExit()
 {
-    return romfsUnmount(null);
+    return romfsUnmount("romfs".ptr);
 }
 

@@ -7,7 +7,7 @@ module ctru.services.csnd;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Maximum number of CSND channels.
 enum CSND_NUM_CHANNELS = 32;

@@ -34,7 +34,7 @@ import citro3d.texture;
 //import core.stdc.stdio;
 
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // #include <stdio.h>
 

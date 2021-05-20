@@ -1,6 +1,6 @@
 module citro3d.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 alias C3D_IVec = uint;
 

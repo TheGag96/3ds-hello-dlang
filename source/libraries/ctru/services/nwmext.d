@@ -2,7 +2,7 @@ module ctru.services.nwmext;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // Initializes NWMEXT.
 Result nwmExtInit();

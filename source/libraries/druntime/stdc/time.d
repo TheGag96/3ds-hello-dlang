@@ -65,7 +65,7 @@ else version (Posix)
         char*   tm_zone;    /// timezone abbreviation
     }
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     struct tm
     {
@@ -94,7 +94,7 @@ else version (Windows)
     ///
     alias c_long clock_t;
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     alias c_long time_t;
     alias c_long clock_t;
@@ -164,7 +164,7 @@ else version (CRuntime_UClibc)
     enum clock_t CLOCKS_PER_SEC = 1_000_000;
     clock_t clock();
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     enum clock_t CLOCKS_PER_SEC = 1_000;
     clock_t clock();
@@ -276,7 +276,7 @@ else version (CRuntime_UClibc)
     ///
     extern __gshared const(char)*[2] tzname;
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     ///
     void tzset();

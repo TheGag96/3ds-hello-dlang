@@ -7,7 +7,7 @@ module ctru.services.cfgu;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Configuration region values.
 enum CFGRegion : ubyte

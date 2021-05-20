@@ -7,7 +7,7 @@ module ctru.allocator.vram;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Allocates a 0x80-byte aligned buffer.

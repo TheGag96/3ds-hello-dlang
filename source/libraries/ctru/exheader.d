@@ -7,7 +7,7 @@ module ctru.exheader;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// ARM9 descriptor flags
 enum

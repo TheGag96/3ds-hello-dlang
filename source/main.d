@@ -8,6 +8,7 @@ extern (C):
 import ctru;
 import citro2d;
 import citro3d;
+import core.stdc.stdio;
 
 enum MAX_SPRITES   = 768;
 enum SCREEN_WIDTH  = 400;

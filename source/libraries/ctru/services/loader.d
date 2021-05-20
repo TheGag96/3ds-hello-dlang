@@ -9,7 +9,7 @@ import ctru.types;
 import ctru.exheader;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes LOADER.
 Result loaderInit();
