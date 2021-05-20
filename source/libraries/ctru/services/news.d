@@ -7,7 +7,7 @@ module ctru.services.news;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Notification header data.
 struct NotificationHeader

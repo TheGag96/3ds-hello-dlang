@@ -8,7 +8,7 @@ module ctru.services.gsplcd;
 import ctru.types;
 import ctru.gfx;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // For gfxScreen_t
 

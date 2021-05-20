@@ -2,7 +2,7 @@ module citro3d.fog;
 
 import ctru.gpu.enums;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_FogLut
 {

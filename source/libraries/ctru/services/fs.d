@@ -8,7 +8,7 @@ module ctru.services.fs;
 import core.stdc.config;
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Open flags.
 enum

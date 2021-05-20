@@ -7,7 +7,7 @@ module ctru.services.mvd;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //New3DS-only, see also: http://3dbrew.org/wiki/MVD_Services
 

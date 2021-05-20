@@ -7,7 +7,7 @@ module ctru.services.mic;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Microphone audio encodings.
 enum MICUEncoding : ubyte

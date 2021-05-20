@@ -5,6 +5,7 @@
 
 import ctru;
 import citro3d;
+import core.stdc.stdio;
 
 extern(C) int main(int argc, char** argv) {
 	gfxInitDefault();

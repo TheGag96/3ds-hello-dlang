@@ -7,7 +7,7 @@ module ctru.services.mcuhwc;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum PowerLEDState : ubyte
 {

@@ -7,7 +7,7 @@ module ctru.services.ptmsysm;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes ptm:sysm.
 Result ptmSysmInit();

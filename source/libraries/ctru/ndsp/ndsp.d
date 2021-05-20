@@ -8,7 +8,7 @@ module ctru.ndsp.ndsp;
 import ctru.types;
 import ctru.os;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum NDSP_SAMPLE_RATE = SYSCLOCK_SOC / 512.0;
 

@@ -7,7 +7,7 @@ module ctru.services.ptmu;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes PTMU.
 Result ptmuInit();

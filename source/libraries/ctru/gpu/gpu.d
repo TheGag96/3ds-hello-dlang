@@ -9,7 +9,7 @@ import ctru.types;
 import ctru.gpu.registers;
 import ctru.gpu.enums;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Creates a GPU command header from its write increments, mask, and register.
 pragma(inline, true)

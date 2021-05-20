@@ -3,7 +3,7 @@ module citro3d.maths;
 import core.stdc.math;
 import citro3d.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @addtogroup math_support

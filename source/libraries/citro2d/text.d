@@ -12,7 +12,7 @@ import citro2d.base;
 import citro2d.font;
 import citro3d.texture;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C2Di_Glyph
 {

@@ -8,7 +8,7 @@ module ctru.services.pxidev;
 import ctru.types;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Card SPI wait operation type.
 enum PXIDEVWaitType : ubyte

@@ -7,7 +7,7 @@ module ctru.synchronization;
 
 import ctru.types, ctru.svc;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 // #include "../../newlib-3.1.0/newlib/libc/sys/linux/sys/lock.h"
 

@@ -2,7 +2,7 @@ module citro3d.effect;
 
 import ctru.gpu.enums;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 void C3D_DepthMap(bool bIsZBuffer, float zScale, float zOffset);
 void C3D_CullFace(GPUCullMode mode);

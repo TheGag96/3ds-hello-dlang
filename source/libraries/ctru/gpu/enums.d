@@ -7,7 +7,7 @@ module ctru.gpu.enums;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Creates a texture magnification filter parameter from a @ref GPU_TEXTURE_FILTER_PARAM
 pragma(inline, true)

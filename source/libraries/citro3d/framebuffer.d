@@ -5,7 +5,7 @@ import ctru.gfx;
 import ctru.gpu.enums;
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_FrameBuf
 {

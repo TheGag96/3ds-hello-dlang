@@ -7,7 +7,7 @@ module ctru.services.nfc;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// This is returned when the current state is invalid for this command.
 enum NFC_ERR_INVALID_STATE = 0xC8A17600;

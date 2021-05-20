@@ -2,7 +2,7 @@ module citro3d.lightlut;
 
 import core.stdc.math;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_LightLut
 {

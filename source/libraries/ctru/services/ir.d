@@ -7,7 +7,7 @@ module ctru.services.ir;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Initializes IRU.

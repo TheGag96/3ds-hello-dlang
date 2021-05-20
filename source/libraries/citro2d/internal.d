@@ -7,7 +7,7 @@ module citro2d.internal;
 
 import ctru.types, ctru.gpu, citro3d, citro2d.base;
 
-extern(C):
+extern (C): nothrow: @nogc:
 
 enum
 {
@@ -38,9 +38,9 @@ enum C2D_Corner : ubyte
 
 struct C2Di_Vertex
 {
-    float[3] pos;
-    float[3] texcoordX;
-    float[2] ptcoord;
+    float x, y, z;
+    float u, v;
+    float ptX, ptY;
     uint color;
 }
 

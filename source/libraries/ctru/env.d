@@ -7,7 +7,7 @@ module ctru.env;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// System run-flags.
 enum

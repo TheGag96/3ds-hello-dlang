@@ -8,7 +8,7 @@ module ctru.types;
 import core.stdc.config;
 import core.stdc.stdint;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// The maximum value of a u64.
 enum U64_MAX = UINT64_MAX;

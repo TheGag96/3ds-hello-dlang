@@ -1,6 +1,6 @@
 module ctru.ioctl;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum FIONBIO = 1;
 

@@ -8,7 +8,7 @@ module ctru.applets.miiselector;
 import ctru.types;
 import ctru.mii;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Magic value needed to launch the applet.
 enum MIISELECTOR_MAGIC = 0x13DE28CF;

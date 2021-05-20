@@ -5,7 +5,7 @@
 
 module ctru.gdbhio_dev;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct timeval;
 

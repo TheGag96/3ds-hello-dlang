@@ -5,47 +5,141 @@
 
 module object;
 
-//import std.stdio;
+nothrow: @nogc:
 
-alias size_t = uint;
-alias ptrdiff_t = int;
-alias string = immutable(char)[]; // TODO: Create wrapper for strings
+alias size_t = typeof(int.sizeof);
+alias ptrdiff_t = typeof(cast(void*)0 - cast(void*)0);
 
-//version (PowerNex) import core.sys.powernex.io;
+alias sizediff_t = ptrdiff_t; // For backwards compatibility only.
+//alias noreturn = typeof(*null);  /// bottom type
 
+alias hash_t = size_t; // For backwards compatibility only.
+alias equals_t = bool; // For backwards compatibility only.
+
+alias string  = immutable(char)[];
+alias wstring = immutable(wchar)[];
+alias dstring = immutable(dchar)[];
+
+class Object {
+  string toString() { return ""; }
+
+  size_t toHash() @trusted nothrow {
+    // BUG: this prevents a compacting GC from working, needs to be fixed
+    size_t addr = cast(size_t) cast(void*) this;
+    // The bottom log2((void*).alignof) bits of the address will always
+    // be 0. Moreover it is likely that each Object is allocated with a
+    // separate call to malloc. The alignment of malloc differs from
+    // platform to platform, but rather than having special cases for
+    // each platform it is safe to use a shift of 4. To minimize
+    // collisions in the low bits it is more important for the shift to
+    // not be too small than for the shift to not be too big.
+    return addr ^ (addr >>> 4);
+  }
+
+  int opComp(Object o) {
+    return this !is o;
+  }
+
+  bool opEquals(Object o) {
+    return this is o;
+  }
+
+  interface Monitor {
+    void lock();
+    void unlock();
+  }
+
+  static Object factory(string classname) {
+    return null;
+  }
+}
+
+// lhs == rhs lowers to __equals(lhs, rhs) for dynamic arrays
 bool __equals(T1, T2)(T1[] lhs, T2[] rhs) {
-  import std.traits : Unqual;
+  import core.internal.traits : Unqual;
+  alias U1 = Unqual!T1;
+  alias U2 = Unqual!T2;
 
-  alias RealT1 = Unqual!T1;
-  alias RealT2 = Unqual!T2;
+  static @trusted ref R at(R)(R[] r, size_t i) { return r.ptr[i]; }
+  static @trusted R trustedCast(R, S)(S[] r) { return cast(R) r; }
 
-  static if (is(RealT1 == RealT2) && is(RealT1 == void)) {
-    auto lhs_ = cast(ubyte[])lhs;
-    auto rhs_ = cast(ubyte[])rhs;
-    if (lhs_.length != rhs_.length)
-      return false;
-    foreach (idx, a; lhs_)
-      if (a != rhs_[idx])
-        return false;
-    return true;
-  } else static if (is(RealT1 == RealT2)) {
-    if (lhs.length != rhs.length)
-      return false;
-    foreach (idx, a; lhs)
-      if (a != rhs[idx])
-        return false;
-    return true;
-  } else static if (__traits(compiles, { RealT2 a; auto b = cast(RealT1)a; }())) {
-    if (lhs.length != rhs.length)
-      return false;
-    foreach (idx, a; lhs)
-      if (a != cast(RealT1)rhs[idx])
-        return false;
+  if (lhs.length != rhs.length)
+    return false;
+
+  if (lhs.length == 0 && rhs.length == 0)
     return true;
 
-  } else {
-    pragma(msg, "I don't know what to do!: ", __PRETTY_FUNCTION__);
-    assert(0, "I don't know what to do!");
+  static if (is(U1 == void) && is(U2 == void)) {
+    return __equals(trustedCast!(ubyte[])(lhs), trustedCast!(ubyte[])(rhs));
+  }
+  else static if (is(U1 == void)) {
+    return __equals(trustedCast!(ubyte[])(lhs), rhs);
+  }
+  else static if (is(U2 == void)) {
+    return __equals(lhs, trustedCast!(ubyte[])(rhs));
+  }
+  else static if (!is(U1 == U2)) {
+    // This should replace src/object.d _ArrayEq which
+    // compares arrays of different types such as long & int,
+    // char & wchar.
+    // Compiler lowers to __ArrayEq in dmd/src/opover.d
+    foreach (const u; 0 .. lhs.length) {
+      if (at(lhs, u) != at(rhs, u))
+        return false;
+    }
+    return true;
+  }
+  else static if (__traits(isIntegral, U1)) {
+    if (!__ctfe) {
+      import core.stdc.string : memcmp;
+      return () @trusted { return memcmp(cast(void*)lhs.ptr, cast(void*)rhs.ptr, lhs.length * U1.sizeof) == 0; }();
+    }
+    else {
+      foreach (const u; 0 .. lhs.length) {
+        if (at(lhs, u) != at(rhs, u))
+          return false;
+      }
+      return true;
+    }
+  }
+  else {
+    foreach (const u; 0 .. lhs.length) {
+      static if (__traits(compiles, __equals(at(lhs, u), at(rhs, u)))) {
+        if (!__equals(at(lhs, u), at(rhs, u)))
+          return false;
+      }
+      else static if (__traits(isFloating, U1)) {
+        if (at(lhs, u) != at(rhs, u))
+          return false;
+      }
+      else static if (is(U1 : Object) && is(U2 : Object)) {
+        if (!(cast(Object)at(lhs, u) is cast(Object)at(rhs, u)
+          || at(lhs, u) && (cast(Object)at(lhs, u)).opEquals(cast(Object)at(rhs, u))))
+          return false;
+      }
+      else static if (__traits(hasMember, U1, "opEquals")) {
+        if (!at(lhs, u).opEquals(at(rhs, u)))
+          return false;
+      }
+      else static if (is(U1 == delegate)) {
+        if (at(lhs, u) != at(rhs, u))
+          return false;
+      }
+      else static if (is(U1 == U11*, U11)) {
+        if (at(lhs, u) != at(rhs, u))
+          return false;
+      }
+      else static if (__traits(isAssociativeArray, U1)) {
+        if (at(lhs, u) != at(rhs, u))
+          return false;
+      }
+      else {
+        if (at(lhs, u).tupleof != at(rhs, u).tupleof)
+          return false;
+      }
+    }
+
+    return true;
   }
 }
 
@@ -69,29 +163,71 @@ extern (C) void[] _d_arraycopy(size_t size, void[] from, void[] to) @trusted {
   return to;
 }
 
-extern (C) void __assert(const char* msg_, const char* file_, int line) @trusted {
-  //import std.text;
+version (LDC) {
+  extern(C) void _d_array_slice_copy(void* dst, size_t dstlen, void* src, size_t srclen, size_t elemsz) @trusted {
+    import ldc.intrinsics : llvm_memcpy;
+    llvm_memcpy!size_t(dst, src, dstlen * elemsz, 0);
+  }
+}
 
-  //TODO: stderr.write("assert failed: ", msg, file, "<UNK>", line);
-  //string msg = cast(string)msg_[0 .. strlen(msg_)];
-  //string file = cast(string)file_[0 .. strlen(file_)];
-  //stderr.writeln("assert failed@", file, "!\n", msg);
+static if (false) /* <-- remove to use custom assert handler */ debug {
+  private static extern(C) int printf(
+    scope const(char*) format, ...
+  ) nothrow @nogc;
 
-  while (true) {
+  private extern(C) bool aptMainLoop()  nothrow @nogc;
+  private extern(C) void hidScanInput() nothrow @nogc;
+  private extern(C) uint hidKeysDown()  nothrow @nogc;
+
+  private extern(C) void exit(
+    int status
+  ) nothrow @nogc;
+
+  /**
+   * In recent devkitARM updates, one of the things linked in defines __assert for some reason.
+   * If you would like to use this custom assert, you have to weaken theirs so that the linker
+   * will choose this one like so:
+   * sudo $DEVKITARM/bin/arm-none-eabi-objcopy --weaken-symbol=__assert $DEVKITARM/arm-none-eabi/lib/armv6k/fpu/libg.a /opt/devkitpro/devkitARM/arm-none-eabi/lib/armv6k/fpu/libg.a
+   **/
+  extern (C) void __assert(const char* msg_, const char* file_, int line) @trusted {
+    printf("\x1b[1;1HAssert failed in file %s at line %d: %s\x1b[K", file_, line, msg_);
+
+    printf("\n\nPress Start to exit...\n");
+
+    //wait for key press and exit (so we can read the error message)
+    while (aptMainLoop()) {
+      hidScanInput();
+
+      if ((hidKeysDown() & (1<<3))) {
+        exit(0);
+      }
+    }
   }
 }
 
 // From https://github.com/dlang/druntime/commit/96408ecb775f06809314fa3eded3158d60b40e31
 
 // compiler frontend lowers dynamic array comparison to this
-extern (C) bool __ArrayEq(T1, T2)(T1[] a, T2[] b) {
-  if (a.length != b.length)
+extern (C) bool _ArrayEq(T1, T2)(T1[] a1, T2[] a2) {
+  if (a1.length != a2.length)
     return false;
-  foreach (size_t i; 0 .. a.length)
-    if (a[i] != b[i])
-      return false;
 
+  // This is function is used as a compiler intrinsic and explicitly written
+  // in a lowered flavor to use as few CTFE instructions as possible.
+  size_t idx = 0;
+  immutable length = a1.length;
+
+  for(;idx < length;++idx)
+  {
+    if (a1[idx] != a2[idx])
+      return false;
+  }
   return true;
+}
+
+size_t hashOf(T)(auto ref T arg, size_t seed = 0) {
+  import core.internal.hash;
+  return core.internal.hash.hashOf(arg, seed);
 }
 
 // compiler frontend lowers struct array postblitting to this
@@ -120,7 +256,10 @@ Params:
     toSize   = total size in bytes of the array being cast to
  */
 private void onArrayCastError()(string fromType, size_t fromSize, string toType, size_t toSize) @trusted {
+  //printf("\x1b[1;1HonArrayCastError failed: fromType: %s, fromSize: %d, toType: %s, toSize: %d\x1b[K", fromType.ptr, fromSize, toType.ptr, toSize);
   //stderr.writeln("onArrayCastError failed: fromType: ", fromType, ", fromSize: ", fromSize, " toType: ", toType, ", toSize: ", toSize);
+  assert(false, "onArrayCastError");
+  while (true) { }
 }
 
 /**
@@ -147,40 +286,6 @@ extern (C) TTo[] __ArrayCast(TFrom, TTo)(TFrom[] from) @nogc pure @trusted {
   a.length = toLength; // jam new length
   return *cast(TTo[]*)a;
 }
-
-//private extern (C) int _Dmain(char[][] args);
-//private alias extern (C) int function(char[][] args) MainFunc;
-
-//private extern (C) int _d_run_main(int argc, char** argv, MainFunc mainFunc) {
-//  import std.text;
-
-//  char[][64] args = void;
-//  if (argc > args.length)
-//    argc = args.length;
-
-//  for (int i; i < argc; i++) {
-//    char* cArg = argv[i];
-//    args[i] = cArg[0 .. strlen(cArg)];
-//  }
-
-//  return mainFunc(args[0 .. argc]);
-//}
-
-// Provided by dmd!
-//private extern (C) int main(int argc, char** argv);
-
-//private extern (C) void _start() {
-//  asm pure @trusted nothrow @nogc {
-//    naked;
-//    call main;
-//    mov RDI, RAX;
-//    mov RAX, 0;
-//    syscall;
-
-//  loop:
-//    jmp loop;
-//  }
-//}
 
 /**
 Destroys the given object and optionally resets to initial state. It's used to

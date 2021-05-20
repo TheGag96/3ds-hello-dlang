@@ -9,7 +9,7 @@ import ctru.gpu.gpu;
 import ctru.gpu.enums;
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// DVLE type.
 enum DVLEType : ubyte

@@ -8,7 +8,7 @@ module ctru.sdmc;
 import ctru.types;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum SDMC_DIRITER_MAGIC = 0x73646D63; /* "sdmc" */
 

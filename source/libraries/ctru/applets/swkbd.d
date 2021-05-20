@@ -7,7 +7,7 @@ module ctru.applets.swkbd;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Keyboard types.
 enum SWKBDType : ubyte

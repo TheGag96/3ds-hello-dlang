@@ -13,12 +13,122 @@ import citro2d.spritesheet;
 import citro3d.maths;
 import core.stdc.math;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C2D_Sprite
 {
+    nothrow: @nogc:
+
     C2D_Image image;
     C2D_DrawParams params;
+
+    pragma(inline, true)
+    static C2D_Sprite fromImage(C2D_Image image) {
+        C2D_Sprite result = void;
+        C2D_SpriteFromImage(&result, image);
+        return result;
+    }
+
+    pragma(inline, true)
+    static C2D_Sprite fromSheet(C2D_SpriteSheet sheet, size_t index) {
+        C2D_Sprite result = void;
+        C2D_SpriteFromSheet(&result, sheet, index);
+        return result;
+    }
+
+    pragma(inline, true)
+    void scale(float x, float y)
+    {
+        C2D_SpriteScale(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void rotate(float radians)
+    {
+        C2D_SpriteRotate(&this, radians);
+    }
+
+    pragma(inline, true)
+    void rotateDegrees(float degrees)
+    {
+        C2D_SpriteRotateDegrees(&this, degrees);
+    }
+
+    pragma(inline, true)
+    void move(float x, float y)
+    {
+        C2D_SpriteMove(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void setScale(float x, float y)
+    {
+        C2D_SpriteScale(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void setRotation(float radians)
+    {
+        C2D_SpriteSetRotation(&this, radians);
+    }
+
+    pragma(inline, true)
+    void setRotationDegrees(float degrees)
+    {
+        C2D_SpriteSetRotationDegrees(&this, degrees);
+    }
+
+    pragma(inline, true)
+    void setCenter(float x, float y)
+    {
+        C2D_SpriteSetCenter(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void setCenterRaw(float x, float y)
+    {
+        C2D_SpriteSetCenterRaw(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void setPos(float x, float y)
+    {
+        C2D_SpriteSetPos(&this, x, y);
+    }
+
+    pragma(inline, true)
+    void setDepth(float depth)
+    {
+        C2D_SpriteSetDepth(&this, depth);
+    }
+
+    pragma(inline, true)
+    void draw()
+    {
+        C2D_DrawSprite(&this);
+    }
+
+    pragma(inline, true)
+    void draw(const(C2D_ImageTint)* tint)
+    {
+        C2D_DrawSpriteTinted(&this, tint);
+    }
+
+    pragma(inline, true)
+    void setFlipX(bool flip) {
+        if ((flip && params.pos.w > 0) || (!flip && params.pos.w <= 0)) {
+            params.pos.w    *= -1;
+            //params.center.x *= -1;
+        }
+    }
+
+    pragma(inline, true)
+    void setFlipY(bool flip) {
+        if ((flip && params.pos.h > 0) || (!flip && params.pos.h <= 0)) {
+            params.pos.h    *= -1;
+            //params.center.y *= -1;
+        }
+    }
 }
 
 /** @defgroup Sprite Sprite functions

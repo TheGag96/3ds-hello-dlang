@@ -7,7 +7,7 @@ module ctru.allocator.mappable;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Reserves a mappable memory area.

@@ -5,7 +5,7 @@
 
 module ctru.gpu.registers;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 ///@name Miscellaneous registers (0x000-0x03F)
 ///@{

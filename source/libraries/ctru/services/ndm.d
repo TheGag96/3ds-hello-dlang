@@ -7,7 +7,7 @@ module ctru.services.ndm;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Exclusive states.
 enum NDMExclusiveState : ubyte

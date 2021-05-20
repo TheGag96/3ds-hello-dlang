@@ -9,7 +9,7 @@ import ctru.gfx;
 import ctru.types;
 import citro3d;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum C2D_DEFAULT_MAX_OBJECTS = 4096;
 
@@ -17,30 +17,30 @@ struct C2D_DrawParams
 {
     struct _Anonymous_0
     {
-        float x;
-        float y;
-        float w;
-        float h;
+        float x = 0;
+        float y = 0;
+        float w = 0;
+        float h = 0;
     }
 
     _Anonymous_0 pos;
 
     struct _Anonymous_1
     {
-        float x;
-        float y;
+        float x = 0;
+        float y = 0;
     }
 
     _Anonymous_1 center;
 
-    float depth;
-    float angle;
+    float depth = 0;
+    float angle = 0;
 }
 
 struct C2D_Tint
 {
     uint color; ///< RGB tint color and Alpha transparency
-    float blend; ///< Blending strength of the tint color (0.0~1.0)
+    float blend = 0; ///< Blending strength of the tint color (0.0~1.0)
 }
 
 enum C2DCorner : ubyte
@@ -325,6 +325,7 @@ bool C2D_DrawImageAt(C2D_Image img, float x, float y, float depth,
  *  @param[in] scaleX Horizontal scaling factor to apply to the image (optional, by default 1.0f); negative values apply a horizontal flip
  *  @param[in] scaleY Vertical scaling factor to apply to the image (optional, by default 1.0f); negative values apply a vertical flip
  */
+pragma(inline, true)
 bool C2D_DrawImageAtRotated(
     C2D_Image img,
     float x,
@@ -333,7 +334,17 @@ bool C2D_DrawImageAtRotated(
     float angle,
     const(C2D_ImageTint)* tint,
     float scaleX,
-    float scaleY);
+    float scaleY)
+{
+    C2D_DrawParams params =
+    {
+        { x, y, scaleX*img.subtex.width, scaleY*img.subtex.height },
+        { img.subtex.width/2.0f, img.subtex.height/2.0f },
+        depth, angle
+    };
+    return C2D_DrawImage(img, &params, tint);
+}
+
 
 /** @brief Draws a plain triangle using the GPU
  *  @param[in] x0 X coordinate of the first vertex of the triangle
@@ -358,6 +369,27 @@ bool C2D_DrawTriangle(
     float y2,
     uint clr2,
     float depth);
+
+/** @brief Draws a plain line using the GPU
+ *  @param[in] x0 X coordinate of the first vertex of the line
+ *  @param[in] y0 Y coordinate of the first vertex of the line
+ *  @param[in] clr0 32-bit RGBA color of the first vertex of the line
+ *  @param[in] x1 X coordinate of the second vertex of the line
+ *  @param[in] y1 Y coordinate of the second vertex of the line
+ *  @param[in] clr1 32-bit RGBA color of the second vertex of the line
+ *  @param[in] thickness Thickness, in pixels, of the line
+ *  @param[in] depth Depth value to draw the line with
+ */
+bool C2D_DrawLine(
+    float x0,
+    float y0,
+    uint clr0,
+    float x1,
+    float y1,
+    uint clr1,
+    float thickness,
+    float depth
+);
 
 /** @brief Draws a plain rectangle using the GPU
  *  @param[in] x X coordinate of the top-left vertex of the rectangle
@@ -389,7 +421,11 @@ bool C2D_DrawRectangle(
  *  @param[in] h Height of the rectangle
  *  @param[in] clr 32-bit RGBA color of the rectangle
  */
-bool C2D_DrawRectSolid(float x, float y, float z, float w, float h, uint clr);
+pragma(inline, true)
+bool C2D_DrawRectSolid(float x, float y, float z, float w, float h, uint clr)
+{
+    return C2D_DrawRectangle(x,y,z,w,h,clr,clr,clr,clr);
+}
 
 /** @brief Draws an ellipse using the GPU
  *  @param[in] x X coordinate of the top-left vertex of the ellipse
@@ -423,13 +459,17 @@ bool C2D_DrawEllipse(
  *  @param[in] clr 32-bit RGBA color of the ellipse
  *  @note Switching to and from "circle mode" internally requires an expensive state change. As such, the recommended usage of this feature is to draw all non-circular objects first, then draw all circular objects.
 */
+pragma(inline, true)
 bool C2D_DrawEllipseSolid(
     float x,
     float y,
     float z,
     float w,
     float h,
-    uint clr);
+    uint clr)
+{
+    return C2D_DrawEllipse(x,y,z,w,h,clr,clr,clr,clr);
+}
 
 /** @brief Draws a circle (an ellipse with identical width and height) using the GPU
  *  @param[in] x X coordinate of the center of the circle
@@ -442,6 +482,7 @@ bool C2D_DrawEllipseSolid(
  *  @param[in] clr3 32-bit RGBA color of the bottom-right corner of the ellipse
  *  @note Switching to and from "circle mode" internally requires an expensive state change. As such, the recommended usage of this feature is to draw all non-circular objects first, then draw all circular objects.
 */
+pragma(inline, true)
 bool C2D_DrawCircle(
     float x,
     float y,
@@ -450,7 +491,12 @@ bool C2D_DrawCircle(
     uint clr0,
     uint clr1,
     uint clr2,
-    uint clr3);
+    uint clr3)
+{
+    return C2D_DrawEllipse(
+        x - radius,y - radius,z,radius*2,radius*2,
+        clr0,clr1,clr2,clr3);
+}
 
 /** @brief Draws a circle (an ellipse with identical width and height) using the GPU (with a solid color)
  *  @param[in] x X coordinate of the center of the circle
@@ -463,5 +509,9 @@ bool C2D_DrawCircle(
  *  @param[in] clr3 32-bit RGBA color of the bottom-right corner of the ellipse
  *  @note Switching to and from "circle mode" internally requires an expensive state change. As such, the recommended usage of this feature is to draw all non-circular objects first, then draw all circular objects.
 */
-bool C2D_DrawCircleSolid(float x, float y, float z, float radius, uint clr);
+pragma(inline, true)
+bool C2D_DrawCircleSolid(float x, float y, float z, float radius, uint clr)
+{
+    return C2D_DrawCircle(x,y,z,radius,clr,clr,clr,clr);
+}
 /** @} */

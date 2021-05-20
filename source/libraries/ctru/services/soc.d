@@ -12,7 +12,7 @@ import ctru.types;
 //import ctru.netinet.in_;
 //import ctru.sys.socket;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //TODO: enable later when i fix the c std lib
 

@@ -8,7 +8,7 @@ module ctru.services.cam;
 import ctru.types;
 import ctru.services.y2r;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Camera connection target ports.
 enum

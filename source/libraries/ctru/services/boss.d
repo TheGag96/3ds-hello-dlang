@@ -7,7 +7,7 @@ module ctru.services.boss;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// BOSS context.
 struct bossContext

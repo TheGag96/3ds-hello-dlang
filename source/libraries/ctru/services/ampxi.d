@@ -8,7 +8,7 @@ module ctru.services.ampxi;
 import ctru.types;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief Initializes AMPXI.

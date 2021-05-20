@@ -7,7 +7,7 @@ module ctru.services.apt;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /**
  * @brief NS Application IDs.

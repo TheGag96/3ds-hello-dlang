@@ -7,7 +7,7 @@ module ctru.font;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 ///@name Data types
 ///@{

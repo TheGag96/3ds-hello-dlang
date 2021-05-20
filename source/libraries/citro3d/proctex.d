@@ -4,7 +4,7 @@ import ctru.types;
 import ctru.gpu.enums;
 import ctru.services.fs;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 struct C3D_ProcTexColorLut
 {

@@ -6,7 +6,7 @@ import ctru.gfx;
 import ctru.gpu.enums;
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 alias C3D_RenderTarget = C3D_RenderTarget_tag;
 

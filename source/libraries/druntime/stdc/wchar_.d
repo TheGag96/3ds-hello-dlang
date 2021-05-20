@@ -115,7 +115,7 @@ else version (CRuntime_UClibc)
         wchar_t __wc = 0;
     }
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     ///
     struct _mbstate_t

@@ -3,7 +3,7 @@ module citro3d.mtxstack;
 import citro3d.types;
 import ctru.gpu.enums;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum C3D_MTXSTACK_SIZE = 8;
 

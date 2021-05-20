@@ -9,7 +9,7 @@ import ctru.exheader;
 import ctru.services.fs;
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes fs:REG.
 Result fsRegInit();

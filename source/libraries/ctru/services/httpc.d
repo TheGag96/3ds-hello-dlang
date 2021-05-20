@@ -8,7 +8,7 @@ module ctru.services.httpc;
 import ctru.types;
 import ctru.services.sslc;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// HTTP context.
 struct httpcContext

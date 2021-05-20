@@ -5,7 +5,7 @@ import ctru.gpu.enums;
 import citro3d.lightlut;
 import citro3d.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //-----------------------------------------------------------------------------
 // Material

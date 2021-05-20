@@ -34,7 +34,7 @@ else version (Posix)
     ///
     alias dchar wchar_t;
 }
-else version (CRuntime_Newlib)
+else version (CRuntime_Newlib_3DS)
 {
     ///
     alias dchar wchar_t;

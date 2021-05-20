@@ -7,7 +7,7 @@ module ctru.services.qtm;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 //See also: http://3dbrew.org/wiki/QTM_Services
 

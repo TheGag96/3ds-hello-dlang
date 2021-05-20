@@ -8,7 +8,7 @@ module ctru.applets.error;
 import ctru.types;
 import ctru.services.cfgu;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum
 {

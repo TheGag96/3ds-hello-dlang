@@ -1,6 +1,6 @@
 module citro3d.uniforms;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 import ctru.types;
 import citro3d.types;
@@ -34,9 +34,6 @@ C3D_IVec* C3D_IVUnifWritePtr(GPUShaderType type, int id)
     return &C3D_IVUnif[type][id];
 }
 
-extern(C) int printf(
-  scope const(char*) format, ...
-) nothrow @nogc; 
 pragma(inline, true)
 void C3D_FVUnifMtxNx4(GPUShaderType type, int id, const C3D_Mtx* mtx, int num)
 {

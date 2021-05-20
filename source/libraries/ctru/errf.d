@@ -7,7 +7,7 @@ module ctru.errf;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Types of errors that can be thrown by err:f.
 enum ERRF_ErrType : ubyte

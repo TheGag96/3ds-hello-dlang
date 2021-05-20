@@ -9,7 +9,7 @@ module ctru.mii;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Shared Mii struct
 struct MiiData

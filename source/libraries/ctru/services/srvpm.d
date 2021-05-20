@@ -7,7 +7,7 @@ module ctru.services.srvpm;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Initializes srv:pm and the service API.
 Result srvPmInit();

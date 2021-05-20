@@ -8,7 +8,7 @@ module ctru.os;
 import ctru.types;
 import ctru.svc;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 enum SYSCLOCK_SOC = 16756991;
 enum SYSCLOCK_ARM9 = SYSCLOCK_SOC * 8;

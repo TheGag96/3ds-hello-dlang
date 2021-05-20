@@ -7,7 +7,7 @@ module ctru.result;
 
 import ctru.types;
 
-extern (C):
+extern (C): nothrow: @nogc:
 
 /// Checks whether a result code indicates success.
 extern (D) auto R_SUCCEEDED(T)(auto ref T res)
