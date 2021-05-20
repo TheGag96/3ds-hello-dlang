@@ -14,9 +14,9 @@
 
 module core.stdc.wchar_;
 
-private import core.stdc.config;
-private import core.stdc.stdarg; // for va_list
-private import core.stdc.stdio;  // for FILE, not exposed per spec
+import core.stdc.config;
+import core.stdc.stdarg; // for va_list
+import core.stdc.stdio;  // for FILE, not exposed per spec
 public import core.stdc.stddef;  // for wchar_t
 public import core.stdc.time;    // for tm
 public import core.stdc.stdint;  // for WCHAR_MIN, WCHAR_MAX
@@ -144,13 +144,13 @@ alias wchar_t wint_t;
 enum wchar_t WEOF = 0xFFFF;
 
 ///
-int fwprintf(FILE* stream, const scope wchar_t* format, ...);
+int fwprintf(FILE* stream, const scope wchar_t* format, scope const ...);
 ///
-int fwscanf(FILE* stream, const scope wchar_t* format, ...);
+int fwscanf(FILE* stream, const scope wchar_t* format, scope ...);
 ///
-int swprintf(wchar_t* s, size_t n, const scope wchar_t* format, ...);
+int swprintf(wchar_t* s, size_t n, const scope wchar_t* format, scope const ...);
 ///
-int swscanf(const scope wchar_t* s, const scope wchar_t* format, ...);
+int swscanf(const scope wchar_t* s, const scope wchar_t* format, scope ...);
 ///
 int vfwprintf(FILE* stream, const scope wchar_t* format, va_list arg);
 ///
@@ -164,9 +164,9 @@ int vwprintf(const scope wchar_t* format, va_list arg);
 ///
 int vwscanf(const scope wchar_t* format, va_list arg);
 ///
-int wprintf(const scope wchar_t* format, ...);
+int wprintf(const scope wchar_t* format, scope const ...);
 ///
-int wscanf(const scope wchar_t* format, ...);
+int wscanf(const scope wchar_t* format, scope ...);
 
 // No unsafe pointer manipulation.
 @trusted
@@ -261,7 +261,7 @@ wchar_t* wcstok(return wchar_t* s1, scope const wchar_t* s2, wchar_t** ptr);
 pure size_t wcslen(scope const wchar_t* s);
 
 ///
-pure wchar_t* wmemchr(return const wchar_t* s, wchar_t c, size_t n);
+pure inout(wchar_t)* wmemchr(return inout wchar_t* s, wchar_t c, size_t n);
 ///
 pure int      wmemcmp(scope const wchar_t* s1, scope const wchar_t* s2, size_t n);
 ///

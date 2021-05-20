@@ -5,6 +5,7 @@ Functions and types that manipulate built-in arrays and associative arrays.
 This module provides all kinds of functions to create, manipulate or convert arrays:
 
 $(SCRIPT inhibitQuickIndex = 1;)
+$(DIVC quickindex,
 $(BOOKTABLE ,
 $(TR $(TH Function Name) $(TH Description)
 )
@@ -67,7 +68,7 @@ $(TR $(TH Function Name) $(TH Description)
     $(TR $(TD $(LREF uninitializedArray))
         $(TD Returns a new array of type `T` without initializing its elements.
     ))
-)
+))
 
 Copyright: Copyright Andrei Alexandrescu 2008- and Jonathan M Davis 2011-.
 
@@ -91,7 +92,9 @@ public import std.range.primitives : save, empty, popFront, popBack, front, back
  * Allocates an array and initializes it with copies of the elements
  * of range `r`.
  *
- * Narrow strings are handled as a special case in an overload.
+ * Narrow strings are handled as follows:
+ * - If autodecoding is turned on (default), then they are handled as a separate overload.
+ * - If autodecoding is turned off, then this is equivalent to duplicating the array.
  *
  * Params:
  *      r = range (or aggregate with `opApply` function) whose elements are copied into the allocated array
@@ -99,7 +102,7 @@ public import std.range.primitives : save, empty, popFront, popBack, front, back
  *      allocated and initialized array
  */
 ForeachType!Range[] array(Range)(Range r)
-if (isIterable!Range && !isNarrowString!Range && !isInfinite!Range)
+if (isIterable!Range && !isAutodecodableString!Range && !isInfinite!Range)
 {
     if (__ctfe)
     {
@@ -118,7 +121,7 @@ if (isIterable!Range && !isNarrowString!Range && !isInfinite!Range)
         if (length == 0)
             return null;
 
-        import std.conv : emplaceRef;
+        import core.internal.lifetime : emplaceRef;
 
         auto result = (() @trusted => uninitializedArray!(Unqual!E[])(length))();
 
@@ -144,7 +147,7 @@ if (isIterable!Range && !isNarrowString!Range && !isInfinite!Range)
 
 /// ditto
 ForeachType!(PointerTarget!Range)[] array(Range)(Range r)
-if (isPointer!Range && isIterable!(PointerTarget!Range) && !isNarrowString!Range && !isInfinite!Range)
+if (isPointer!Range && isIterable!(PointerTarget!Range) && !isAutodecodableString!Range && !isInfinite!Range)
 {
     return array(*r);
 }
@@ -206,9 +209,9 @@ if (isPointer!Range && isIterable!(PointerTarget!Range) && !isNarrowString!Range
     assert(equal(a, [Foo(1), Foo(2), Foo(3), Foo(4), Foo(5)]));
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=12315
 @safe unittest
 {
-    // Issue 12315
     static struct Bug12315 { immutable int i; }
     enum bug12315 = [Bug12315(123456789)].array();
     static assert(bug12315[0].i == 123456789);
@@ -222,12 +225,12 @@ if (isPointer!Range && isIterable!(PointerTarget!Range) && !isNarrowString!Range
     assert(a.length == 5);
 }
 
-version (unittest)
+version (StdUnittest)
     private extern(C) void _d_delarray_t(void[] *p, TypeInfo_Struct ti);
 
+// https://issues.dlang.org/show_bug.cgi?id=18995
 @system unittest
 {
-    // Issue 18995
     int nAlive = 0;
     struct S
     {
@@ -251,8 +254,11 @@ version (unittest)
 }
 
 /**
-Convert a narrow string to an array type that fully supports random access.
-This is handled as a special case and always returns an array of `dchar`
+Convert a narrow autodecoding string to an array type that fully supports
+random access.  This is handled as a special case and always returns an array
+of `dchar`
+
+NOTE: This function is never used when autodecoding is turned off.
 
 Params:
     str = `isNarrowString` to be converted to an array of `dchar`
@@ -260,26 +266,34 @@ Returns:
     a `dchar[]`, `const(dchar)[]`, or `immutable(dchar)[]` depending on the constness of
     the input.
 */
-ElementType!String[] array(String)(scope String str)
-if (isNarrowString!String)
+CopyTypeQualifiers!(ElementType!String,dchar)[] array(String)(scope String str)
+if (isAutodecodableString!String)
 {
     import std.utf : toUTF32;
     auto temp = str.toUTF32;
     /* Unsafe cast. Allowed because toUTF32 makes a new array
        and copies all the elements.
      */
-    return () @trusted { return cast(ElementType!String[]) temp; } ();
+    return () @trusted { return cast(CopyTypeQualifiers!(ElementType!String, dchar)[]) temp; } ();
 }
 
 ///
 @safe unittest
 {
     import std.range.primitives : isRandomAccessRange;
+    import std.traits : isAutodecodableString;
 
-    assert("Hello D".array == "Hello D"d);
-    static assert(isRandomAccessRange!string == false);
+    // note that if autodecoding is turned off, `array` will not transcode these.
+    static if (isAutodecodableString!string)
+        assert("Hello D".array == "Hello D"d);
+    else
+        assert("Hello D".array == "Hello D");
 
-    assert("Hello D"w.array == "Hello D"d);
+    static if (isAutodecodableString!wstring)
+        assert("Hello D"w.array == "Hello D"d);
+    else
+        assert("Hello D"w.array == "Hello D"w);
+
     static assert(isRandomAccessRange!dstring == true);
 }
 
@@ -339,11 +353,14 @@ if (isNarrowString!String)
     assert(e == f);
 
     assert(array(OpApply.init) == [0,1,2,3,4,5,6,7,8,9]);
-    assert(array("ABC") == "ABC"d);
-    assert(array("ABC".dup) == "ABC"d.dup);
+    static if (isAutodecodableString!string)
+    {
+        assert(array("ABC") == "ABC"d);
+        assert(array("ABC".dup) == "ABC"d.dup);
+    }
 }
 
-//Bug# 8233
+// https://issues.dlang.org/show_bug.cgi?id=8233
 @safe unittest
 {
     assert(array("hello world"d) == "hello world"d);
@@ -371,9 +388,9 @@ if (isNarrowString!String)
     }}
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=9824
 @safe unittest
 {
-    //9824
     static struct S
     {
         @disable void opAssign(S);
@@ -383,7 +400,7 @@ if (isNarrowString!String)
     arr.array();
 }
 
-// Bugzilla 10220
+// https://issues.dlang.org/show_bug.cgi?id=10220
 @safe unittest
 {
     import std.algorithm.comparison : equal;
@@ -535,6 +552,7 @@ if (isInputRange!Values && isInputRange!Keys)
 {
     import std.range : repeat, zip;
     import std.typecons : tuple;
+    import std.range.primitives : autodecodeStrings;
     auto a = assocArray(zip([0, 1, 2], ["a", "b", "c"])); // aka zipMap
     static assert(is(typeof(a) == string[int]));
     assert(a == [0:"a", 1:"b", 2:"c"]);
@@ -543,13 +561,18 @@ if (isInputRange!Values && isInputRange!Keys)
     static assert(is(typeof(b) == string[string]));
     assert(b == ["foo":"bar", "baz":"quux"]);
 
+    static if (autodecodeStrings)
+        alias achar = dchar;
+    else
+        alias achar = immutable(char);
     auto c = assocArray("ABCD", true.repeat);
-    static assert(is(typeof(c) == bool[dchar]));
-    bool[dchar] expected = ['D':true, 'A':true, 'B':true, 'C':true];
+    static assert(is(typeof(c) == bool[achar]));
+    bool[achar] expected = ['D':true, 'A':true, 'B':true, 'C':true];
     assert(c == expected);
 }
 
-// @@@11053@@@ - Cannot be version (unittest) - recursive instantiation error
+// Cannot be version (StdUnittest) - recursive instantiation error
+// https://issues.dlang.org/show_bug.cgi?id=11053
 @safe unittest
 {
     import std.typecons;
@@ -559,7 +582,7 @@ if (isInputRange!Values && isInputRange!Keys)
     assert([ tuple("foo", "bar") ].assocArray() == ["foo": "bar"]);
 }
 
-// Issue 13909
+// https://issues.dlang.org/show_bug.cgi?id=13909
 @safe unittest
 {
     import std.typecons;
@@ -587,11 +610,16 @@ if (isInputRange!Values && isInputRange!Keys)
 {
     import std.algorithm.iteration : filter, map;
     import std.range : enumerate;
+    import std.range.primitives : autodecodeStrings;
 
     auto r = "abcde".enumerate.filter!(a => a.index == 2);
     auto a = assocArray(r.map!(a => a.value), r.map!(a => a.index));
-    assert(is(typeof(a) == size_t[dchar]));
-    assert(a == [dchar('c'): size_t(2)]);
+    static if (autodecodeStrings)
+        alias achar = dchar;
+    else
+        alias achar = immutable(char);
+    static assert(is(typeof(a) == size_t[achar]));
+    assert(a == [achar('c'): size_t(2)]);
 }
 
 @safe nothrow pure unittest
@@ -716,7 +744,7 @@ if (isAssociativeArray!AA)
     assert(savedPairs.front == tuple("a", 2));
 }
 
-// Issue 17711
+// https://issues.dlang.org/show_bug.cgi?id=17711
 @safe unittest
 {
     const(int[string]) aa = [ "abc": 123 ];
@@ -932,7 +960,7 @@ private auto arrayAllocImpl(bool minimallyInitialized, T, I...)(I sizes) nothrow
                         ret ~= E.init;
                 }
                 catch (Exception e)
-                    throw new Error(e.msg);
+                    assert(0, e.msg);
             }
             else
                 assert(0, "No postblit nor default init on " ~ E.stringof ~
@@ -978,7 +1006,8 @@ private auto arrayAllocImpl(bool minimallyInitialized, T, I...)(I sizes) nothrow
     assert(s2.length == 0);
 }
 
-@safe nothrow pure unittest //@@@9803@@@
+// https://issues.dlang.org/show_bug.cgi?id=9803
+@safe nothrow pure unittest
 {
     auto a = minimallyInitializedArray!(int*[])(1);
     assert(a[0] == null);
@@ -988,7 +1017,8 @@ private auto arrayAllocImpl(bool minimallyInitialized, T, I...)(I sizes) nothrow
     assert(c[0][0] == null);
 }
 
-@safe unittest //@@@10637@@@
+// https://issues.dlang.org/show_bug.cgi?id=10637
+@safe unittest
 {
     static struct S
     {
@@ -1128,10 +1158,11 @@ if (is(typeof(a.ptr < b.ptr) == bool))
     test(a, b);
     assert(overlap(a, b.dup).empty);
     test(c, d);
-    assert(overlap(c, d.idup).empty);
+    assert(overlap(c, d.dup.idup).empty);
 }
 
-@safe pure nothrow unittest // bugzilla 9836
+ // https://issues.dlang.org/show_bug.cgi?id=9836
+@safe pure nothrow unittest
 {
     // range primitives for array should work with alias this types
     struct Wrapper
@@ -1192,7 +1223,7 @@ if (!isSomeString!(T[])
 {
     static if (allSatisfy!(isInputRangeWithLengthOrConvertible!T, U))
     {
-        import std.conv : emplaceRef;
+        import core.internal.lifetime : emplaceRef;
 
         immutable oldLen = array.length;
 
@@ -1251,7 +1282,7 @@ if (isSomeString!(T[]) && allSatisfy!(isCharOrStringOrDcharRange, U))
     static if (is(Unqual!T == T)
         && allSatisfy!(isInputRangeWithLengthOrConvertible!dchar, U))
     {
-        import std.utf : codeLength;
+        import std.utf : codeLength, byDchar;
         // mutable, can do in place
         //helper function: re-encode dchar to Ts and store at *ptr
         static T* putDChar(T* ptr, dchar ch)
@@ -1316,7 +1347,7 @@ if (isSomeString!(T[]) && allSatisfy!(isCharOrStringOrDcharRange, U))
             }
             else
             {
-                foreach (dchar ch; stuff[i])
+                foreach (ch; stuff[i].byDchar)
                     ptr = putDChar(ptr, ch);
             }
         }
@@ -1513,7 +1544,8 @@ private template isInputRangeOrConvertible(E)
     });
 }
 
-@system unittest // bugzilla 6874
+// https://issues.dlang.org/show_bug.cgi?id=6874
+@system unittest
 {
     import core.memory;
     // allocate some space
@@ -1927,7 +1959,9 @@ ElementEncodingType!(ElementType!RoR)[] join(RoR, R)(RoR ror, scope R sep)
 if (isInputRange!RoR &&
     isInputRange!(Unqual!(ElementType!RoR)) &&
     isInputRange!R &&
-    is(Unqual!(ElementType!(ElementType!RoR)) == Unqual!(ElementType!R)))
+    (is(immutable ElementType!(ElementType!RoR) == immutable ElementType!R) ||
+     (isSomeChar!(ElementType!(ElementType!RoR)) && isSomeChar!(ElementType!R))
+    ))
 {
     alias RetType = typeof(return);
     alias RetTypeElement = Unqual!(ElementEncodingType!RetType);
@@ -1940,7 +1974,7 @@ if (isInputRange!RoR &&
     // This converts sep to an array (forward range) if it isn't one,
     // and makes sure it has the same string encoding for string types.
     static if (isSomeString!RetType &&
-               !is(RetTypeElement == Unqual!(ElementEncodingType!R)))
+               !is(immutable ElementEncodingType!RetType == immutable ElementEncodingType!R))
     {
         import std.conv : to;
         auto sepArr = to!RetType(sep);
@@ -1952,7 +1986,7 @@ if (isInputRange!RoR &&
 
     static if (hasCheapIteration!RoR && (hasLength!RoRElem || isNarrowString!RoRElem))
     {
-        import std.conv : emplaceRef;
+        import core.internal.lifetime : emplaceRef;
         size_t length;          // length of result array
         size_t rorLength;       // length of range ror
         foreach (r; ror.save)
@@ -1986,24 +2020,50 @@ if (isInputRange!RoR &&
         ror.popFront();
         for (; !ror.empty; ror.popFront())
         {
-            put(result, sep);
+            put(result, sepArr);
             put(result, ror.front);
         }
         return result.data;
     }
 }
 
-@safe unittest // Issue 14230
+// https://issues.dlang.org/show_bug.cgi?id=14230
+@safe unittest
 {
    string[] ary = ["","aa","bb","cc"]; // leaded by _empty_ element
    assert(ary.join(" @") == " @aa @bb @cc"); // OK in 2.067b1 and olders
+}
+
+// https://issues.dlang.org/show_bug.cgi?id=21337
+@system unittest
+{
+    import std.algorithm.iteration : map;
+
+    static class Once
+    {
+        bool empty;
+
+        void popFront()
+        {
+            empty = true;
+        }
+
+        int front()
+        {
+            return 0;
+        }
+    }
+
+    assert([1, 2].map!"[a]".join(new Once) == [1, 0, 2]);
 }
 
 /// Ditto
 ElementEncodingType!(ElementType!RoR)[] join(RoR, E)(RoR ror, scope E sep)
 if (isInputRange!RoR &&
     isInputRange!(Unqual!(ElementType!RoR)) &&
-    is(E : ElementType!(ElementType!RoR)))
+    ((is(E : ElementType!(ElementType!RoR))) ||
+     (!autodecodeStrings && isSomeChar!(ElementType!(ElementType!RoR)) &&
+      isSomeChar!E)))
 {
     alias RetType = typeof(return);
     alias RetTypeElement = Unqual!(ElementEncodingType!RetType);
@@ -2023,7 +2083,7 @@ if (isInputRange!RoR &&
         }
         else
         {
-            import std.conv : emplaceRef;
+            import core.internal.lifetime : emplaceRef;
             import std.format : format;
             size_t length;
             size_t rorLength;
@@ -2067,7 +2127,8 @@ if (isInputRange!RoR &&
     }
 }
 
-@safe unittest // Issue 10895
+// https://issues.dlang.org/show_bug.cgi?id=10895
+@safe unittest
 {
     class A
     {
@@ -2082,7 +2143,8 @@ if (isInputRange!RoR &&
     assert(temp.length == 3);
 }
 
-@safe unittest // Issue 14230
+// https://issues.dlang.org/show_bug.cgi?id=14230
+@safe unittest
 {
    string[] ary = ["","aa","bb","cc"];
    assert(ary.join('@') == "@aa@bb@cc");
@@ -2110,7 +2172,7 @@ if (isInputRange!RoR &&
 
     static if (hasCheapIteration!RoR && (hasLength!RoRElem || isNarrowString!RoRElem))
     {
-        import std.conv : emplaceRef;
+        import core.internal.lifetime : emplaceRef;
         size_t length;
         foreach (r; ror.save)
             length += r.length;
@@ -2150,6 +2212,7 @@ if (isInputRange!RoR &&
 @safe pure unittest
 {
     import std.conv : to;
+    import std.range.primitives : autodecodeStrings;
 
     static foreach (T; AliasSeq!(string,wstring,dstring))
     {{
@@ -2301,7 +2364,7 @@ if (isInputRange!RoR &&
     assert(join(f([f([1, 2]), f([41, 42])]), f([5, 6])) == [1, 2, 5, 6, 41, 42]);
 }
 
-// Issue 10683
+// https://issues.dlang.org/show_bug.cgi?id=10683
 @safe unittest
 {
     import std.range : join;
@@ -2310,7 +2373,7 @@ if (isInputRange!RoR &&
     assert([[tuple("x")]].join == [tuple("x")]);
 }
 
-// Issue 13877
+// https://issues.dlang.org/show_bug.cgi?id=13877
 @safe unittest
 {
     // Test that the range is iterated only once.
@@ -2703,7 +2766,7 @@ if (isInputRange!Range &&
     assert(replace(d, 5, 10, "⁴³²¹⁰"d) == "⁰¹²³⁴⁴³²¹⁰"d);
 }
 
-// Issue 18166
+// https://issues.dlang.org/show_bug.cgi?id=18166
 @safe pure unittest
 {
     auto str = replace("aaaaa"d, 1, 4, "***"d);
@@ -2773,9 +2836,9 @@ if (is(typeof(replace(array, from, to, stuff))))
     assert(a == [1, 4, 5, 5]);
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=12889
 @safe unittest
 {
-    // Bug# 12889
     int[1][] arr = [[0], [1], [2], [3], [4], [5], [6]];
     int[1][] stuff = [[0], [1]];
     replaceInPlace(arr, 4, 6, stuff);
@@ -2784,7 +2847,7 @@ if (is(typeof(replace(array, from, to, stuff))))
 
 @system unittest
 {
-    // Bug# 14925
+    // https://issues.dlang.org/show_bug.cgi?id=14925
     char[] a = "mon texte 1".dup;
     char[] b = "abc".dup;
     replaceInPlace(a, 4, 9, b);
@@ -3010,7 +3073,7 @@ if (isDynamicArray!(E[]) &&
     }
 }
 
-//Bug# 8187
+// https://issues.dlang.org/show_bug.cgi?id=8187
 @safe unittest
 {
     auto res = ["a", "a"];
@@ -3197,7 +3260,6 @@ struct Appender(A)
 if (isDynamicArray!A)
 {
     import core.memory : GC;
-    import std.format : FormatSpec;
 
     private alias T = ElementEncodingType!A;
 
@@ -3397,7 +3459,7 @@ if (isDynamicArray!A)
         }
         else
         {
-            import std.conv : emplaceRef;
+            import core.internal.lifetime : emplaceRef;
 
             ensureAddable(1);
             immutable len = _data.arr.length;
@@ -3463,7 +3525,7 @@ if (isDynamicArray!A)
             }
             else
             {
-                import std.conv : emplaceRef;
+                import core.internal.lifetime : emplaceRef;
                 foreach (ref it ; bigData[len .. newlen])
                 {
                     emplaceRef!T(it, items.front);
@@ -3473,6 +3535,17 @@ if (isDynamicArray!A)
 
             //We do this at the end, in case of exceptions
             _data.arr = bigData;
+        }
+        else static if (isSomeChar!T && isSomeChar!(ElementType!Range) &&
+                        !is(immutable T == immutable ElementType!Range))
+        {
+            // need to decode and encode
+            import std.utf : decodeFront;
+            while (!items.empty)
+            {
+                auto c = items.decodeFront;
+                put(c);
+            }
         }
         else
         {
@@ -3540,47 +3613,44 @@ if (isDynamicArray!A)
      * Returns:
      *     A `string` if `writer` is not set; `void` otherwise.
      */
-    string toString() const
+    string toString()() const
     {
         import std.format : singleSpec;
 
         auto app = appender!string();
         auto spec = singleSpec("%s");
+        immutable len = _data ? _data.arr.length : 0;
         // different reserve lengths because each element in a
         // non-string-like array uses two extra characters for `, `.
         static if (isSomeString!A)
         {
-            app.reserve(_data.arr.length + 25);
+            app.reserve(len + 25);
         }
         else
         {
             // Multiplying by three is a very conservative estimate of
             // length, as it assumes each element is only one char
-            app.reserve((_data.arr.length * 3) + 25);
+            app.reserve((len * 3) + 25);
         }
         toString(app, spec);
         return app.data;
     }
 
+    import std.format : FormatSpec;
+
     /// ditto
-    void toString(Writer)(ref Writer w, scope const ref FormatSpec!char fmt) const
+    template toString(Writer)
     if (isOutputRange!(Writer, char))
     {
-        import std.format : formatValue;
-        import std.range.primitives : put;
-        put(w, Unqual!(typeof(this)).stringof);
-        put(w, '(');
-        formatValue(w, data, fmt);
-        put(w, ')');
-    }
-
-    // @@@DEPRECATED_2.089@@@
-    deprecated("To be removed after 2.089. Please use the output range overload.")
-    void toString(Writer)(scope Writer w)
-    if (isCallable!Writer)
-    {
-        import std.format : formattedWrite;
-        w.formattedWrite(typeof(this).stringof ~ "(%s)", data);
+        void toString(ref Writer w, scope const ref FormatSpec!char fmt) const
+        {
+            import std.format : formatValue;
+            import std.range.primitives : put;
+            put(w, Unqual!(typeof(this)).stringof);
+            put(w, '(');
+            formatValue(w, data, fmt);
+            put(w, ')');
+        }
     }
 }
 
@@ -3621,7 +3691,8 @@ if (isDynamicArray!A)
     assert(app3[] == "Appender!(int[])(0001, 0002, 0003)");
 }
 
-@safe unittest // issue 17251
+// https://issues.dlang.org/show_bug.cgi?id=17251
+@safe unittest
 {
     static struct R
     {
@@ -3636,7 +3707,8 @@ if (isDynamicArray!A)
     app.put(r[]);
 }
 
-@safe unittest // issue 13300
+// https://issues.dlang.org/show_bug.cgi?id=13300
+@safe unittest
 {
     static test(bool isPurePostblit)()
     {
@@ -3671,7 +3743,8 @@ if (isDynamicArray!A)
     static assert(!__traits(compiles, () pure { test!false(); }));
 }
 
-@system unittest // issue 19572
+// https://issues.dlang.org/show_bug.cgi?id=19572
+@system unittest
 {
     static struct Struct
     {
@@ -3689,6 +3762,26 @@ if (isDynamicArray!A)
     auto result = appender[][0];
 
     assert(result.value != 23);
+}
+
+@safe unittest
+{
+    import std.conv : to;
+    import std.utf : byCodeUnit;
+    auto str = "ウェブサイト";
+    auto wstr = appender!wstring();
+    put(wstr, str.byCodeUnit);
+    assert(wstr.data == str.to!wstring);
+}
+
+// https://issues.dlang.org/show_bug.cgi?id=21256
+@safe unittest
+{
+    Appender!string app1;
+    app1.toString();
+
+    Appender!(int[]) app2;
+    app2.toString();
 }
 
 //Calculates an efficient growth scheme based on the old capacity
@@ -3892,7 +3985,8 @@ Appender!(E[]) appender(A : E[], E)(auto ref A array)
     }
     catch (Exception) assert(0);
 
-    // Issue 5663 & 9725 tests
+    // https://issues.dlang.org/show_bug.cgi?id=5663
+    // https://issues.dlang.org/show_bug.cgi?id=9725
     static foreach (S; AliasSeq!(char[], const(char)[], string))
     {
         {
@@ -4007,11 +4101,11 @@ unittest
     }
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=10690
 @safe unittest
 {
     import std.algorithm;
     import std.typecons;
-    //10690
     [tuple(1)].filter!(t => true).array; // No error
     [tuple("A")].filter!(t => true).array; // error
 }
@@ -4081,9 +4175,9 @@ unittest
     a2.put([s2]);
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=9528
 @safe unittest
 {
-    //9528
     const(E)[] fastCopy(E)(E[] src) {
             auto app = appender!(const(E)[])();
             foreach (i, e; src)
@@ -4099,10 +4193,10 @@ unittest
     assert(t.length == 1);
 }
 
+// https://issues.dlang.org/show_bug.cgi?id=10753
 @safe unittest
 {
     import std.algorithm.iteration : map;
-    //10753
     struct Foo {
        immutable dchar d;
     }
@@ -4222,7 +4316,7 @@ unittest
 
 @system unittest
 {
-    // Issue 13077
+    // https://issues.dlang.org/show_bug.cgi?id=13077
     static class A {}
 
     // reduced case
@@ -4321,7 +4415,8 @@ unittest
     assert(app3[] == [1, 2, 3]);
 }
 
-@safe unittest // issue 14605
+// https://issues.dlang.org/show_bug.cgi?id=14605
+@safe unittest
 {
     static assert(isOutputRange!(Appender!(int[]), int));
     static assert(isOutputRange!(RefAppender!(int[]), int));
@@ -4453,7 +4548,7 @@ if (isInputRange!T && is(ElementType!T : U))
 {
     import std.algorithm.mutation : uninitializedFill;
     import std.range : take;
-    import std.conv : emplaceRef;
+    import core.internal.lifetime : emplaceRef;
 
     if (__ctfe)
     {
@@ -4511,7 +4606,7 @@ nothrow pure @safe unittest
 // Tests that code compiles when there is an elaborate destructor and exceptions
 // are thrown. Unfortunately can't test that memory is initialized
 // before having a destructor called on it.
-// @system required because of issue 18872.
+// @system required because of https://issues.dlang.org/show_bug.cgi?id=18872.
 @system nothrow unittest
 {
     // exists only to allow doing something in the destructor. Not tested
@@ -4610,7 +4705,7 @@ nothrow pure @safe unittest
     staticArray!(long, 2.iota).checkStaticArray!long([0, 1]);
 }
 
-version (unittest) private void checkStaticArray(T, T1, T2)(T1 a, T2 b) nothrow @safe pure @nogc
+version (StdUnittest) private void checkStaticArray(T, T1, T2)(T1 a, T2 b) nothrow @safe pure @nogc
 {
     static assert(is(T1 == T[T1.length]));
     assert(a == b, "a must be equal to b");

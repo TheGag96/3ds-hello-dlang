@@ -14,11 +14,19 @@
 
 module core.stdc.stdint;
 
-private import core.stdc.config;
-private import core.stdc.stddef; // for wchar_t
-//private import core.stdc.signal; // for sig_atomic_t
-//private import core.stdc.wchar_; // for wint_t
+import core.stdc.config;
+import core.stdc.stddef; // for wchar_t
+import core.stdc.signal; // for sig_atomic_t
+import core.stdc.wchar_; // for wint_t
 
+version (OSX)
+    version = Darwin;
+else version (iOS)
+    version = Darwin;
+else version (TVOS)
+    version = Darwin;
+else version (WatchOS)
+    version = Darwin;
 
 // Can't be `private` because of @@@BUG11173@@@.
 T _typify(T)(T val) @safe pure nothrow { return val; }
@@ -77,7 +85,7 @@ version (Windows)
     alias intmax_t  = long;      ///
     alias uintmax_t = ulong;     ///
 }
-else version (OSX)
+else version (Darwin)
 {
     alias int8_t   = byte;          ///
     alias int16_t  = short;         ///
@@ -140,6 +148,15 @@ else version (Posix)
         alias int_fast32_t  = int;  ///
         alias uint_fast32_t = uint; ///
     }
+    else version (CRuntime_Musl)
+    {
+        alias int_fast8_t   = byte;  ///
+        alias uint_fast8_t  = ubyte; ///
+        alias int_fast16_t  = int;   ///
+        alias uint_fast16_t = uint;  ///
+        alias int_fast32_t  = int;   ///
+        alias uint_fast32_t = uint;  ///
+    }
     else
     {
         alias int_fast8_t   = byte;      ///
@@ -149,13 +166,6 @@ else version (Posix)
         alias int_fast32_t  = ptrdiff_t; ///
         alias uint_fast32_t = size_t;    ///
     }
-    alias int_fast64_t  = long;      ///
-    alias uint_fast64_t = ulong;     ///
-
-    alias intptr_t  = ptrdiff_t; ///
-    alias uintptr_t = size_t;    ///
-    alias intmax_t  = long;      ///
-    alias uintmax_t = ulong;     ///
 }
 else version (DevkitARM)
 {
@@ -301,22 +311,22 @@ enum ptrdiff_t PTRDIFF_MIN = ptrdiff_t.min;
 enum ptrdiff_t PTRDIFF_MAX = ptrdiff_t.max;
 
 ///
-//enum sig_atomic_t SIG_ATOMIC_MIN = sig_atomic_t.min;
-/////
-//enum sig_atomic_t SIG_ATOMIC_MAX = sig_atomic_t.max;
+enum sig_atomic_t SIG_ATOMIC_MIN = sig_atomic_t.min;
+///
+enum sig_atomic_t SIG_ATOMIC_MAX = sig_atomic_t.max;
 
 ///
 enum size_t  SIZE_MAX  = size_t.max;
 
 ///
 enum wchar_t WCHAR_MIN = wchar_t.min;
-/////
+///
 enum wchar_t WCHAR_MAX = wchar_t.max;
 
 ///
-//enum wint_t  WINT_MIN  = wint_t.min;
-/////
-//enum wint_t  WINT_MAX  = wint_t.max;
+enum wint_t  WINT_MIN  = wint_t.min;
+///
+enum wint_t  WINT_MAX  = wint_t.max;
 
 ///
 alias INT8_C  = _typify!int8_t ;

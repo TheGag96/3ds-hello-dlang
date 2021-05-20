@@ -268,7 +268,7 @@ else version (DragonFlyBSD)
         ssize_t          s_len;         // current length of string
         int              s_flags;       // flags
         ssize_t          s_sect_len;    // current length of section
-    };
+    }
 
     enum {
         SBUF_FIXEDLEN   = 0x00000000,   // fixed length buffer (default)
@@ -1393,91 +1393,115 @@ version (MinGW)
     // Prefer the MinGW versions over the MSVC ones, as the latter don't handle
     // reals at all.
     ///
-    int __mingw_fprintf(FILE* stream, scope const char* format, ...);
+    pragma(printf)
+    int __mingw_fprintf(FILE* stream, scope const char* format, scope const ...);
     ///
     alias __mingw_fprintf fprintf;
 
     ///
-    int __mingw_fscanf(FILE* stream, scope const char* format, ...);
+    pragma(scanf)
+    int __mingw_fscanf(FILE* stream, scope const char* format, scope ...);
     ///
     alias __mingw_fscanf fscanf;
 
     ///
-    int __mingw_sprintf(scope char* s, scope const char* format, ...);
+    pragma(printf)
+    int __mingw_sprintf(scope char* s, scope const char* format, scope const ...);
     ///
     alias __mingw_sprintf sprintf;
 
     ///
-    int __mingw_sscanf(scope const char* s, scope const char* format, ...);
+    pragma(scanf)
+    int __mingw_sscanf(scope const char* s, scope const char* format, scope ...);
     ///
     alias __mingw_sscanf sscanf;
 
     ///
+    pragma(printf)
     int __mingw_vfprintf(FILE* stream, scope const char* format, va_list arg);
     ///
     alias __mingw_vfprintf vfprintf;
 
     ///
+    pragma(scanf)
     int __mingw_vfscanf(FILE* stream, scope const char* format, va_list arg);
     ///
     alias __mingw_vfscanf vfscanf;
 
     ///
+    pragma(printf)
     int __mingw_vsprintf(scope char* s, scope const char* format, va_list arg);
     ///
     alias __mingw_vsprintf vsprintf;
 
     ///
+    pragma(scanf)
     int __mingw_vsscanf(scope const char* s, scope const char* format, va_list arg);
     ///
     alias __mingw_vsscanf vsscanf;
 
     ///
+    pragma(printf)
     int __mingw_vprintf(scope const char* format, va_list arg);
     ///
     alias __mingw_vprintf vprintf;
 
     ///
+    pragma(scanf)
     int __mingw_vscanf(scope const char* format, va_list arg);
     ///
     alias __mingw_vscanf vscanf;
 
     ///
-    int __mingw_printf(scope const char* format, ...);
+    pragma(printf)
+    int __mingw_printf(scope const char* format, scope const ...);
     ///
     alias __mingw_printf printf;
 
     ///
-    int __mingw_scanf(scope const char* format, ...);
+    pragma(scanf)
+    int __mingw_scanf(scope const char* format, scope ...);
     ///
     alias __mingw_scanf scanf;
 }
 else
 {
     ///
-    int fprintf(FILE* stream, scope const char* format, ...);
+    pragma(printf)
+    int fprintf(FILE* stream, scope const char* format, scope const ...);
     ///
-    int fscanf(FILE* stream, scope const char* format, ...);
+    pragma(scanf)
+    int fscanf(FILE* stream, scope const char* format, scope ...);
     ///
-    int sprintf(scope char* s, scope const char* format, ...);
+    pragma(printf)
+    int sprintf(scope char* s, scope const char* format, scope const ...);
     ///
-    int sscanf(scope const char* s, scope const char* format, ...);
+    pragma(scanf)
+    int sscanf(scope const char* s, scope const char* format, scope ...);
     ///
+    pragma(printf)
     int vfprintf(FILE* stream, scope const char* format, va_list arg);
     ///
+    pragma(scanf)
     int vfscanf(FILE* stream, scope const char* format, va_list arg);
     ///
+    pragma(printf)
     int vsprintf(scope char* s, scope const char* format, va_list arg);
     ///
+    pragma(scanf)
     int vsscanf(scope const char* s, scope const char* format, va_list arg);
     ///
+    pragma(printf)
     int vprintf(scope const char* format, va_list arg);
     ///
+    pragma(scanf)
     int vscanf(scope const char* format, va_list arg);
     ///
-    int printf(scope const char* format, ...);
+    pragma(printf)
+    int printf(scope const char* format, scope const ...);
     ///
-    int scanf(scope const char* format, ...);
+    pragma(scanf)
+    int scanf(scope const char* format, scope ...);
 }
 
 // No unsafe pointer manipulation.
@@ -1550,11 +1574,13 @@ version (CRuntime_DigitalMars)
     pure int  fileno()(FILE* stream)   { return stream._file; }
   }
   ///
-    int   _snprintf(scope char* s, size_t n, scope const char* fmt, ...);
+    pragma(printf)
+    int   _snprintf(scope char* s, size_t n, scope const char* fmt, scope const ...);
     ///
     alias _snprintf snprintf;
 
     ///
+    pragma(printf)
     int   _vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
     ///
     alias _vsnprintf vsnprintf;
@@ -1578,13 +1604,15 @@ else version (CRuntime_Microsoft)
 
   version (MinGW)
   {
-    int   __mingw_snprintf(scope char* s, size_t n, scope const char* fmt, ...);
+    pragma(printf)
+    int   __mingw_snprintf(scope char* s, size_t n, scope const char* fmt, scope const ...);
     ///
     alias __mingw_snprintf _snprintf;
     ///
     alias __mingw_snprintf snprintf;
 
     ///
+    pragma(printf)
     int   __mingw_vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
     ///
     alias __mingw_vsnprintf _vsnprintf;
@@ -1594,13 +1622,17 @@ else version (CRuntime_Microsoft)
   else
   {
     ///
-    int _snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int _snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
 
     ///
+    pragma(printf)
     int _vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
   }
 
@@ -1637,8 +1669,10 @@ else version (CRuntime_Glibc)
   }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (Darwin)
@@ -1659,8 +1693,10 @@ else version (Darwin)
   }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (FreeBSD)
@@ -1681,8 +1717,10 @@ else version (FreeBSD)
   }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (NetBSD)
@@ -1703,8 +1741,10 @@ else version (NetBSD)
   }
 
     ///
-    int  snprintf(char* s, size_t n, const scope char* format, ...);
+    pragma(printf)
+    int  snprintf(char* s, size_t n, const scope char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(char* s, size_t n, const scope char* format, va_list arg);
 }
 else version (OpenBSD)
@@ -1754,7 +1794,7 @@ else version (OpenBSD)
     {
         void __sclearerr()(FILE* p)
         {
-            p._flags &= ~(__SERR|__SEOF);
+            p._flags = p._flags & ~(__SERR|__SEOF);
         }
 
         int __sfeof()(FILE* p)
@@ -1794,8 +1834,10 @@ else version (OpenBSD)
     }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (DragonFlyBSD)
@@ -1826,8 +1868,10 @@ else version (DragonFlyBSD)
   enum __SALC = 0x4000;
   enum __SIGN = 0x8000;
 
-  int  snprintf(scope char* s, size_t n, scope const char* format, ...);
-  int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
+    pragma(printf)
+    int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (Solaris)
 {
@@ -1847,8 +1891,10 @@ else version (Solaris)
   }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (CRuntime_Bionic)
@@ -1868,9 +1914,11 @@ else version (CRuntime_Bionic)
     int  fileno(FILE*);
   }
 
-  ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
     ///
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
+    ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (CRuntime_Musl)
@@ -1890,8 +1938,10 @@ else version (CRuntime_Musl)
     }
 
     ///
-    int snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (CRuntime_UClibc)
@@ -1912,8 +1962,10 @@ else version (CRuntime_UClibc)
   }
 
     ///
-    int  snprintf(scope char* s, size_t n, scope const char* format, ...);
+    pragma(printf)
+    int  snprintf(scope char* s, size_t n, scope const char* format, scope const ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else version (CRuntime_Newlib_3DS)
@@ -1934,8 +1986,10 @@ else version (CRuntime_Newlib_3DS)
   }
 
     ///
+    pragma(printf)
     int  snprintf(scope char* s, size_t n, scope const char* format, ...);
     ///
+    pragma(printf)
     int  vsnprintf(scope char* s, size_t n, scope const char* format, va_list arg);
 }
 else
