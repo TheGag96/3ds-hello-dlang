@@ -9,6 +9,8 @@ import ctru;
 import citro2d;
 import citro3d;
 import core.stdc.stdio;
+import core.stdc.stdlib;
+import core.stdc.time;
 
 enum MAX_SPRITES   = 768;
 enum SCREEN_WIDTH  = 400;
@@ -29,24 +31,11 @@ static size_t numSprites = MAX_SPRITES/2;
 float depth = 100;
 bool rotation = false;
 
-//TODO: replace with real rand once std lib stuff is fixed
-enum RAND_MAX = int.max;
-int rand()
-{
-  static int seed = 123456789;
-  static int m = RAND_MAX;
-  static int a = 1103515245;
-  static int c = 12345;
-
-  seed = (a * seed + c) % m;
-  return seed;
-}
-
 //---------------------------------------------------------------------------------
 void initSprites() {
 //---------------------------------------------------------------------------------
   size_t numImages = C2D_SpriteSheetCount(spriteSheet);
-  //srand(time(null));
+  srand(time(null));
 
   for (size_t i = 0; i < MAX_SPRITES; i++)
   {
