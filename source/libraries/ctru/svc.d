@@ -412,11 +412,11 @@ void* getThreadLocalStorage()
     void* ret;
     version (LDC)
     {
-        //ret = __asm!(void*)( "mrc p15, 0, {data}, c13, c0, 3");
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
     }
     else
     {
-        asm { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
+        asm @nogc nothrow { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
     }
     return ret;
 }
