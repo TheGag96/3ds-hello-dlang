@@ -46,7 +46,15 @@ pragma(inline, true)
 void __dsb()
 {
     //TODO
-    //__asm__ __volatile__("mcr p15, 0, %[val], c7, c10, 4" :: [val] "r" (0) : "memory");
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "mcr p15, 0, %[val], c7, c10, 4" :: [val] "r" (0) : "memory"; }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
 }
 
 /// Performs a clrex operation.
@@ -54,7 +62,15 @@ pragma(inline, true)
 void __clrex()
 {
     //TODO
-    //__asm__ __volatile__("clrex" ::: "memory");
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "clrex" ::: "memory"; }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
 }
 
 /**
@@ -67,7 +83,15 @@ int __ldrex(int* addr)
 {
     //TODO
     int val;
-    //__asm__ __volatile__("ldrex %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "ldrex %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
     return val;
 }
 
@@ -82,7 +106,15 @@ bool __strex(int* addr, int val)
 {
     //TODO
     bool res;
-    //__asm__ __volatile__("strex %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "strex %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
     return res;
 }
 
@@ -96,7 +128,15 @@ ushort __ldrexh(ushort* addr)
 {
     //TODO
     ushort val;
-    //__asm__ __volatile__("ldrexh %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "ldrexh %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
     return val;
 }
 
@@ -111,7 +151,14 @@ bool __strexh(ushort* addr, ushort val)
 {
     //TODO
     bool res;
-    //__asm__ __volatile__("strexh %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "strexh %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+    }
     return res;
 }
 
@@ -125,7 +172,15 @@ ubyte __ldrexb(ubyte* addr)
 {
     //TODO
     ubyte val;
-    //__asm__ __volatile__("ldrexb %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "ldrexb %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+    }
+    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
     return val;
 }
 
@@ -140,7 +195,14 @@ bool __strexb(ubyte* addr, ubyte val)
 {
     //TODO
     bool res;
-    //__asm__ __volatile__("strexb %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr));
+    version (LDC)
+    {
+        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+    }
+    else
+    {
+        asm @nogc nothrow { "strexb %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+    }
     return res;
 }
 
