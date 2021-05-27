@@ -122,13 +122,11 @@ void C2Di_SetTex(C3D_Tex* tex)
 }
 
 pragma(inline, true)
-void C2Di_SwapUV(float[2] a, float[2] b)
+void C2Di_SwapUV(ref float[2] a, ref float[2] b)
 {
-    float[2] temp = [ a[0], a[1] ];
-    a[0] = b[0];
-    a[1] = b[1];
-    b[0] = temp[0];
-    b[1] = temp[1];
+    float[2] temp = a;
+    a = b;
+    b = temp;
 }
 
 void C2Di_Update();
