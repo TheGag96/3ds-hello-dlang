@@ -45,6 +45,9 @@ GFXBUILD	:=	$(BUILD)
 # options for code generation
 #---------------------------------------------------------------------------------
 
+export GDC := $(DEVKITARM)/bin/arm-none-eabi-gdc
+export LDC := ldc2
+
 # Can be GDC or LDC
 export DCOMPILER	:=	LDC
 export BUILD_TYPE	:=	DEBUG_FAST
@@ -113,7 +116,9 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir))
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
-export SHBINDIR	:=	$(SOURCEDIR)/__SHBIN
+export SHBINDIR	:=	$(BUILD)/__SHBIN
+export SHBINDIR2	:=	__SHBIN
+# make is bad
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
@@ -159,8 +164,8 @@ export OFILES_BIN	:=	$(addsuffix .o,$(BINFILES)) \
 			$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \
 			$(addsuffix .o,$(T3XFILES))
 
-# export OFILES   := $(OFILES_BIN) $(OFILES_SOURCES) $(OFILES_D_SOURCES)
-export OFILES   := $(OFILES_SOURCES) $(OFILES_D_SOURCES)
+export OFILES   := $(OFILES_BIN) $(OFILES_SOURCES) $(OFILES_D_SOURCES)
+# export OFILES   := $(OFILES_SOURCES) $(OFILES_D_SOURCES)
 
 export HFILES	:=	$(PICAFILES:.v.pica=_shbin.h) $(SHLISTFILES:.shlist=_shbin.h) \
 			$(addsuffix .h,$(subst .,_,$(BINFILES))) \
@@ -203,6 +208,7 @@ all: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES)
 
 $(BUILD):
 	@mkdir -p $@
+	@mkdir $(SHBINDIR)
 
 ifneq ($(GFXBUILD),$(BUILD))
 $(GFXBUILD):
@@ -237,6 +243,16 @@ $(OFILES_SOURCES) : $(HFILES)
 
 $(OUTPUT).elf	:	$(OFILES) $(OFILES_D)
 
+main.o: $(OFILES_BIN) $(DFILES)
+	$(SILENTMSG) $(notdir $<)
+ifeq ($(DCOMPILER),LDC)
+	$(SILENTCMD)$(LDC) $(DFLAGS) -I=$(SHBINDIR2) -c $^ -of=$@ $(ERROR_FILTER)
+else ifeq ($(DCOMPILER),GDC)
+	$(SILENTCMD)$(GDC) $(DFLAGS) -c $^ -o $@ $(ERROR_FILTER)
+else
+	$(SILENTMSG) ERROR: Please specify a D compiler in the Makefile or command line args!
+endif
+
 #---------------------------------------------------------------------------------
 # you need a rule like this for each extension you use as binary data
 #---------------------------------------------------------------------------------
@@ -269,27 +285,29 @@ endef
 
 define shader-as-d
 	$(eval CURBIN := $*.shbin)
-	rm -rf $(SHBINDIR)
-	mkdir $(SHBINDIR)
-	echo "module pica_`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`;" > $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
-	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end;" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
-	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
-	echo "extern (C) extern __gshared const uint" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
-	echo "const(ubyte)[]  `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_wrapped() { return (&`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`)[0..`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size]; }" >> $(SHBINDIR)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "module pica_`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`;" > $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "nothrow: @nogc:" >> $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end;" >> $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const(ubyte)" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`";" >> $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "extern (C) extern __gshared const uint" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
+	echo "const(ubyte)[]  `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_wrapped() { return (&`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`)[0..`(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size]; }" >> $(SHBINDIR2)/pica_`(echo $(CURBIN) | tr . _)`.d
 	picasso -o $(CURBIN) $1
 	bin2s $(CURBIN) | $(AS) -o $*.shbin.o
 endef
 
-%.shbin.o %_shbin.h : %.v.pica %.g.pica
+%.shbin.o %_shbin.h %_shbin.d : %.v.pica %.g.pica
 	@echo $(notdir $^)
+	@$(call shader-as,$^)
 	@$(call shader-as-d,$^)
 
-%.shbin.o %_shbin.h : %.v.pica
+%.shbin.o %_shbin.h %_shbin.d : %.v.pica
 	@echo $(notdir $<)
+	@$(call shader-as,$<)
 	@$(call shader-as-d,$<)
 
-%.shbin.o %_shbin.h : %.shlist
+%.shbin.o %_shbin.h %_shbin.d : %.shlist
 	@echo $(notdir $<)
+	@$(call shader-as,$(foreach file,$(shell cat $<),$(dir $<)$(file)))
 	@$(call shader-as-d,$(foreach file,$(shell cat $<),$(dir $<)$(file)))
 
 #---------------------------------------------------------------------------------

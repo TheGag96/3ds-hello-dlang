@@ -16,19 +16,13 @@ git clone https://github.com/TheGag96/3ds-hello-dlang
 
 Go download/install the latest version of [LDC](https://github.com/ldc-developers/ldc).
 
-From the `makescripts` folder in this repo, open up `base_rules`. On the line where it says:
+Inside the Makefile, notice find line:
 
 ```Makefile
 export LDC := ldc2
 ```
 
-Edit this to be command/path to your LDC executable. (I may remove this hacky line in the future and just force you to put ldc2 in your path.)
-
-Copy the `base_rules` and `3ds_rules` files into `/opt/devkitpro/devkitARM`:
-
-```sh
-sudo cp -r /path/to/3ds-hello-dlang/makescripts/* /opt/devkitpro/devkitARM
-```
+Edit this to be command/path to your LDC executable if need be.
 
 Then, finally...
 
@@ -88,12 +82,6 @@ From another GDC installation, copy the D standard library files into the devkit
 
 ```sh
 sudo cp -r /some/gdc/path/.../include/d /opt/devkitpro/devkitARM/lib/gcc/arm-none-eabi/9.1.0/include/
-```
-
-From the `makescripts` folder in this repo, copy the `base_rules` and `3ds_rules` files into `/opt/devkitpro/devkitARM`:
-
-```sh
-sudo cp -r /path/to/3ds-hello-dlang/makescripts/* /opt/devkitpro/devkitARM
 ```
 
 Then, finally...
