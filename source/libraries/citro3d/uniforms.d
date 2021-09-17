@@ -20,8 +20,7 @@ extern __gshared bool[2] C3D_BoolUnifsDirty;
 pragma(inline, true)
 C3D_FVec* C3D_FVUnifWritePtr(GPUShaderType type, int id, int size)
 {
-    int i;
-    for (i = 0; i < size; i ++)
+    foreach (i; 0..size)
         C3D_FVUnifDirty[type][id+i] = true;
     return &C3D_FVUnif[type][id];
 }
@@ -37,10 +36,9 @@ C3D_IVec* C3D_IVUnifWritePtr(GPUShaderType type, int id)
 pragma(inline, true)
 void C3D_FVUnifMtxNx4(GPUShaderType type, int id, const C3D_Mtx* mtx, int num)
 {
-    int i;
     C3D_FVec* ptr = C3D_FVUnifWritePtr(type, id, num);
-    for (i = 0; i < num; i ++)
-        ptr[i] = mtx.r[i]; // Struct copy.
+    foreach (i; 0..num)
+        ptr[i] = mtx.r.ptr[i]; // Struct copy. (Intentional write "out of bounds")
 }
 
 pragma(inline, true)

@@ -121,22 +121,37 @@ void ProcTexLut_FromArray(C3D_ProcTexLut* lut, ref const(float)[129] in_);
 void C3D_ProcTexColorLutBind(C3D_ProcTexColorLut* lut);
 void ProcTexColorLut_Write(C3D_ProcTexColorLut* out_, const(uint)* in_, int offset, int length);
 
-void C3D_ProcTexClamp(
-    C3D_ProcTex* pt,
-    GPUProcTexClamp u,
-    GPUProcTexClamp v);
+pragma(inline, true)
+void C3D_ProcTexClamp(C3D_ProcTex* pt, GPUProcTexClamp u, GPUProcTexClamp v)
+{
+    pt.uClamp = u;
+    pt.vClamp = v;
+}
 
-void C3D_ProcTexCombiner(
-    C3D_ProcTex* pt,
-    bool separate,
-    GPUProcTexMapFunc rgb,
-    GPUProcTexMapFunc alpha);
+pragma(inline, true)
+void C3D_ProcTexCombiner(C3D_ProcTex* pt, bool separate, GPUProcTexMapFunc rgb, GPUProcTexMapFunc alpha)
+{
+    pt.alphaSeparate = separate;
+    pt.rgbFunc = rgb;
+    if (separate)
+        pt.alphaFunc = alpha;
+}
 
-void C3D_ProcTexNoiseEnable(C3D_ProcTex* pt, bool enable);
+pragma(inline, true)
+void C3D_ProcTexNoiseEnable(C3D_ProcTex* pt, bool enable)
+{
+    pt.enableNoise = enable;
+}
 
-void C3D_ProcTexShift(
-    C3D_ProcTex* pt,
-    GPUProcTexShift u,
-    GPUProcTexShift v);
+pragma(inline, true)
+void C3D_ProcTexShift(C3D_ProcTex* pt, GPUProcTexShift u, GPUProcTexShift v)
+{
+    pt.uShift = u;
+    pt.vShift = v;
+}
 
-void C3D_ProcTexFilter(C3D_ProcTex* pt, GPUProcTexFilter min);
+pragma(inline, true)
+void C3D_ProcTexFilter(C3D_ProcTex* pt, GPUProcTexFilter min)
+{
+    pt.minFilter = min;
+}
