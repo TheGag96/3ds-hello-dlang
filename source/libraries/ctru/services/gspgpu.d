@@ -10,6 +10,13 @@ import ctru.gfx;
 
 extern (C): nothrow: @nogc:
 
+ enum GSP_SCREEN_TOP           = 0;   ///< ID of the top screen.
+ enum GSP_SCREEN_BOTTOM        = 1;   ///< ID of the bottom screen.
+ enum GSP_SCREEN_WIDTH         = 240; ///< Width of the top/bottom screens.
+ enum GSP_SCREEN_HEIGHT_TOP    = 400; ///< Height of the top screen.
+ enum GSP_SCREEN_HEIGHT_TOP_2X = 800; ///< Height of the top screen (2x).
+ enum GSP_SCREEN_HEIGHT_BOTTOM = 320; ///< Height of the bottom screen.
+
 extern (D) auto GSPGPU_REBASE_REG(T)(auto ref T r)
 {
     return r - 0x1EB00000;
@@ -65,6 +72,24 @@ enum GSPGPUEvent : ubyte
 
     max     = 7  ///< Used to know how many events there are.
 }
+
+pragma(inline, true)
+uint gspGetBytesPerPixel(GSPGPUFramebufferFormats format)
+{
+    switch (format)
+    {
+        case GSPGPUFramebufferFormats.rgba8_oes:
+            return 4;
+        default:
+        case GSPGPUFramebufferFormats.bgr8_oes:
+            return 3;
+        case GSPGPUFramebufferFormats.rgb565_oes:
+        case GSPGPUFramebufferFormats.rgb5_a1_oes:
+        case GSPGPUFramebufferFormats.rgba4_oes:
+            return 2;
+    }
+}
+
 
 /// Initializes GSPGPU.
 Result gspInit();

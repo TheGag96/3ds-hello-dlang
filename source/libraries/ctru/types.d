@@ -19,18 +19,18 @@ enum SSIZE_MAX = SIZE_MAX >> 1;
 
 alias ssize_t = int; ///<  8-bit unsigned integer ///<  8-bit unsigned integer ///< 16-bit unsigned integer ///< 32-bit unsigned integer ///< 64-bit unsigned integer ///<  8-bit signed integer ///< 16-bit signed integer ///< 32-bit signed integer ///< 64-bit signed integer
 
-alias vu8 = ubyte; ///<  8-bit volatile unsigned integer.
+alias vu8  = ubyte;  ///< 8-bit volatile unsigned integer.
 alias vu16 = ushort; ///< 16-bit volatile unsigned integer.
-alias vu32 = uint; ///< 32-bit volatile unsigned integer.
-alias vu64 = c_ulong; ///< 64-bit volatile unsigned integer.
+alias vu32 = uint;   ///< 32-bit volatile unsigned integer.
+alias vu64 = ulong;  ///< 64-bit volatile unsigned integer.
 
-alias vs8 = byte; ///<  8-bit volatile signed integer.
-alias vs16 = short; ///< 16-bit volatile signed integer.
-alias vs32 = int; ///< 32-bit volatile signed integer.
-alias vs64 = c_long; ///< 64-bit volatile signed integer.
+alias vs8  = byte;   ///< 8-bit volatile signed integer.
+alias vs16 = short;  ///< 16-bit volatile signed integer.
+alias vs32 = int;    ///< 32-bit volatile signed integer.
+alias vs64 = long;   ///< 64-bit volatile signed integer.
 
 alias Handle = uint; ///< Resource handle.
-alias Result = int; ///< Function result.
+alias Result = int;  ///< Function result.
 alias ThreadFunc = void function(void*); ///< Thread entrypoint function.
 alias voidfn = void function();
 

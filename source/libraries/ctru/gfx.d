@@ -96,6 +96,22 @@ void gfxSet3D(bool enable);
 bool gfxIs3D();
 
 /**
+ * @brief Retrieves the status of the 800px (double-height) high resolution display mode of the top screen.
+ * @return true if wide mode enabled, false otherwise.
+ */
+bool gfxIsWide();
+
+/**
+ * @brief Enables or disables the 800px (double-height) high resolution display mode of the top screen.
+ * @param enable Pass true to enable, false to disable.
+ * @note Wide mode is disabled by default.
+ * @note Wide and stereoscopic 3D modes are mutually exclusive.
+ * @note In wide mode pixels are not square, since scanlines are half as tall as they normally are.
+ * @warning Wide mode does not work on Old 2DS consoles (however it does work on New 2DS XL consoles).
+ */
+void gfxSetWide(bool enable);
+
+/**
  * @brief Changes the color format of a screen
  * @param screen The screen of which format should be changed
  * @param format One of the gsp pixel formats.
