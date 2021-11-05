@@ -49,6 +49,7 @@ float C3D_GetProcessingTime();
 
 union C3D_DEPTHTYPE
 {
+    @nogc: nothrow:
     private:
         int __i;
         GPUDepthBuf __e;
