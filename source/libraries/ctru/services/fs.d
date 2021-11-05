@@ -249,7 +249,7 @@ struct FS_Path
 }
 
 /// Filesystem archive handle, providing access to a filesystem's contents.
-alias FS_Archive = c_ulong;
+alias FS_Archive = ulong;
 
 /// Initializes FS.
 Result fsInit ();
