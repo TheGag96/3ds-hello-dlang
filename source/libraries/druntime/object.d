@@ -54,6 +54,12 @@ class Object {
   }
 }
 
+class Throwable { }
+class Exception : Throwable { }
+class Error     : Throwable { }
+
+class TypeInfo { }
+
 // lhs == rhs lowers to __equals(lhs, rhs) for dynamic arrays
 bool __equals(T1, T2)(T1[] lhs, T2[] rhs) {
   import core.internal.traits : Unqual;

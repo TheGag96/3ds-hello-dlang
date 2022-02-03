@@ -40,6 +40,12 @@ C2D_SpriteSheet C2D_SpriteSheetLoad(const(char)* filename);
  */
 C2D_SpriteSheet C2D_SpriteSheetLoadFromMem(const(void)* data, size_t size);
 
+pragma(inline, true)
+extern(D) C2D_SpriteSheet C2D_SpriteSheetLoadFromMem(const(void)[] data)
+{
+    return C2D_SpriteSheetLoadFromMem(data.ptr, data.length);
+}
+
 /** @brief Load sprite sheet from file descriptor
  *  @param[in] fd File descriptor used to load data
  *  @returns Sprite sheet handle

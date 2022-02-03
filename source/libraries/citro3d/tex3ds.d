@@ -43,12 +43,12 @@ extern (C): nothrow: @nogc:
  */
 struct Tex3DS_SubTexture
 {
-    ushort width;  ///< Sub-texture width (pixels)
-    ushort height; ///< Sub-texture height (pixels)
-    float left;    ///< Left u-coordinate
-    float top;     ///< Top v-coordinate
-    float right;   ///< Right u-coordinate
-    float bottom;  ///< Bottom v-coordinate
+    ushort width;     ///< Sub-texture width (pixels)
+    ushort height;    ///< Sub-texture height (pixels)
+    float left   = 0; ///< Left u-coordinate
+    float top    = 0; ///< Top v-coordinate
+    float right  = 0; ///< Right u-coordinate
+    float bottom = 0; ///< Bottom v-coordinate
 }
 
 /** @brief Texture */
