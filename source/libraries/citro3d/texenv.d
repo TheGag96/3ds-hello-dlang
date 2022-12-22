@@ -64,8 +64,8 @@ void C3D_TexEnvSrc(
     C3D_TexEnv* env,
     C3DTexEnvMode mode,
     GPUTevSrc s1,
-    GPUTevSrc s2,
-    GPUTevSrc s3)
+    GPUTevSrc s2 = GPUTevSrc.primary_color,
+    GPUTevSrc s3 = GPUTevSrc.primary_color)
 {
     int param = GPU_TEVSOURCES(cast(int)s1, cast(int)s2, cast(int)s3);
     if (cast(int)mode & C3DTexEnvMode.rgb)
@@ -78,8 +78,8 @@ pragma(inline, true)
 void C3D_TexEnvOpRgb(
     C3D_TexEnv* env,
     GPUTevOpRGB o1,
-    GPUTevOpRGB o2,
-    GPUTevOpRGB o3)
+    GPUTevOpRGB o2 = GPUTevOpRGB.src_color,
+    GPUTevOpRGB o3 = GPUTevOpRGB.src_color)
 {
     env.opRgb = GPU_TEVOPERANDS(cast(int)o1, cast(int)o2, cast(int)o3);
 }
@@ -88,8 +88,8 @@ pragma(inline, true)
 void C3D_TexEnvOpAlpha(
     C3D_TexEnv* env,
     GPUTevOpA o1,
-    GPUTevOpA o2,
-    GPUTevOpA o3)
+    GPUTevOpA o2 = GPUTevOpA.src_alpha,
+    GPUTevOpA o3 = GPUTevOpA.src_alpha)
 {
     env.opAlpha = GPU_TEVOPERANDS(cast(int)o1, cast(int)o2, cast(int)o3);
 }
