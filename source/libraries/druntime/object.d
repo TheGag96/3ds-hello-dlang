@@ -163,7 +163,7 @@ extern (C) void[] _d_arraycast(uint toTSize, uint fromTSize, void[] a) @trusted 
 }
 
 extern (C) void[] _d_arraycopy(size_t size, void[] from, void[] to) @trusted {
-  import rt.memory : memmove;
+  import core.stdc.string;
 
   memmove(to.ptr, from.ptr, from.length * size);
   return to;
