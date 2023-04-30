@@ -51,10 +51,8 @@ struct C3D_Tex
     }
 }
 
-struct C3D_TexInitParams
+align (8) struct C3D_TexInitParams
 {
-    align (8):
-    
     import std.bitmanip : bitfields;
 
     ushort width;

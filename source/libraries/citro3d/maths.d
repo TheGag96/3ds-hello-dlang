@@ -313,7 +313,7 @@ C3D_FVec FVec3_Cross(C3D_FVec lhs, C3D_FVec rhs)
 pragma(inline, true)
 void Mtx_Zeros(C3D_Mtx* out_)
 {
-    import rt.memory : memset;
+    import core.stdc.string : memset;
     memset(out_, 0, C3D_Mtx.sizeof);
 }
 
