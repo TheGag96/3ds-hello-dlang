@@ -7,6 +7,9 @@ module object;
 
 nothrow: @nogc:
 
+public import core.internal.array.appending : _d_arrayappendT;
+public import core.internal.array.appending : _d_arrayappendcTXImpl;
+
 alias size_t = typeof(int.sizeof);
 alias ptrdiff_t = typeof(cast(void*)0 - cast(void*)0);
 
