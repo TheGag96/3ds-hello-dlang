@@ -409,16 +409,17 @@ struct StartupInfo
 pragma(inline, true)
 void* getThreadLocalStorage()
 {
-    void* ret;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!(void*)("mrc p15, 0, $0, c13, c0, 3", "=r");
     }
     else
     {
+        void* ret;
         asm @nogc nothrow { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
+        return ret;
     }
-    return ret;
 }
 
 /**

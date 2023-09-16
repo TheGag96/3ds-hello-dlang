@@ -45,32 +45,30 @@ struct LightSemaphore
 pragma(inline, true)
 void __dsb()
 {
-    //TODO
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        __asm("mcr p15, 0, $0, c7, c10, 4", "r,~{memory}", 0);
     }
     else
     {
         asm @nogc nothrow { "mcr p15, 0, %[val], c7, c10, 4" :: [val] "r" (0) : "memory"; }
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
 }
 
 /// Performs a clrex operation.
 pragma(inline, true)
 void __clrex()
 {
-    //TODO
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        __asm("clrex", "~{memory}");
     }
     else
     {
         asm @nogc nothrow { "clrex" ::: "memory"; }
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
 }
 
 /**
@@ -81,18 +79,17 @@ void __clrex()
 pragma(inline, true)
 int __ldrex(int* addr)
 {
-    //TODO
-    int val;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!int("ldrex $0, $1", "=r,Q", *addr);
     }
     else
     {
+        int val;
         asm @nogc nothrow { "ldrex %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+        return val;
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
-    return val;
 }
 
 /**
@@ -104,18 +101,17 @@ int __ldrex(int* addr)
 pragma(inline, true)
 bool __strex(int* addr, int val)
 {
-    //TODO
-    bool res;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!bool("strex $0, $1, $2", "=&r,r,Q", val, *addr);
     }
     else
     {
+        bool res;
         asm @nogc nothrow { "strex %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+        return res;
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
-    return res;
 }
 
 /**
@@ -126,18 +122,17 @@ bool __strex(int* addr, int val)
 pragma(inline, true)
 ushort __ldrexh(ushort* addr)
 {
-    //TODO
-    ushort val;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!ushort("ldrexh $0, $1", "=r,Q", *addr);
     }
     else
     {
+        ushort val;
         asm @nogc nothrow { "ldrexh %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+        return val;
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
-    return val;
 }
 
 /**
@@ -149,17 +144,17 @@ ushort __ldrexh(ushort* addr)
 pragma(inline, true)
 bool __strexh(ushort* addr, ushort val)
 {
-    //TODO
-    bool res;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!bool("strexh $0, $1, $2", "=&r,r,Q", val, *addr);
     }
     else
     {
+        bool res;
         asm @nogc nothrow { "strexh %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+        return res;
     }
-    return res;
 }
 
 /**
@@ -170,18 +165,17 @@ bool __strexh(ushort* addr, ushort val)
 pragma(inline, true)
 ubyte __ldrexb(ubyte* addr)
 {
-    //TODO
-    ubyte val;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!ubyte("ldrexb $0, $1", "=r,Q", *addr);
     }
     else
     {
+        ubyte val;
         asm @nogc nothrow { "ldrexb %[val], %[addr]" : [val] "=r" (val) : [addr] "Q" (*addr); }
+        return val;
     }
-    assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
-    return val;
 }
 
 /**
@@ -193,17 +187,17 @@ ubyte __ldrexb(ubyte* addr)
 pragma(inline, true)
 bool __strexb(ubyte* addr, ubyte val)
 {
-    //TODO
-    bool res;
     version (LDC)
     {
-        assert(0, "Not working until LDC updated to support GCC-style inline ASM fully.");
+        import ldc.llvmasm;
+        return __asm!bool("strexb $0, $1, $2", "=&r,r,Q", val, *addr);
     }
     else
     {
+        bool res;
         asm @nogc nothrow { "strexb %[res], %[val], %[addr]" : [res] "=&r" (res) : [val] "r" (val), [addr] "Q" (*addr); }
+        return res;
     }
-    return res;
 }
 
 /// Performs an atomic pre-increment operation.
