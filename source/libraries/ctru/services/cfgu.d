@@ -38,6 +38,17 @@ enum CFGLanguage : ubyte
     tw = 11  ///< Traditional Chinese
 }
 
+// Configuration system model values.
+enum CFGSystemModel
+{
+    _3ds   = 0, ///< Old 3DS (CTR)
+    _3dsxl = 1, ///< Old 3DS XL (SPR)
+    n3ds   = 2, ///< New 3DS (KTR)
+    _2ds   = 3, ///< Old 2DS (FTR)
+    n3dsxl = 4, ///< New 3DS XL (RED)
+    n2dsxl = 5, ///< New 2DS XL (JAN)
+}
+
 /// Initializes CFGU.
 Result cfguInit();
 
@@ -65,7 +76,7 @@ Result CFGU_GetRegionCanadaUSA(ubyte* value);
 
 /**
  * @brief Gets the system's model.
- * @param model Pointer to output the model to. (0 = O3DS, 1 = O3DSXL, 2 = N3DS, 3 = 2DS, 4 = N3DSXL, 5 = N2DSXL)
+ * @param model Pointer to output the model to. (see @ref CFG_SystemModel)
  */
 Result CFGU_GetSystemModel(ubyte* model);
 
@@ -101,7 +112,7 @@ Result CFGU_IsNFCSupported(bool* isSupported);
  * @param blkID ID of the block to retrieve.
  * @param outData Pointer to write the block data to.
  */
-Result CFGU_GetConfigInfoBlk2(uint size, uint blkID, ubyte* outData);
+Result CFGU_GetConfigInfoBlk2(uint size, uint blkID, void* outData);
 
 /**
  * @brief Gets a config info block with flags = 4.
@@ -109,7 +120,7 @@ Result CFGU_GetConfigInfoBlk2(uint size, uint blkID, ubyte* outData);
  * @param blkID ID of the block to retrieve.
  * @param outData Pointer to write the block data to.
  */
-Result CFG_GetConfigInfoBlk4(uint size, uint blkID, ubyte* outData);
+Result CFG_GetConfigInfoBlk4(uint size, uint blkID, void* outData);
 
 /**
  * @brief Gets a config info block with flags = 8.
@@ -117,7 +128,7 @@ Result CFG_GetConfigInfoBlk4(uint size, uint blkID, ubyte* outData);
  * @param blkID ID of the block to retrieve.
  * @param outData Pointer to write the block data to.
  */
-Result CFG_GetConfigInfoBlk8(uint size, uint blkID, ubyte* outData);
+Result CFG_GetConfigInfoBlk8(uint size, uint blkID, void* outData);
 
 /**
  * @brief Sets a config info block with flags = 4.
@@ -125,7 +136,7 @@ Result CFG_GetConfigInfoBlk8(uint size, uint blkID, ubyte* outData);
  * @param blkID ID of the block to retrieve.
  * @param inData Pointer to block data to write.
  */
-Result CFG_SetConfigInfoBlk4(uint size, uint blkID, ubyte* inData);
+Result CFG_SetConfigInfoBlk4(uint size, uint blkID, const(void)* inData);
 
 /**
  * @brief Sets a config info block with flags = 8.
@@ -133,7 +144,7 @@ Result CFG_SetConfigInfoBlk4(uint size, uint blkID, ubyte* inData);
  * @param blkID ID of the block to retrieve.
  * @param inData Pointer to block data to write.
  */
-Result CFG_SetConfigInfoBlk8(uint size, uint blkID, ubyte* inData);
+Result CFG_SetConfigInfoBlk8(uint size, uint blkID, const(void)* inData);
 
 /**
  * @brief Writes the CFG buffer in memory to the savegame in NAND.

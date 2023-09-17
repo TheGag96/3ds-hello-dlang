@@ -72,43 +72,45 @@ struct ConsoleFont
  */
 struct PrintConsole
 {
-    ConsoleFont font; ///< Font of the console
+    ConsoleFont font;        ///< Font of the console
 
-    ushort* frameBuffer; ///< Framebuffer address
+    ushort* frameBuffer;     ///< Framebuffer address
 
-    int cursorX; ///< Current X location of the cursor (as a tile offset by default)
-    int cursorY; ///< Current Y location of the cursor (as a tile offset by default)
+    int cursorX;             ///< Current X location of the cursor (as a tile offset by default)
+    int cursorY;             ///< Current Y location of the cursor (as a tile offset by default)
 
-    int prevCursorX; ///< Internal state
-    int prevCursorY; ///< Internal state
+    int prevCursorX;         ///< Internal state
+    int prevCursorY;         ///< Internal state
 
-    int consoleWidth; ///< Width of the console hardware layer in characters
-    int consoleHeight; ///< Height of the console hardware layer in characters
+    int consoleWidth;        ///< Width of the console hardware layer in characters
+    int consoleHeight;       ///< Height of the console hardware layer in characters
 
-    int windowX; ///< Window X location in characters (not implemented)
-    int windowY; ///< Window Y location in characters (not implemented)
-    int windowWidth; ///< Window width in characters (not implemented)
-    int windowHeight; ///< Window height in characters (not implemented)
+    int windowX;             ///< Window X location in characters (not implemented)
+    int windowY;             ///< Window Y location in characters (not implemented)
+    int windowWidth;         ///< Window width in characters (not implemented)
+    int windowHeight;        ///< Window height in characters (not implemented)
 
-    int tabSize; ///< Size of a tab
-    int fg; ///< Foreground color
-    int bg; ///< Background color
-    int flags; ///< Reverse/bright flags
+    int tabSize;             ///< Size of a tab
+    ushort fg;               ///< Foreground color
+    ushort bg;               ///< Background color
+    int flags;               ///< Reverse/bright flags
 
-    ConsolePrint PrintChar; ///< Callback for printing a character. Should return true if it has handled rendering the graphics (else the print engine will attempt to render via tiles).
+    ConsolePrint PrintChar;  ///< Callback for printing a character. Should return true if it has handled rendering the graphics (else the print engine will attempt to render via tiles).
 
     bool consoleInitialised; ///< True if the console is initialized
 }
 
-enum CONSOLE_COLOR_BOLD    = BIT(0); ///< Bold text
-enum CONSOLE_COLOR_FAINT   = BIT(1); ///< Faint text
-enum CONSOLE_ITALIC        = BIT(2); ///< Italic text
-enum CONSOLE_UNDERLINE     = BIT(3); ///< Underlined text
-enum CONSOLE_BLINK_SLOW    = BIT(4); ///< Slow blinking text
-enum CONSOLE_BLINK_FAST    = BIT(5); ///< Fast blinking text
-enum CONSOLE_COLOR_REVERSE = BIT(6); ///< Reversed color text
-enum CONSOLE_CONCEAL       = BIT(7); ///< Concealed text
-enum CONSOLE_CROSSED_OUT   = BIT(8); ///< Crossed out text
+enum CONSOLE_COLOR_BOLD    = BIT(0);  ///< Bold text
+enum CONSOLE_COLOR_FAINT   = BIT(1);  ///< Faint text
+enum CONSOLE_ITALIC        = BIT(2);  ///< Italic text
+enum CONSOLE_UNDERLINE     = BIT(3);  ///< Underlined text
+enum CONSOLE_BLINK_SLOW    = BIT(4);  ///< Slow blinking text
+enum CONSOLE_BLINK_FAST    = BIT(5);  ///< Fast blinking text
+enum CONSOLE_COLOR_REVERSE = BIT(6);  ///< Reversed color text
+enum CONSOLE_CONCEAL       = BIT(7);  ///< Concealed text
+enum CONSOLE_CROSSED_OUT   = BIT(8);  ///< Crossed out text
+enum CONSOLE_FG_CUSTOM     = BIT(9);  ///< Foreground custom color
+enum CONSOLE_BG_CUSTOM     = BIT(10); ///< Background custom color
 
 /// Console debug devices supported by libnds.
 enum debugDevice : ubyte
@@ -164,6 +166,6 @@ PrintConsole* consoleInit(GFXScreen screen, PrintConsole* console);
  */
 void consoleDebugInit(debugDevice device);
 
-/// Clears the screan by using iprintf("\x1b[2J");
+/// Clears the screen by using iprintf("\x1b[2J");
 void consoleClear();
 

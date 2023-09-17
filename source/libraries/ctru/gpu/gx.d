@@ -22,7 +22,7 @@ extern (D) auto GX_BUFFER_DIM(T0, T1)(auto ref T0 w, auto ref T1 h)
 
 /**
  * @brief Supported transfer pixel formats.
- * @sa GSPGPU_FramebufferFormats
+ * @sa GSPGPU_FramebufferFormat
  */
 enum GxTransferFormat : ubyte
 {

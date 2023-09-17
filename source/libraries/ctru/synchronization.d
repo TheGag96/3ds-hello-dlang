@@ -24,6 +24,7 @@ struct __lock_t
 }
 
 alias _LOCK_RECURSIVE_T = __lock_t;
+alias CondVar = int;
 alias RecursiveLock = __lock_t;
 
 /// A light event.
@@ -45,14 +46,36 @@ struct LightSemaphore
 pragma(inline, true)
 void __dsb()
 {
+    asm @nogc nothrow { "mcr p15, 0, %0, c7, c10, 4" :: "r" (0) : "memory"; }
+}
+
+/// Performs an Instruction Synchronization Barrier (officially "flush prefetch buffer") operation.
+pragma(inline, true)
+void __isb()
+{
     version (LDC)
     {
         import ldc.llvmasm;
-        __asm("mcr p15, 0, $0, c7, c10, 4", "r,~{memory}", 0);
+        __asm("mcr p15, 0, $0, c7, c5, 4", "r,~{memory}", 0);
     }
     else
     {
-        asm @nogc nothrow { "mcr p15, 0, %[val], c7, c10, 4" :: [val] "r" (0) : "memory"; }
+        asm @nogc nothrow { "mcr p15, 0, %0, c7, c5, 4" :: "r" (0) : "memory"; }
+    }
+}
+
+/// Performs a Data Memory Barrier operation.
+pragma(inline, true)
+void __dmb()
+{
+    version (LDC)
+    {
+        import ldc.llvmasm;
+        __asm("mcr p15, 0, $0, c7, c10, 5", "r,~{memory}", 0);
+    }
+    else
+    {
+        asm @nogc nothrow { "mcr p15, 0, %0, c7, c10, 5" :: "r" (0) : "memory"; }
     }
 }
 
@@ -236,10 +259,36 @@ extern (D) auto AtomicSwap(T0, T1)(auto ref T0 ptr, auto ref T1 value)
 }
 
 /**
- * @brief Retrieves the synchronization subsystem's address arbiter handle.
- * @return The synchronization subsystem's address arbiter handle.
+ * @brief Function used to implement user-mode synchronization primitives.
+ * @param addr Pointer to a signed 32-bit value whose address will be used to identify waiting threads.
+ * @param type Type of action to be performed by the arbiter
+ * @param value Number of threads to signal if using @ref ARBITRATION_SIGNAL, or the value used for comparison.
+ *
+ * This will perform an arbitration based on #type. The comparisons are done between #value and the value at the address #addr.
+ *
+ * @code
+ * s32 val=0;
+ * // Does *nothing* since val >= 0
+ * syncArbitrateAddress(&val,ARBITRATION_WAIT_IF_LESS_THAN,0);
+ * @endcode
  */
-Handle __sync_get_arbiter();
+Result syncArbitrateAddress(int* addr, ArbitrationType type, int value);
+
+/**
+ * @brief Function used to implement user-mode synchronization primitives (with timeout).
+ * @param addr Pointer to a signed 32-bit value whose address will be used to identify waiting threads.
+ * @param type Type of action to be performed by the arbiter (must use \ref ARBITRATION_WAIT_IF_LESS_THAN_TIMEOUT or \ref ARBITRATION_DECREMENT_AND_WAIT_IF_LESS_THAN_TIMEOUT)
+ * @param value Number of threads to signal if using @ref ARBITRATION_SIGNAL, or the value used for comparison.
+ *
+ * This will perform an arbitration based on #type. The comparisons are done between #value and the value at the address #addr.
+ *
+ * @code
+ * int val=0;
+ * // Thread will wait for a signal or wake up after 10000000 nanoseconds because val < 1.
+ * syncArbitrateAddressWithTimeout(&val,ARBITRATION_WAIT_IF_LESS_THAN_TIMEOUT,1,10000000LL);
+ * @endcode
+ */
+Result syncArbitrateAddressWithTimeout(int* addr, ArbitrationType type, int value, long timeout_ns);
 
 /**
  * @brief Initializes a light lock.
@@ -292,6 +341,55 @@ int RecursiveLock_TryLock(RecursiveLock* lock);
 void RecursiveLock_Unlock(RecursiveLock* lock);
 
 /**
+ * @brief Initializes a condition variable.
+ * @param cv Pointer to the condition variable.
+ */
+void CondVar_Init(CondVar* cv);
+
+/**
+ * @brief Waits on a condition variable.
+ * @param cv Pointer to the condition variable.
+ * @param lock Pointer to the lock to atomically unlock/relock during the wait.
+ */
+void CondVar_Wait(CondVar* cv, LightLock* lock);
+
+/**
+ * @brief Waits on a condition variable with a timeout.
+ * @param cv Pointer to the condition variable.
+ * @param lock Pointer to the lock to atomically unlock/relock during the wait.
+ * @param timeout_ns Timeout in nanoseconds.
+ * @return Zero on success, non-zero on failure.
+ */
+int CondVar_WaitTimeout(CondVar* cv, LightLock* lock, long timeout_ns);
+
+/**
+ * @brief Wakes up threads waiting on a condition variable.
+ * @param cv Pointer to the condition variable.
+ * @param num_threads Maximum number of threads to wake up (or \ref ARBITRATION_SIGNAL_ALL to wake them all).
+ */
+void CondVar_WakeUp(CondVar* cv, int num_threads);
+
+/**
+ * @brief Wakes up a single thread waiting on a condition variable.
+ * @param cv Pointer to the condition variable.
+ */
+pragma(inline, true)
+void CondVar_Signal(CondVar* cv)
+{
+    CondVar_WakeUp(cv, 1);
+}
+
+/**
+ * @brief Wakes up all threads waiting on a condition variable.
+ * @param cv Pointer to the condition variable.
+ */
+pragma(inline, true)
+void CondVar_Broadcast(CondVar* cv)
+{
+    CondVar_WakeUp(cv, ARBITRATION_SIGNAL_ALL);
+}
+
+/**
  * @brief Initializes a light event.
  * @param event Pointer to the event.
  * @param reset_type Type of reset the event uses (RESET_ONESHOT/RESET_STICKY).
@@ -330,6 +428,14 @@ int LightEvent_TryWait(LightEvent* event);
 void LightEvent_Wait(LightEvent* event);
 
 /**
+ * @brief Waits on a light event until either the event is signaled or the timeout is reached.
+ * @param event Pointer to the event.
+ * @param timeout_ns Timeout in nanoseconds.
+ * @return Non-zero on timeout, zero otherwise.
+ */
+int LightEvent_WaitTimeout(LightEvent* event, long timeout_ns);
+
+/**
  * @brief Initializes a light semaphore.
  * @param event Pointer to the semaphore.
  * @param max_count Initial count of the semaphore.
@@ -343,6 +449,14 @@ void LightSemaphore_Init(LightSemaphore* semaphore, short initial_count, short m
  * @param count Acquire count
  */
 void LightSemaphore_Acquire(LightSemaphore* semaphore, int count);
+
+/**
+ * @brief Attempts to acquire a light semaphore.
+ * @param semaphore Pointer to the semaphore.
+ * @param count Acquire count
+ * @return Zero on success, non-zero on failure
+ */
+int LightSemaphore_TryAcquire(LightSemaphore* semaphore, int count);
 
 /**
  * @brief Releases a light semaphore.

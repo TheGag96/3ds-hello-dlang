@@ -43,27 +43,38 @@ enum MemOp : uint
 /// The state of a memory block.
 enum MemState : ubyte
 {
-    FREE       = 0,  /// < Free memory
-    RESERVED   = 1,  /// < Reserved memory
-    IO         = 2,  /// < I/O memory
-    STATIC     = 3,  /// < Static memory
-    CODE       = 4,  /// < Code memory
-    PRIVATE    = 5,  /// < Private memory
-    SHARED     = 6,  /// < Shared memory
-    CONTINUOUS = 7,  /// < Continuous memory
-    ALIASED    = 8,  /// < Aliased memory
-    ALIAS      = 9,  /// < Alias memory
-    ALIASCODE  = 10, /// < Aliased code memory
-    LOCKED     = 11  /// < Locked memory
+    FREE       = 0,  ///< Free memory
+    RESERVED   = 1,  ///< Reserved memory
+    IO         = 2,  ///< I/O memory
+    STATIC     = 3,  ///< Static memory
+    CODE       = 4,  ///< Code memory
+    PRIVATE    = 5,  ///< Private memory
+    SHARED     = 6,  ///< Shared memory
+    CONTINUOUS = 7,  ///< Continuous memory
+    ALIASED    = 8,  ///< Aliased memory
+    ALIAS      = 9,  ///< Alias memory
+    ALIASCODE  = 10, ///< Aliased code memory
+    LOCKED     = 11  ///< Locked memory
 }
 
 /// Memory permission flags
 enum MemPerm : uint
 {
-    read     = 1,         /// < readable
-    write    = 2,         /// < writable
-    execute  = 4,         /// < executable
-    dontcare = 0x10000000 /// < don't care
+    read        = 1,              ///< readable
+    write       = 2,              ///< writable
+    execute     = 4,              ///< executable
+    readwrite   = read | write,   ///< executable
+    readexecute = read | execute, ///< executable
+    dontcare    = 0x10000000      ///< don't care
+}
+
+/// Memory regions.
+enum MemRegion : ubyte
+{
+    all         = 0, ///< All regions.
+    application = 1, ///< APPLICATION memory.
+    system      = 2, ///< SYSTEM memory.
+    base        = 3  ///< BASE memory.
 }
 
 /// Memory information.
@@ -135,8 +146,157 @@ enum CUR_THREAD_HANDLE = 0xFFFF8000;
 
 ///@}
 
+///@name Device drivers
+///@{
+
+/// DMA transfer state.
+enum DmaState {
+    starting = 0,  ///< DMA transfer involving at least one device is starting and has not reached DMAWFP yet.
+    wfp_dst = 1,   ///< DMA channel is in WFP state for the destination device (2nd loop iteration onwards).
+    wfp_src = 2,   ///< DMA channel is in WFP state for the source device (2nd loop iteration onwards).
+    running = 3,   ///< DMA transfer is running.
+    done = 4,      ///< DMA transfer is done.
+}
+
+/// Configuration flags for \ref DmaConfig.
+enum {
+    DMACFG_SRC_IS_DEVICE        = BIT(0), ///< DMA source is a device/peripheral. Address will not auto-increment.
+    DMACFG_DST_IS_DEVICE        = BIT(1), ///< DMA destination is a device/peripheral. Address will not auto-increment.
+    DMACFG_WAIT_AVAILABLE       = BIT(2), ///< Make \ref svcStartInterProcessDma wait for the channel to be unlocked.
+    DMACFG_KEEP_LOCKED          = BIT(3), ///< Keep the channel locked after the transfer. Required for \ref svcRestartDma.
+    DMACFG_USE_SRC_CONFIG       = BIT(6), ///< Use the provided source device configuration even if the DMA source is not a device.
+    DMACFG_USE_DST_CONFIG       = BIT(7), ///< Use the provided destination device configuration even if the DMA destination is not a device.
+}
+
+/// Configuration flags for \ref svcRestartDma.
+enum {
+    DMARST_UNLOCK           = BIT(0), ///< Unlock the channel after transfer.
+    DMARST_RESUME_DEVICE    = BIT(1), ///< Replace DMAFLUSHP instructions by NOP (they may not be regenerated even if this flag is not set).
+}
+
+/**
+ * @brief Device configuration structure, part of \ref DmaConfig.
+ * @note
+ * - if (and only if) src/dst is a device, then src/dst won't be auto-incremented.
+ * - the kernel uses DMAMOV instead of DMAADNH, when having to decrement (possibly working around an erratum);
+ * this forces all loops to be unrolled -- you need to keep that in mind when using negative increments, as the kernel
+ * uses a limit of 100 DMA instruction bytes per channel.
+ */
+struct DmaDeviceConfig {
+    byte deviceId;            ///< DMA device ID.
+    byte allowedAlignments;   ///< Mask of allowed access alignments (8, 4, 2, 1).
+    short burstSize;          ///< Number of bytes transferred in a burst loop. Can be 0 (in which case the max allowed alignment is used as unit).
+    short transferSize;       ///< Number of bytes transferred in a "transfer" loop (made of burst loops).
+    short burstStride;        ///< Burst loop stride, can be <= 0.
+    short transferStride;     ///< "Transfer" loop stride, can be <= 0.
+}
+
+/// Configuration stucture for \ref svcStartInterProcessDma.
+struct DmaConfig {
+    byte channelId;         ///< Channel ID (Arm11: 0-7, Arm9: 0-1). Use -1 to auto-assign to a free channel (Arm11: 3-7, Arm9: 0-1).
+    byte endianSwapSize;    ///< Endian swap size (can be 0).
+    ubyte flags;            ///< DMACFG_* flags.
+    ubyte _padding;
+    DmaDeviceConfig srcCfg; ///< Source device configuration, read if \ref DMACFG_SRC_IS_DEVICE and/or \ref DMACFG_USE_SRC_CONFIG are set.
+    DmaDeviceConfig dstCfg; ///< Destination device configuration, read if \ref DMACFG_SRC_IS_DEVICE and/or \ref DMACFG_USE_SRC_CONFIG are set.
+}
+
+///@}
+
 ///@name Debugging
 ///@{
+
+/// Operations for \ref svcControlPerformanceCounter
+enum PerfCounterOperation : ubyte {
+    enable                        = 0,    ///< Enable and lock perfmon. functionality.
+    disable                       = 1,    ///< Disable and forcibly unlock perfmon. functionality.
+    get_value                     = 2,    ///< Get the value of a counter register.
+    set_value                     = 3,    ///< Set the value of a counter register.
+    get_overflow_flags            = 4,    ///< Get the overflow flags for all CP15 and SCU counters.
+    reset                         = 5,    ///< Reset the value and/or overflow flags of selected counters.
+    get_event                     = 6,    ///< Get the event ID associated to a particular counter.
+    set_event                     = 7,    ///< Set the event ID associated to a paritcular counter.
+    set_virtual_counter_enabled   = 8,    ///< (Dis)allow the kernel to track counter overflows and to use 64-bit counter values.
+}
+
+/// Performance counter register IDs (CP15 and SCU).
+enum PerfCounterRegister : ubyte {
+    // CP15 registers:
+    core_base = 0,
+    core_count_reg_0 = core_base, ///< CP15 PMN0.
+    core_count_reg_1,   ///< CP15 PMN1.
+    core_cycle_counter, ///< CP15 CCNT.
+
+    // SCU registers
+    scu_base = 0x10,
+    scu_0 = scu_base, ///< SCU MN0.
+    scu_1,  ///< SCU MN1.
+    scu_2,  ///< SCU MN2.
+    scu_3,  ///< SCU MN3.
+    scu_4,  ///< SCU MN4. Prod-N3DS only. IRQ line missing.
+    scu_5,  ///< SCU MN5. Prod-N3DS only. IRQ line missing.
+    scu_6,  ///< SCU MN6. Prod-N3DS only. IRQ line missing.
+    scu_7,  ///< SCU MN7. Prod-N3DS only. IRQ line missing.
+}
+
+/**
+ * @brief Performance counter event IDs (CP15 or SCU).
+ *
+ * @note Refer to:
+ *     - CP15: https://developer.arm.com/documentation/ddi0360/e/control-coprocessor-cp15/register-descriptions/c15--performance-monitor-control-register--pmnc-
+ *     - SCU: https://developer.arm.com/documentation/ddi0360/e/mpcore-private-memory-region/about-the-mpcore-private-memory-region/performance-monitor-event-registers
+ */
+enum PerfCounterEvent : ushort {
+    // Core events:
+    core_base = 0x0,
+    core_inst_cache_miss = core_base,
+    core_stall_by_lack_of_inst,
+    core_stall_by_data_hazard,
+    core_inst_micro_tlb_miss,
+    core_data_micro_tlb_miss,
+    core_branch_inst,
+    core_branch_not_predicted,
+    core_branch_miss_predicted,
+    core_inst_executed,
+    core_folded_inst_executed,
+    core_data_cache_read,
+    core_data_cache_read_miss,
+    core_data_cache_write,
+    core_data_cache_write_miss,
+    core_data_cache_line_eviction,
+    core_pc_changed,
+    core_main_tlb_miss,
+    core_external_request,
+    core_stall_by_lsu_full,
+    core_store_buffer_drain,
+    core_merge_in_store_buffer,
+    core_cycle_count = core_base + 0xFF,     ///< One cycle elapsed.
+    core_cycle_count_64 = core_base + 0xFFF, ///< 64 cycles elapsed.
+
+
+    scu_base = 0x1000,
+    scu_disabled = scu_base,
+    scu_linefill_miss_from_core0,
+    scu_linefill_miss_from_core1,
+    scu_linefill_miss_from_core2,
+    scu_linefill_miss_from_core3,
+    scu_linefill_hit_from_core0,
+    scu_linefill_hit_from_core1,
+    scu_linefill_hit_from_core2,
+    scu_linefill_hit_from_core3,
+    scu_line_missing_from_core0,
+    scu_line_missing_from_core1,
+    scu_line_missing_from_core2,
+    scu_line_missing_from_core3,
+    scu_line_migration,
+    scu_read_busy_port0,
+    scu_read_busy_port1,
+    scu_write_busy_port0,
+    scu_write_busy_port1,
+    scu_external_read,
+    scu_external_write,
+    scu_cycle_count = scu_base + 0x1F,
+}
 
 /// Event relating to the attachment of a process.
 struct AttachProcessEvent
@@ -289,19 +449,19 @@ struct MapEvent
 /// Debug event type.
 enum DebugEventType : ubyte
 {
-    attach_process = 0,  /// < Process attached event.
-    attach_thread  = 1,  /// < Thread attached event.
-    exit_thread    = 2,  /// < Thread exit event.
-    exit_process   = 3,  /// < Process exit event.
-    exception      = 4,  /// < Exception event.
-    dll_load       = 5,  /// < DLL load event.
-    dll_unload     = 6,  /// < DLL unload event.
-    schedule_in    = 7,  /// < Schedule in event.
-    schedule_out   = 8,  /// < Schedule out event.
-    syscall_in     = 9,  /// < Syscall in event.
-    syscall_out    = 10, /// < Syscall out event.
-    output_string  = 11, /// < Output string event.
-    map            = 12  /// < Map event.
+    attach_process = 0,  ///< Process attached event.
+    attach_thread  = 1,  ///< Thread attached event.
+    exit_thread    = 2,  ///< Thread exit event.
+    exit_process   = 3,  ///< Process exit event.
+    exception      = 4,  ///< Exception event.
+    dll_load       = 5,  ///< DLL load event.
+    dll_unload     = 6,  ///< DLL unload event.
+    schedule_in    = 7,  ///< Schedule in event.
+    schedule_out   = 8,  ///< Schedule out event.
+    syscall_in     = 9,  ///< Syscall in event.
+    syscall_out    = 10, ///< Syscall out event.
+    output_string  = 11, ///< Output string event.
+    map            = 12  ///< Map event.
 }
 
 /// Information about a debug event.
@@ -329,11 +489,11 @@ struct DebugEventInfo
 /// Debug flags for an attached process, set by @ref svcContinueDebugEvent
 enum DebugFlags : ubyte
 {
-    inhibit_user_cpu_exception_handlers = BIT(0), /// < Inhibit user-defined CPU exception handlers(including watchpoints and breakpoints, regardless of any @ref svcKernelSetState call).
-    signal_fault_exception_events       = BIT(1), /// < Signal fault exception events. See @ref FaultExceptionEvent.
-    signal_schedule_events              = BIT(2), /// < Signal schedule in/out events. See @ref ScheduleInOutEvent.
-    signal_syscall_events               = BIT(3), /// < Signal syscall in/out events. See @ref SyscallInOutEvent.
-    signal_map_events                   = BIT(4)  /// < Signal map events. See @ref MapEvent.
+    inhibit_user_cpu_exception_handlers = BIT(0), ///< Inhibit user-defined CPU exception handlers(including watchpoints and breakpoints, regardless of any @ref svcKernelSetState call).
+    signal_fault_exception_events       = BIT(1), ///< Signal fault exception events. See @ref FaultExceptionEvent.
+    signal_schedule_events              = BIT(2), ///< Signal schedule in/out events. See @ref ScheduleInOutEvent.
+    signal_syscall_events               = BIT(3), ///< Signal syscall in/out events. See @ref SyscallInOutEvent.
+    signal_map_events                   = BIT(4)  ///< Signal map events. See @ref MapEvent.
 }
 
 struct ThreadContext
@@ -371,33 +531,32 @@ enum DebugThreadParameter : ubyte
 ///@{
 
 /// Information on address space for process. All sizes are in pages(0x1000 bytes)
-struct CodeSetInfo
+struct CodeSetHeader
 {
-    ubyte[8] name; ///< ASCII name of codeset
-    ushort unk1;
-    ushort unk2;
-    uint unk3;
-    uint text_addr; ///< .text start address
-    uint text_size; ///< .text number of pages
-    uint ro_addr; ///< .rodata start address
-    uint ro_size; ///< .rodata number of pages
-    uint rw_addr; ///< .data, .bss start address
-    uint rw_size; ///< .data number of pages
+    ubyte[8] name;        ///< ASCII name of codeset
+    ushort version_;      ///< Version field of codeset (unused)
+    ushort[3] padding;    ///< Padding
+    uint text_addr;       ///< .text start address
+    uint text_size;       ///< .text number of pages
+    uint ro_addr;         ///< .rodata start address
+    uint ro_size;         ///< .rodata number of pages
+    uint rw_addr;         ///< .data, .bss start address
+    uint rw_size;         ///< .data number of pages
     uint text_size_total; ///< total pages for .text (aligned)
-    uint ro_size_total; ///< total pages for .rodata (aligned)
-    uint rw_size_total; ///< total pages for .data, .bss (aligned)
-    uint unk4;
-    ulong program_id; ///< Program ID
+    uint ro_size_total;   ///< total pages for .rodata (aligned)
+    uint rw_size_total;   ///< total pages for .data, .bss (aligned)
+    uint padding2;        ///< Padding
+    ulong program_id;     ///< Program ID
 }
 
 /// Information for the main thread of a process.
 struct StartupInfo
 {
-    int priority; ///< Priority of the main thread.
+    int priority;    ///< Priority of the main thread.
     uint stack_size; ///< Size of the stack of the main thread.
-    int argc; ///< Unused on retail kernel.
-    ushort* argv; ///< Unused on retail kernel.
-    ushort* envp; ///< Unused on retail kernel.
+    int argc;        ///< Unused on retail kernel.
+    ushort* argv;    ///< Unused on retail kernel.
+    ushort* envp;    ///< Unused on retail kernel.
 }
 
 ///@}
@@ -409,17 +568,9 @@ struct StartupInfo
 pragma(inline, true)
 void* getThreadLocalStorage()
 {
-    version (LDC)
-    {
-        import ldc.llvmasm;
-        return __asm!(void*)("mrc p15, 0, $0, c13, c0, 3", "=r");
-    }
-    else
-    {
-        void* ret;
-        asm @nogc nothrow { "mrc p15, 0, %[data], c13, c0, 3" : [data] "=r" (ret); }
-        return ret;
-    }
+    void* ret;
+    asm @nogc nothrow { "mrc p15, 0, %0, c13, c0, 3" : "=r" (ret); }
+    return ret;
 }
 
 /**
@@ -441,6 +592,42 @@ uint* getThreadStaticBuffers()
 {
     return cast(uint*)(cast(ubyte*)getThreadLocalStorage() + 0x180);
 }
+
+///@name Device drivers
+///@{
+
+/// Writes the default DMA device config that the kernel uses when DMACFG_*_IS_DEVICE and DMACFG_*_USE_CFG are not set
+pragma(inline, true)
+void dmaDeviceConfigInitDefault(DmaDeviceConfig *cfg)
+{
+    // Kernel uses this default instance if _IS_DEVICE and _USE_CFG are not set
+    DmaDeviceConfig value = {
+        deviceId : -1,
+        allowedAlignments : 8 | 4 | 2 | 1,
+        burstSize : 0x80,
+        transferSize : 0,
+        burstStride : 0x80,
+        transferStride : 0,
+    };
+    *cfg = value;
+}
+
+/// Initializes a \ref DmaConfig instance with sane defaults for RAM<>RAM tranfers
+pragma(inline, true)
+void dmaConfigInitDefault(DmaConfig *cfg)
+{
+    DmaConfig value = {
+        channelId : -1,
+        endianSwapSize : 0,
+        flags : DMACFG_WAIT_AVAILABLE,
+        _padding : 0,
+        srcCfg : {},
+        dstCfg : {},
+    };
+    *cfg = value;
+}
+
+///@}
 
 ///@name Memory management
 ///@{
@@ -526,29 +713,54 @@ Result svcUnmapProcessMemory(Handle process, uint destAddress, uint size);
 Result svcUnmapMemoryBlock(Handle memblock, uint addr);
 
 /**
- * @brief Begins an inter-process DMA.
- * @param[out] dma Pointer to output the handle of the DMA to.
- * @param dstProcess Destination process.
- * @param dst Buffer to write data to.
- * @param srcprocess Source process.
- * @param src Buffer to read data from.
- * @param size Size of the data to DMA.
- * @param dmaConfig DMA configuration data.
+ * @brief Begins an inter-process DMA transfer.
+ * @param[out] dma Pointer to output the handle of the DMA channel object to.
+ * @param dstProcess Destination process handle.
+ * @param dstAddr Address in the destination process to write data to.
+ * @param srcProcess Source process handle.
+ * @param srcAddr Address in the source to read data from.
+ * @param size Size of the data to transfer.
+ * @param cfg Configuration structure.
+ * @note The handle is signaled when the transfer finishes.
  */
-Result svcStartInterProcessDma(Handle* dma, Handle dstProcess, void* dst, Handle srcProcess, const(void)* src, uint size, void* dmaConfig);
+Result svcStartInterProcessDma(Handle* dma, Handle dstProcess, uint dst, Handle srcProcess, uint* src, uint size, const(DmaConfig)* dmaConfig);
 
 /**
- * @brief Terminates an inter-process DMA.
- * @param dma Handle of the DMA.
+ * @brief Stops an inter-process DMA transfer.
+ * @param dma Handle of the DMA channel object.
  */
 Result svcStopDma(Handle dma);
 
 /**
- * @brief Gets the state of an inter-process DMA.
- * @param[out] dmaState Pointer to output the state of the DMA to.
- * @param dma Handle of the DMA.
+ * @brief Gets the state of an inter-process DMA transfer.
+ * @param[out] state Pointer to output the state of the DMA transfer to.
+ * @param dma Handle of the DMA channel object.
  */
-Result svcGetDmaState(void* dmaState, Handle dma);
+Result svcGetDmaState(DmaState* state, Handle dma);
+
+/**
+ * @brief Restarts a DMA transfer, using the same configuration as before.
+ * @param[out] state Pointer to output the state of the DMA transfer to.
+ * @param dma Handle of the DMA channel object.
+ * @param dstAddr Address in the destination process to write data to.
+ * @param srcAddr Address in the source to read data from.
+ * @param size Size of the data to transfer.
+ * @param flags Restart flags, \ref DMARST_UNLOCK and/or \ref DMARST_RESUME_DEVICE.
+ * @note The first transfer has to be configured with \ref DMACFG_KEEP_LOCKED.
+ */
+Result svcRestartDma(Handle dma, uint dstAddr, uint srcAddr, uint size, byte flags);
+
+/**
+ * @brief Restarts a DMA transfer, using the same configuration as before.
+ * @param[out] state Pointer to output the state of the DMA transfer to.
+ * @param dma Handle of the DMA channel object.
+ * @param dstAddr Address in the destination process to write data to.
+ * @param srcAddr Address in the source to read data from.
+ * @param size Size of the data to transfer.
+ * @param flags Restart flags, \ref DMARST_UNLOCK and/or \ref DMARST_RESUME_DEVICE.
+ * @note The first transfer has to be configured with \ref DMACFG_KEEP_LOCKED.
+ */
+Result svcRestartDma(Handle dma, uint dstAddr, uint srcAddr, uint size, byte flags);
 
 /**
  * @brief Queries memory information.
@@ -573,7 +785,7 @@ Result svcQueryProcessMemory(MemInfo* info, PageInfo* out_, Handle process, uint
  * @param addr Address to invalidate.
  * @param size Size of the memory to invalidate.
  */
-Result svcInvalidateProcessDataCache(Handle process, void* addr, uint size);
+Result svcInvalidateProcessDataCache(Handle process, uint addr, uint size);
 
 /**
  * @brief Cleans a process's data cache.
@@ -581,7 +793,7 @@ Result svcInvalidateProcessDataCache(Handle process, void* addr, uint size);
  * @param addr Address to clean.
  * @param size Size of the memory to clean.
  */
-Result svcStoreProcessDataCache(Handle process, void* addr, uint size);
+Result svcStoreProcessDataCache(Handle process, uint addr, uint size);
 
 /**
  * @brief Flushes(cleans and invalidates) a process's data cache.
@@ -589,7 +801,7 @@ Result svcStoreProcessDataCache(Handle process, void* addr, uint size);
  * @param addr Address to flush.
  * @param size Size of the memory to flush.
  */
-Result svcFlushProcessDataCache(Handle process, const(void)* addr, uint size);
+Result svcFlushProcessDataCache(Handle process, uint addr, uint size);
 ///@}
 
 ///@name Process management
@@ -659,23 +871,24 @@ Result svcCreatePort(Handle* portServer, Handle* portClient, const(char)* name, 
 Result svcConnectToPort(Handle* out_, const(char)* portName);
 
 /**
- * @brief Sets up virtual address space for a new process
- * @param[out] out Pointer to output the code set handle to.
- * @param info Description for setting up the addresses
- * @param code_ptr Pointer to .text in shared memory
- * @param ro_ptr Pointer to .rodata in shared memory
- * @param data_ptr Pointer to .data in shared memory
+ * @brief Sets up virtual address space for a new process.
+ * @param[out] out Pointer to output the codeset handle to.
+ * @param info Codeset header, contains process name, titleId and segment info.
+ * @param textSegmentLma Address of executable segment in caller's address space.
+ * @param roSegmentLma Address of read-only segment in caller's address space.
+ * @param dataSegmentLma Address of read-write segment in caller's address space.
+ * @note On success, the provided segments are unmapped from the caller's address space.
  */
-Result svcCreateCodeSet(Handle* out_, const(CodeSetInfo)* info, void* code_ptr, void* ro_ptr, void* data_ptr);
+Result svcCreateCodeSet(Handle* out_, const(CodeSetHeader)* info, uint textSegmentLma, uint roSegmentLma, uint dataSegmentLma);
 
 /**
- * @brief Sets up virtual address space for a new process
+ * @brief Create a new process.
  * @param[out] out Pointer to output the process handle to.
- * @param codeset Codeset created for this process
- * @param arm11kernelcaps ARM11 Kernel Capabilities from exheader
- * @param arm11kernelcaps_num Number of kernel capabilities
+ * @param codeset Codeset created for this process.
+ * @param arm11KernelCaps Arm11 Kernel Capabilities from exheader.
+ * @param numArm11KernelCaps Number of kernel capabilities.
  */
-Result svcCreateProcess(Handle* out_, Handle codeset, const(uint)* arm11kernelcaps, uint arm11kernelcaps_num);
+Result svcCreateProcess(Handle* out_, Handle codeset, const(uint)* arm11KernelCaps, int numArm11KernelCaps);
 
 /**
  * @brief Gets a process's affinity mask.
@@ -960,18 +1173,22 @@ Result svcCreateAddressArbiter(Handle* arbiter);
  * @param addr A pointer to a s32 value.
  * @param type Type of action to be performed by the arbiter
  * @param value Number of threads to signal if using @ref ARBITRATION_SIGNAL, or the value used for comparison.
- *
- * This will perform an arbitration based on #type. The comparisons are done between #value and the value at the address #addr.
- *
- * @code
- * s32 val=0;
- * // Does *nothing* since val >= 0
- * svcCreateAddressArbiter(arbiter,&val,ARBITRATION_WAIT_IF_LESS_THAN,0,0);
- * // Thread will wait for a signal or wake up after 10000000 nanoseconds because val < 1.
- * svcCreateAddressArbiter(arbiter,&val,ARBITRATION_WAIT_IF_LESS_THAN_TIMEOUT,1,10000000ULL);
- * @endcode
+ * @param timeout_ns Optional timeout in nanoseconds when using TIMEOUT actions, ignored otherwise. If not needed, use \ref svcArbitrateAddressNoTimeout instead.
+ * @note Usage of this syscall entails an implicit Data Memory Barrier (dmb).
+ * @warning Please use \ref syncArbitrateAddressWithTimeout instead.
  */
-Result svcArbitrateAddress(Handle arbiter, uint addr, ArbitrationType type, int value, long nanoseconds);
+Result svcArbitrateAddress(Handle arbiter, uint addr, ArbitrationType type, int value, long timeout_ns);
+
+/**
+ * @brief Same as \ref svcArbitrateAddress but with the timeout_ns parameter undefined.
+ * @param arbiter Handle of the arbiter
+ * @param addr A pointer to a s32 value.
+ * @param type Type of action to be performed by the arbiter
+ * @param value Number of threads to signal if using @ref ARBITRATION_SIGNAL, or the value used for comparison.
+ * @note Usage of this syscall entails an implicit Data Memory Barrier (dmb).
+ * @warning Please use \ref syncArbitrateAddress instead.
+ */
+Result svcArbitrateAddressNoTimeout(Handle arbiter, uint addr, ArbitrationType type, int value);
 
 /**
  * @brief Sends a synchronized request to a session handle.
@@ -1134,6 +1351,33 @@ void svcBreakRO(UserBreakType breakReason, const(void)* croInfo, uint croInfoSiz
  * @param length Length of the string to output, needs to be positive.
  */
 Result svcOutputDebugString(const(char)* str, int length);
+
+/**
+ * @brief Controls performance monitoring on the CP15 interface and the SCU.
+ * The meaning of the parameters depend on the operation.
+ * @param[out] out Output.
+ * @param op Operation, see details.
+ * @param param1 First parameter.
+ * @param param2 Second parameter.
+ * @details The operations are the following:
+ *     - \ref PERFCOUNTEROP_ENABLE (void) -> void, tries to enable and lock perfmon. functionality.
+ *     - \ref PERFCOUNTEROP_DISABLE (void) -> void, disable and forcibly unlocks perfmon. functionality.
+ *     - \ref PERFCOUNTEROP_GET_VALUE (\ref PerfCounterRegister reg) -> u64, gets the value of a particular counter register.
+ *     - \ref PERFCOUNTEROP_SET_VALUE (\ref PerfCounterRegister reg, u64 value) -> void, sets the value of a particular counter register.
+ *     - \ref PERFCOUNTEROP_GET_OVERFLOW_FLAGS (void) -> u32, gets the overflow flags of all CP15 and SCU registers.
+ *         - Format is a bitfield of \ref PerfCounterRegister.
+ *     - \ref PERFCOUNTEROP_RESET (u32 valueResetMask, u32 overflowFlagResetMask) -> void, resets the value and/or
+ *     overflow flags of selected registers.
+ *         - Format is two bitfields of \ref PerfCounterRegister.
+ *     - \ref PERFCOUNTEROP_GET_EVENT (\ref PerfCounterRegister reg) -> \ref PerfCounterEvent, gets the event associated
+ *     to a particular counter register.
+ *     - \ref PERFCOUNTEROP_SET_EVENT (\ref PerfCounterRegister reg, \ref PerfCounterEvent) -> void, sets the event associated
+ *     to a particular counter register.
+ *     - \ref PERFCOUNTEROP_SET_VIRTUAL_COUNTER_ENABLED (bool enabled) -> void, (dis)allows the kernel to track counter overflows
+ *     and to use 64-bit counter values.
+ */
+Result svcControlPerformanceCounter(ulong* out_, PerfCounterOperation op, uint param1, ulong param2);
+
 /**
  * @brief Creates a debug handle for an active process.
  * @param[out] debug Pointer to output the created debug handle to.

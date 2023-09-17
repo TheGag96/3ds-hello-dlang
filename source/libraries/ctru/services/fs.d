@@ -135,10 +135,11 @@ enum FSAction : ubyte
 }
 
 /// Archive control actions.
-enum FSArchiveAction : ubyte
+enum FSArchiveAction : ushort
 {
-    commit_save_data = 0, ///< Commits save data changes. No inputs/outputs.
-    get_timestamp    = 1  ///< Retrieves a file's last-modified timestamp. In: "u16*, UTF-16 Path", Out: "u64, Time Stamp".
+    commit_save_data = 0,      ///< Commits save data changes. No inputs/outputs.
+    get_timestamp    = 1,      ///< Retrieves a file's last-modified timestamp. In: "u16*, UTF-16 Path", Out: "u64, Time Stamp".
+    unknown          = 0x789D, //< Unknown action; calls FSPXI command 0x56. In: "FS_Path instance", Out: "u32[4], Unknown"
 }
 
 /// Secure save control actions.
@@ -248,6 +249,14 @@ struct FS_Path
     const(void)* data; ///< Pointer to FS path data.
 }
 
+/// SDMC/NAND speed information
+struct FS_SdMmcSpeedInfo
+{
+    bool highSpeedModeEnabled;  ///< Whether or not High Speed Mode is enabled.
+    bool usesHighestClockRate;  ///< Whether or not a clock divider of 2 is being used.
+    ushort sdClkCtrl;           ///< The value of the SD_CLK_CTRL register.
+}
+
 /// Filesystem archive handle, providing access to a filesystem's contents.
 alias FS_Archive = ulong;
 
@@ -301,7 +310,7 @@ Handle* fsGetSessionHandle ();
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_Control (FSAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_Control (FSAction action, const(void)* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Initializes a FSUSER session.
@@ -411,7 +420,7 @@ Result FSUSER_OpenArchive (FS_Archive* archive, FSArchiveID id, FS_Path path);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_ControlArchive (FS_Archive archive, FSArchiveAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_ControlArchive (FS_Archive archive, FSArchiveAction action, const(void)* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Closes an archive.
@@ -458,7 +467,7 @@ Result FSUSER_IsSdmcDetected (bool* detected);
 
 /**
  * @brief Gets whether the SD card is writable.
- * @param detected Pointer to output the writable status to.
+ * @param writable Pointer to output the writable status to.
  */
 Result FSUSER_IsSdmcWritable (bool* writable);
 
@@ -480,13 +489,13 @@ Result FSUSER_GetNandCid (ubyte* out_, uint length);
  * @brief Gets the SDMC speed info.
  * @param speedInfo Pointer to output the speed info to.
  */
-Result FSUSER_GetSdmcSpeedInfo (uint* speedInfo);
+Result FSUSER_GetSdmcSpeedInfo (FS_SdMmcSpeedInfo* speedInfo);
 
 /**
  * @brief Gets the NAND speed info.
  * @param speedInfo Pointer to output the speed info to.
  */
-Result FSUSER_GetNandSpeedInfo (uint* speedInfo);
+Result FSUSER_GetNandSpeedInfo (FS_SdMmcSpeedInfo* speedInfo);
 
 /**
  * @brief Gets the SDMC log.
@@ -551,7 +560,7 @@ Result FSUSER_CardNorDirectCommandWithAddress (ubyte commandId, uint address);
  * @param size Size of the output buffer.
  * @param output Output buffer.
  */
-Result FSUSER_CardNorDirectRead (ubyte commandId, uint size, ubyte* output);
+Result FSUSER_CardNorDirectRead (ubyte commandId, uint size, void* output);
 
 /**
  * @brief Executes a CARDNOR direct read with an address.
@@ -560,7 +569,7 @@ Result FSUSER_CardNorDirectRead (ubyte commandId, uint size, ubyte* output);
  * @param size Size of the output buffer.
  * @param output Output buffer.
  */
-Result FSUSER_CardNorDirectReadWithAddress (ubyte commandId, uint address, uint size, ubyte* output);
+Result FSUSER_CardNorDirectReadWithAddress (ubyte commandId, uint address, uint size, void* output);
 
 /**
  * @brief Executes a CARDNOR direct write.
@@ -568,7 +577,7 @@ Result FSUSER_CardNorDirectReadWithAddress (ubyte commandId, uint address, uint 
  * @param size Size of the input buffer.
  * @param output Input buffer.
  */
-Result FSUSER_CardNorDirectWrite (ubyte commandId, uint size, ubyte* input);
+Result FSUSER_CardNorDirectWrite (ubyte commandId, uint size, const(void)* input);
 
 /**
  * @brief Executes a CARDNOR direct write with an address.
@@ -577,7 +586,7 @@ Result FSUSER_CardNorDirectWrite (ubyte commandId, uint size, ubyte* input);
  * @param size Size of the input buffer.
  * @param input Input buffer.
  */
-Result FSUSER_CardNorDirectWriteWithAddress (ubyte commandId, uint address, uint size, ubyte* input);
+Result FSUSER_CardNorDirectWriteWithAddress (ubyte commandId, uint address, uint size, const(void)* input);
 
 /**
  * @brief Executes a CARDNOR 4xIO direct read.
@@ -586,7 +595,7 @@ Result FSUSER_CardNorDirectWriteWithAddress (ubyte commandId, uint address, uint
  * @param size Size of the output buffer.
  * @param output Output buffer.
  */
-Result FSUSER_CardNorDirectRead_4xIO (ubyte commandId, uint address, uint size, ubyte* output);
+Result FSUSER_CardNorDirectRead_4xIO (ubyte commandId, uint address, uint size, void* output);
 
 /**
  * @brief Executes a CARDNOR direct CPU write without verify.
@@ -594,7 +603,7 @@ Result FSUSER_CardNorDirectRead_4xIO (ubyte commandId, uint address, uint size, 
  * @param size Size of the input buffer.
  * @param output Input buffer.
  */
-Result FSUSER_CardNorDirectCpuWriteWithoutVerify (uint address, uint size, ubyte* input);
+Result FSUSER_CardNorDirectCpuWriteWithoutVerify (uint address, uint size, const(void)* input);
 
 /**
  * @brief Executes a CARDNOR direct sector erase without verify.
@@ -624,7 +633,7 @@ Result FSUSER_SetCardSpiBaudRate (FSCardSPIBaudRate baudRate);
 
 /**
  * @brief Sets the CARDSPI bus mode.
- * @param baudRate Bus mode to set.
+ * @param busMode Bus mode to set.
  */
 Result FSUSER_SetCardSpiBusMode (FSCardSPIBusMode busMode);
 
@@ -885,7 +894,7 @@ Result FSUSER_SetCtrCardLatencyParameter (ulong latency, bool emulateEndurance);
 
 /**
  * @brief Toggles cleaning up invalid save data.
- * @param Whether to enable cleaning up invalid save data.
+ * @param enable Whether to enable cleaning up invalid save data.
  */
 Result FSUSER_SwitchCleanupInvalidSaveData (bool enable);
 
@@ -943,7 +952,7 @@ Result FSUSER_GetSaveDataSecureValue (bool* exists, ulong* value, FSSecureValueS
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSUSER_ControlSecureSave (FSSecureSaveAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSUSER_ControlSecureSave (FSSecureSaveAction action, const(void)* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Gets the media type of the current application.
@@ -960,7 +969,7 @@ Result FSUSER_GetMediaType (FSMediaType* mediaType);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSFILE_Control (Handle handle, FSFileAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSFILE_Control (Handle handle, FSFileAction action, const(void)* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Opens a handle to a sub-section of a file.
@@ -1062,7 +1071,7 @@ Result FSFILE_OpenLinkFile (Handle handle, Handle* linkFile);
  * @param output Buffer to write output to.
  * @param outputSize Size of the output.
  */
-Result FSDIR_Control (Handle handle, FSDirectoryAction action, void* input, uint inputSize, void* output, uint outputSize);
+Result FSDIR_Control (Handle handle, FSDirectoryAction action, const(void)* input, uint inputSize, void* output, uint outputSize);
 
 /**
  * @brief Reads one or more directory entries.

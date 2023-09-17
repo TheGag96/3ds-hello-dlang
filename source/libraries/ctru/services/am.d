@@ -61,6 +61,25 @@ struct AM_TWLPartitionInfo
     ulong titlesFreeSpace; ///< Free space for titles.
 }
 
+/// Contains information about a title's content.
+struct AM_ContentInfo {
+    ushort index;     ///< Index of the content in the title.
+    ushort type;      ///< ?
+    uint contentId;   ///< ID of the content in the title.
+    ulong size;       ///< Size of the content in the title.
+    ubyte flags;      ///< @ref AM_ContentInfoFlags
+    ubyte[7] padding; ///< Padding
+}
+
+/// Title ContentInfo flags.
+enum AM_ContentInfoFlags : ubyte
+{
+    downloaded = BIT(0), ///< ?
+    owned      = BIT(1)  ///< ?
+}
+
+/// Ini
+
 /// Initializes AM. This doesn't initialize with "am:app", see amAppInit().
 Result amInit();
 
@@ -505,3 +524,22 @@ Result AM_DeleteAllExpiredTitles(FSMediaType mediatype);
 
 /// Deletes all TWL titles.
 Result AM_DeleteAllTwlTitles();
+
+/**
+ * @brief Gets the number of content index installed under the specified DLC title.
+ * @param[out] count Pointer to output the number of content indices to.
+ * @param mediatype Media type of the title.
+ * @param titleID Title ID to retrieve the count for (high-id is 0x0004008C).
+ */
+Result AMAPP_GetDLCContentInfoCount(uint* count, FSMediaType mediatype, ulong titleID);
+
+/**
+ * @brief Gets content infos installed under the specified DLC title.
+ * @param[out] contentInfoRead Pointer to output the number of content infos read to.
+ * @param mediatype Media type of the title.
+ * @param titleID Title ID to retrieve the content infos for (high-id is 0x0004008C).
+ * @param contentInfoCount Number of content infos to retrieve.
+ * @param offset Offset from the first content index the count starts at.
+ * @param[out] contentInfos Pointer to output the content infos read to.
+ */
+Result AMAPP_ListDLCContentInfos(uint* contentInfoRead, FSMediaType mediatype, ulong titleID, uint contentInfoCount, uint offset, AM_ContentInfo* contentInfos);

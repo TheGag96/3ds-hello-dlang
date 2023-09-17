@@ -52,6 +52,8 @@ enum APTAppletPos : byte
 
 alias APT_AppletAttr = ubyte;
 
+struct PtmWakeEvents;
+
 /// Create an APT_AppletAttr bitfield from its components.
 pragma(inline, true)
 APT_AppletAttr aptMakeAppletAttr (
@@ -167,28 +169,25 @@ void aptExit();
  */
 Result aptSendCommand(uint* aptcmdbuf);
 
-/**
- * @brief Gets whether to allow the system to enter sleep mode.
- * @return Whether sleep mode is allowed.
- */
+// Returns true if the application is currently in the foreground.
+bool aptIsActive();
+
+/// Returns true if the system has told the application to close.
+bool aptShouldClose();
+
+/// Returns true if the system can enter sleep mode while the application is active.
 bool aptIsSleepAllowed();
 
-/**
- * @brief Sets whether to allow the system to enter sleep mode.
- * @param allowed Whether to allow sleep mode.
- */
+/// Configures whether the system can enter sleep mode while the application is active.
 void aptSetSleepAllowed(bool allowed);
 
-/**
- * @brief Gets whether to allow the system to go back to HOME menu.
- * @return Whether going back to HOME menu is allowed.
- */
+/// Handles incoming sleep mode requests.
+void aptHandleSleep();
+
+/// Returns true if the user can press the HOME button to jump back to the HOME menu while the application is active.
 bool aptIsHomeAllowed();
 
-/**
- * @brief Sets whether to allow the system to go back to HOME menu.
- * @param allowed Whether going back to HOME menu is allowed.
- */
+/// Configures whether the user can press the HOME button to jump back to the HOME menu while the application is active.
 void aptSetHomeAllowed(bool allowed);
 
 /**
@@ -197,9 +196,33 @@ void aptSetHomeAllowed(bool allowed);
  */
 bool aptIsHomePressed();
 
+/// Returns true if the system requires the application to jump back to the HOME menu.
+bool aptShouldJumpToHome();
+
+/// Returns true if there is an incoming HOME button press rejected by the policy set by \ref aptSetHomeAllowed (use this to show a "no HOME allowed" icon).
+bool aptCheckHomePressRejected();
+
+/// \deprecated Alias for \ref aptCheckHomePressRejected.
+pragma(inline, true)
+deprecated bool aptIsHomePressed()
+{
+    return aptCheckHomePressRejected();
+}
+
+/// Jumps back to the HOME menu.
+void aptJumpToHomeMenu();
+
+/// Handles incoming jump-to-HOME requests.
+pragma(inline, true)
+void aptHandleJumpToHome()
+{
+    if (aptShouldJumpToHome())
+        aptJumpToHomeMenu();
+}
+
 /**
- * @brief Processes the current APT status. Generally used within a main loop.
- * @return Whether the application should continue running.
+ * @brief Main function which handles sleep mode and HOME/power buttons - call this at the beginning of every frame.
+ * @return true if the application should keep running, false otherwise (see \ref aptShouldClose).
  */
 bool aptMainLoop();
 
@@ -232,14 +255,33 @@ void aptSetMessageCallback(aptMessageCb callback, void* user);
  * @param handle Handle to pass to the library applet.
  * @return Whether the application should continue running after the library applet launch.
  */
-bool aptLaunchLibraryApplet(NSAppID appId, void* buf, size_t bufsize, Handle handle);
+void aptLaunchLibraryApplet(NSAppID appId, void* buf, size_t bufsize, Handle handle);
+
+/// Clears the chainloader state.
+void aptClearChainloader();
 
 /**
- * @brief Sets the chainloader target.
+ * @brief Configures the chainloader to launch a specific application.
  * @param programID ID of the program to chainload to.
  * @param mediatype Media type of the program to chainload to.
  */
 void aptSetChainloader(ulong programID, ubyte mediatype);
+
+/// Configures the chainloader to launch the previous application.
+void aptSetChainloaderToCaller();
+
+/// Configures the chainloader to relaunch the current application (i.e. soft-reset)
+void aptSetChainloaderToSelf();
+
+/**
+ * @brief Sets the "deliver arg" and HMAC for the chainloader, which will
+ *        be passed to the target 3DS/DS(i) application. The meaning of each
+ *        parameter varies on a per-application basis.
+ * @param deliverArg Deliver arg to pass to the target application.
+ * @param deliverArgSize Size of the deliver arg, maximum 0x300 bytes.
+ * @param hmac HMAC buffer, 32 bytes. Use NULL to pass an all-zero dummy HMAC.
+ */
+void aptSetChainloaderArgs(const(void)* deliverArg, size_t deliverArgSize, const(void)* hmac);
 
 /**
  * @brief Gets an APT lock handle.
@@ -367,6 +409,13 @@ Result APT_IsRegistered(NSAppID appID, bool* out_);
 Result APT_InquireNotification(uint appID, APTSignal* signalType);
 
 /**
+ * @brief Requests to enter sleep mode, and later sets wake events if allowed to.
+ * @param wakeEvents The wake events. Limited to "shell" (bit 1) for the PDN wake events part
+ * and "shell opened", "shell closed" and "HOME button pressed" for the MCU interrupts part.
+ */
+Result APT_SleepSystem(const(PtmWakeEvents)* wakeEvents);
+
+/**
  * @brief Notifies an application to wait.
  * @param appID ID of the application.
  */
@@ -384,6 +433,13 @@ Result APT_AppletUtility(int id, void* out_, size_t outSize, const(void)* in_, s
 
 /// Sleeps if shell is closed (?).
 Result APT_SleepIfShellClosed();
+
+/**
+ * @brief Locks a transition (?).
+ * @param transition Transition ID.
+ * @param flag Flag (?)
+ */
+Result APT_LockTransition(uint transition, bool flag);
 
 /**
  * @brief Tries to lock a transition (?).
@@ -553,4 +609,4 @@ Result APT_GetSharedFont(Handle* fontHandle, uint* mapAddr);
  * @param sender Pointer to output the sender's AppID to.
  * @param received Pointer to output whether an argument was received to.
  */
-Result APT_ReceiveDeliverArg(const(void)* param, size_t paramSize, const(void)* hmac, ulong* sender, bool* received);
+Result APT_ReceiveDeliverArg(void* param, size_t paramSize, void* hmac, ulong* sender, bool* received);

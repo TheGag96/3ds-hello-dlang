@@ -16,6 +16,12 @@ Result ptmuInit();
 void ptmuExit();
 
 /**
+ * @brief Gets a pointer to the current ptm:u session handle.
+ * @return A pointer to the current ptm:u session handle.
+ */
+Handle* ptmuGetSessionHandle();
+
+/**
  * @brief Gets the system's current shell state.
  * @param out Pointer to write the current shell state to. (0 = closed, 1 = open)
  */

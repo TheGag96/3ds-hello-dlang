@@ -124,10 +124,22 @@ uint ndspGetFrameCount ();
 void ndspSetMasterVol(float volume);
 
 /**
+ * @brief Gets the master volume.
+ * @return The master volume.
+ */
+float ndspGetMasterVol();
+
+/**
  * @brief Sets the output mode.
  * @param mode Output mode to set. Defaults to NDSP_OUTPUT_STEREO.
  */
 void ndspSetOutputMode(NDSPOutputMode mode);
+
+/**
+ * @brief Gets the output mode.
+ * @return The output mode.
+ */
+NDSPOutputMode ndspGetOutputMode();
 
 /**
  * @brief Sets the clipping mode.
@@ -136,10 +148,22 @@ void ndspSetOutputMode(NDSPOutputMode mode);
 void ndspSetClippingMode(NDSPClippingMode mode);
 
 /**
+ * @brief Gets the clipping mode.
+ * @return The clipping mode.
+ */
+NDSPClippingMode ndspGetClippingMode();
+
+/**
  * @brief Sets the output count.
  * @param count Output count to set. Defaults to 2.
  */
 void ndspSetOutputCount(int count);
+
+/**
+ * @brief Gets the output count.
+ * @return The output count.
+ */
+int ndspGetOutputCount();
 
 /**
  * @brief Sets the wave buffer to capture audio to.
@@ -164,16 +188,34 @@ void ndspSetCallback(ndspCallback callback, void* data);
 void ndspSurroundSetDepth(ushort depth);
 
 /**
+ * @brief Gets the surround sound depth.
+ * @return The surround sound depth.
+ */
+ushort ndspSurroundGetDepth();
+
+/**
  * @brief Sets the surround sound position.
  * @param pos Position to set. Defaults to NDSP_SPKPOS_SQUARE.
  */
 void ndspSurroundSetPos(NDSPSpeakerPos pos);
 
 /**
+ * @brief Gets the surround sound position.
+ * @return The surround sound speaker position.
+ */
+NDSPSpeakerPos ndspSurroundGetPos();
+
+/**
  * @brief Sets the surround sound rear ratio.
  * @param ratio Rear ratio to set. Defaults to 0x8000.
  */
 void ndspSurroundSetRearRatio(ushort ratio);
+
+/**
+ * @brief Gets the surround sound rear ratio.
+ * @return The rear ratio.
+ */
+ushort ndspSurroundGetRearRatio();
 ///@}
 
 ///@name Auxiliary output
@@ -186,6 +228,13 @@ void ndspSurroundSetRearRatio(ushort ratio);
 void ndspAuxSetEnable(int id, bool enable);
 
 /**
+ * @brief Gets whether auxiliary output is enabled.
+ * @param id ID of the auxiliary output.
+ * @return Whether auxiliary output is enabled.
+ */
+bool ndspAuxIsEnabled(int id);
+
+/**
  * @brief Configures whether an auxiliary output should use front bypass.
  * @param id ID of the auxiliary output.
  * @param bypass Whether to use front bypass.
@@ -193,11 +242,25 @@ void ndspAuxSetEnable(int id, bool enable);
 void ndspAuxSetFrontBypass(int id, bool bypass);
 
 /**
+ * @brief Gets whether auxiliary output front bypass is enabled.
+ * @param id ID of the auxiliary output.
+ * @return Whether auxiliary output front bypass is enabled.
+ */
+bool ndspAuxGetFrontBypass(int id);
+
+/**
  * @brief Sets the volume of an auxiliary output.
  * @param id ID of the auxiliary output.
  * @param volume Volume to set.
  */
 void ndspAuxSetVolume(int id, float volume);
+
+/**
+ * @brief Gets the volume of an auxiliary output.
+ * @param id ID of the auxiliary output.
+ * @return Volume of the auxiliary output.
+ */
+float ndspAuxGetVolume(int id);
 
 /**
  * @brief Sets the callback of an auxiliary output.
