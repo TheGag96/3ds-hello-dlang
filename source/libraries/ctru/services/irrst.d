@@ -20,6 +20,9 @@ extern __gshared Handle irrstMemHandle;
 /// IRRST's shared memory.
 extern __gshared vu32* irrstSharedMem;
 
+/// IRRST's state update event
+extern __gshared Handle irrstEvent;
+
 /// Initializes IRRST.
 Result irrstInit();
 

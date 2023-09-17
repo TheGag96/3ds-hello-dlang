@@ -17,11 +17,22 @@ enum DSPInterruptType : ubyte
     pipe = 2 ///< Pipe interrupt.
 }
 
-/// DSP pipe directions.
-enum DSPPipeDirection : ubyte
+/// DSP hook types.
+enum DSPHookType
 {
-    input  = 0, ///< DSP to ARM
-    output = 1  ///< ARM to DSP
+    onsleep  = 0, ///< DSP is going to sleep.
+    onwakeup = 1, ///< DSP is waking up.
+    oncancel = 2, ///< DSP was sleeping and the app was cancelled.
+}
+
+/// DSP hook function.
+alias dspHookFn = void function(DSPHookType hook);
+
+/// DSP hook cookie.
+struct dspHookCookie
+{
+    dspHookCookie* next; ///< Next cookie.
+    dspHookFn callback;  ///< Hook callback.
 }
 
 /**
@@ -38,6 +49,22 @@ Result dspInit();
  * @note This will also unload the DSP binary.
  */
 void dspExit();
+
+/// Returns true if a component is loaded, false otherwise.
+bool dspIsComponentLoaded();
+
+/**
+ * @brief Sets up a DSP status hook.
+ * @param cookie Hook cookie to use.
+ * @param callback Function to call when DSP's status changes.
+ */
+void dspHook(dspHookCookie* cookie, dspHookFn callback);
+
+/**
+ * @brief Removes a DSP status hook.
+ * @param cookie Hook cookie to remove.
+ */
+void dspUnhook(dspHookCookie* cookie);
 
 /**
  * @brief Checks if a headphone is inserted.
@@ -118,7 +145,7 @@ Result DSP_RegisterInterruptEvents(Handle handle, uint interrupt, uint channel);
 Result DSP_ReadPipeIfPossible(uint channel, uint peer, void* buffer, ushort length, ushort* length_read);
 
 /**
- * @param Writes to a pipe.
+ * @brief Writes to a pipe.
  * @param channel unknown. Usually 2
  * @param buffer  The message to send to the DSP process
  * @param length  Length of the message

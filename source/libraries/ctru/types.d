@@ -74,3 +74,13 @@ struct FpuRegisters
     uint fpscr; ///< fpscr.
     uint fpexc; ///< fpexc.
 }
+
+alias mode_t      = uint;
+alias off_t       = int;
+alias time_t      = long;
+alias suseconds_t = int;
+
+struct timeval {
+    time_t      tv_sec;     /* seconds */
+    suseconds_t tv_usec;    /* and microseconds */
+}

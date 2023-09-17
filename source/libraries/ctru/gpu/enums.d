@@ -117,7 +117,7 @@ enum GPUTexColor : ubyte
     etc1a4   = 0xD  ///< ETC1 texture compression + 4-bit Alpha
 }
 
-// Texture faces.
+/// Texture faces.
 enum GPUTexFace : ubyte
 {
     texface_2d = 0, // 2D face
@@ -415,7 +415,8 @@ enum GPUCombineFunc : ubyte
     add_signed   = 0x03, ///< Signed add.
     interpolate  = 0x04, ///< Interpolate.
     subtract     = 0x05, ///< Subtract.
-    dot3_rgb     = 0x06, ///< Dot3. RGB only.
+    dot3_rgb     = 0x06, ///< Dot3. Scalar result is written to RGB only.
+    dot3_rgba    = 0x07, ///< Dot3. Scalar result is written to RGBA.
     multiply_add = 0x08, ///< Multiply then add.
     add_multiply = 0x09  ///< Add then multiply.
 }

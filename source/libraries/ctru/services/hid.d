@@ -96,6 +96,13 @@ Result hidInit();
 /// Exits HID.
 void hidExit();
 
+/**
+ * @brief Sets the key repeat parameters for @ref hidKeysRepeat.
+ * @param delay Initial delay.
+ * @param interval Repeat interval.
+ */
+void hidSetRepeatParameters(uint delay, uint interval);
+
 /// Scans HID for input data.
 void hidScanInput();
 
@@ -112,6 +119,13 @@ uint hidKeysHeld();
  * @return 32-bit bitmask of newly pressed buttons.
  */
 uint hidKeysDown();
+
+/**
+ * @brief Returns a bitmask of newly pressed or repeated buttons, this frame.
+ * Individual buttons can be extracted using binary AND.
+ * @return 32-bit bitmask of newly pressed or repeated buttons.
+ */
+uint hidKeysDownRepeat();
 
 /**
 * @brief Returns a bitmask of newly released buttons, this frame.
@@ -150,6 +164,14 @@ void hidGyroRead(angularRate* rate);
  * @param nextEvent Whether to discard the current event and wait for the next event.
  */
 void hidWaitForEvent(HIDEvent id, bool nextEvent);
+
+/**
+ * @brief Waits for any HID or IRRST event.
+ * @param nextEvents Whether to discard the current events and wait for the next events.
+ * @param cancelEvent Optional additional handle to wait on, otherwise 0.
+ * @param timeout Timeout.
+ */
+Result hidWaitForAnyEvent(bool nextEvents, Handle cancelEvent, long timeout);
 
 /// Compatibility macro for hidScanInput.
 alias scanKeys = hidScanInput;

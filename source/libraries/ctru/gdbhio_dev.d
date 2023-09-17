@@ -5,9 +5,9 @@
 
 module ctru.gdbhio_dev;
 
-extern (C): nothrow: @nogc:
+public import ctru.types;
 
-struct timeval;
+extern (C): nothrow: @nogc:
 
 ///< Initializes the GDB HIO devoptab wrapper, returns 0 on success, -1 on failure.
 int gdbHioDevInit();

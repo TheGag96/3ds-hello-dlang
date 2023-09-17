@@ -10,17 +10,12 @@ import ctru.gfx;
 
 extern (C): nothrow: @nogc:
 
- enum GSP_SCREEN_TOP           = 0;   ///< ID of the top screen.
- enum GSP_SCREEN_BOTTOM        = 1;   ///< ID of the bottom screen.
- enum GSP_SCREEN_WIDTH         = 240; ///< Width of the top/bottom screens.
- enum GSP_SCREEN_HEIGHT_TOP    = 400; ///< Height of the top screen.
- enum GSP_SCREEN_HEIGHT_TOP_2X = 800; ///< Height of the top screen (2x).
- enum GSP_SCREEN_HEIGHT_BOTTOM = 320; ///< Height of the bottom screen.
-
-extern (D) auto GSPGPU_REBASE_REG(T)(auto ref T r)
-{
-    return r - 0x1EB00000;
-}
+enum GSP_SCREEN_TOP           = 0;   ///< ID of the top screen.
+enum GSP_SCREEN_BOTTOM        = 1;   ///< ID of the bottom screen.
+enum GSP_SCREEN_WIDTH         = 240; ///< Width of the top/bottom screens.
+enum GSP_SCREEN_HEIGHT_TOP    = 400; ///< Height of the top screen.
+enum GSP_SCREEN_HEIGHT_TOP_2X = 800; ///< Height of the top screen (2x).
+enum GSP_SCREEN_HEIGHT_BOTTOM = 320; ///< Height of the bottom screen.
 
 /// Framebuffer information.
 struct GSPGPU_FramebufferInfo
@@ -35,7 +30,7 @@ struct GSPGPU_FramebufferInfo
 }
 
 /// Framebuffer format.
-enum GSPGPUFramebufferFormats : ubyte
+enum GSPGPUFramebufferFormat : ubyte
 {
     rgba8_oes   = 0, ///< RGBA8.  (4 bytes)
     bgr8_oes    = 1, ///< BGR8.   (3 bytes)
@@ -74,18 +69,18 @@ enum GSPGPUEvent : ubyte
 }
 
 pragma(inline, true)
-uint gspGetBytesPerPixel(GSPGPUFramebufferFormats format)
+uint gspGetBytesPerPixel(GSPGPUFramebufferFormat format)
 {
     switch (format)
     {
-        case GSPGPUFramebufferFormats.rgba8_oes:
+        case GSPGPUFramebufferFormat.rgba8_oes:
             return 4;
         default:
-        case GSPGPUFramebufferFormats.bgr8_oes:
+        case GSPGPUFramebufferFormat.bgr8_oes:
             return 3;
-        case GSPGPUFramebufferFormats.rgb565_oes:
-        case GSPGPUFramebufferFormats.rgb5_a1_oes:
-        case GSPGPUFramebufferFormats.rgba4_oes:
+        case GSPGPUFramebufferFormat.rgb565_oes:
+        case GSPGPUFramebufferFormat.rgb5_a1_oes:
+        case GSPGPUFramebufferFormat.rgba4_oes:
             return 2;
     }
 }
@@ -96,6 +91,34 @@ Result gspInit();
 
 /// Exits GSPGPU.
 void gspExit();
+
+/**
+ * @brief Gets a pointer to the current gsp::Gpu session handle.
+ * @return A pointer to the current gsp::Gpu session handle.
+ */
+ Handle *gspGetSessionHandle();
+
+/// Returns true if the application currently has GPU rights.
+bool gspHasGpuRight();
+
+/**
+ * @brief Presents a buffer to the specified screen.
+ * @param screen Screen ID (see \ref GSP_SCREEN_TOP and \ref GSP_SCREEN_BOTTOM)
+ * @param swap Specifies which set of framebuffer registers to configure and activate (0 or 1)
+ * @param fb_a Pointer to the framebuffer (in stereo mode: left eye)
+ * @param fb_b Pointer to the secondary framebuffer (only used in stereo mode for the right eye, otherwise pass the same as fb_a)
+ * @param stride Stride in bytes between scanlines
+ * @param mode Mode configuration to be written to LCD register
+ * @return true if a buffer had already been presented to the screen but not processed yet by GSP, false otherwise.
+ * @note The most recently presented buffer is processed and configured during the specified screen's next VBlank event.
+ */
+bool gspPresentBuffer(uint screen, uint swap, const(void)* fb_a, const(void)* fb_b, uint stride, uint mode);
+
+/**
+ * @brief Returns true if a prior \ref gspPresentBuffer command is still pending to be processed by GSP.
+ * @param screen Screen ID (see \ref GSP_SCREEN_TOP and \ref GSP_SCREEN_BOTTOM)
+ */
+bool gspIsPresentPending(uint screen);
 
 /**
  * @brief Configures a callback to run when a GSPGPU event occurs.
@@ -179,10 +202,9 @@ extern (D) auto gspWaitForDMA()
 
 /**
  * @brief Submits a GX command.
- * @param sharedGspCmdBuf Command buffer to use.
  * @param gxCommand GX command to execute.
  */
-Result gspSubmitGxCommand(uint* sharedGspCmdBuf, ref uint[0x8] gxCommand);
+Result gspSubmitGxCommand(ref const(uint)[0x8] gxCommand);
 
 /**
  * @brief Acquires GPU rights.
@@ -199,8 +221,11 @@ Result GSPGPU_ReleaseRight();
  */
 Result GSPGPU_ImportDisplayCaptureInfo(GSPGPU_CaptureInfo* captureinfo);
 
-/// Sames the VRAM sys area.
+/// Saves the VRAM sys area.
 Result GSPGPU_SaveVramSysArea();
+
+/// Resets the GPU
+Result GSPGPU_ResetGpuCore();
 
 /// Restores the VRAM sys area.
 Result GSPGPU_RestoreVramSysArea();
@@ -216,7 +241,7 @@ Result GSPGPU_SetLcdForceBlack(ubyte flags);
  * @param screenid ID of the screen to update.
  * @param framebufinfo Framebuffer information to update with.
  */
-Result GSPGPU_SetBufferSwap(uint screenid, GSPGPU_FramebufferInfo* framebufinfo);
+Result GSPGPU_SetBufferSwap(uint screenid, const(GSPGPU_FramebufferInfo)* framebufinfo);
 
 /**
  * @brief Flushes memory from the data cache.
@@ -238,7 +263,7 @@ Result GSPGPU_InvalidateDataCache(const(void)* adr, uint size);
  * @param data Data to write.
  * @param size Size of the data to write.
  */
-Result GSPGPU_WriteHWRegs(uint regAddr, uint* data, ubyte size);
+Result GSPGPU_WriteHWRegs(uint regAddr, const(uint)* data, ubyte size);
 
 /**
  * @brief Writes to GPU hardware registers with a mask.
@@ -248,7 +273,7 @@ Result GSPGPU_WriteHWRegs(uint regAddr, uint* data, ubyte size);
  * @param maskdata Data of the mask.
  * @param masksize Size of the mask.
  */
-Result GSPGPU_WriteHWRegsWithMask(uint regAddr, uint* data, ubyte datasize, uint* maskdata, ubyte masksize);
+Result GSPGPU_WriteHWRegsWithMask(uint regAddr, const(uint)* data, ubyte datasize, const(uint)* maskdata, ubyte masksize);
 
 /**
  * @brief Reads from GPU hardware registers.
