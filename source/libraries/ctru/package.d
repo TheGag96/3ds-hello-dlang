@@ -1,6 +1,7 @@
 module ctru;
 
 public import ctru.types;
+public import ctru._3dslink;
 public import ctru.archive;
 public import ctru.arpa.inet;
 public import ctru.console;
